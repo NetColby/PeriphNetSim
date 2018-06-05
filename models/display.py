@@ -420,26 +420,30 @@ class DisplayApp:
 		label = tk.Label( rightcntlframe, text="Adjust Selected Drone Loc", width=20, fg = FONTCOLOR )
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
+		#creating a blank label to take up space for the location table
+		label = tk.Label( rightcntlframe, text="", width=20, fg = FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=30 )
 
 		#---- Up ----#
-		droneUp = tk.Button( rightcntlframe, text="Move Drone Up", command=self.moveDroneUp )
+		droneUp = tk.Button( rightcntlframe, text="Up", command=self.moveDroneUp )
 		droneUp.configure(highlightbackground=FRAMECOLOR)
-		droneUp.pack(side=tk.TOP)
+		droneUp.place(x=60, y=405)
 
 		#---- Left ----#
-		droneLeft = tk.Button( rightcntlframe, text="Move Drone Left", command=self.moveDroneLeft )
+		droneLeft = tk.Button( rightcntlframe, text="Left", command=self.moveDroneLeft )
 		droneLeft.configure(highlightbackground=FRAMECOLOR)
-		droneLeft.pack(side=tk.TOP)
+		droneLeft.place(x=28, y=435)
 
 		#---- Down ----#
-		droneDown = tk.Button( rightcntlframe, text="Move Drone Down", command=self.moveDroneDown )
+		droneDown = tk.Button( rightcntlframe, text="Down", command=self.moveDroneDown )
 		droneDown.configure(highlightbackground=FRAMECOLOR)
-		droneDown.pack(side=tk.TOP)
+		droneDown.place(x=53, y=465)
 
 		#---- Right ----#
-		droneRight = tk.Button( rightcntlframe, text="Move Drone Right", command=self.moveDroneRight )
+		droneRight = tk.Button( rightcntlframe, text="Right", command=self.moveDroneRight )
 		droneRight.configure(highlightbackground=FRAMECOLOR)
-		droneRight.pack(side=tk.TOP)
+		droneRight.place(x=87, y=435)
 
 		#---- Run Simulation Label ----#
 		# use a label to set the size of the right panel

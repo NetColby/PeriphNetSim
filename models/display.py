@@ -206,8 +206,9 @@ class DisplayApp:
 			self.canvas.delete(line)
 		self.lines = []
 
-		self.canvas.delete(self.tarea.getRect())
-		self.tareab = False
+		if self.tareab:
+			self.canvas.delete(self.tarea.getRect())
+			self.tareab = False
 
 
 		text = "Cleared the screen"

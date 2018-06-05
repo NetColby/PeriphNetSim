@@ -612,7 +612,7 @@ class DisplayApp:
 			text = "No point at %sx%s" % (event.x, event.y)
 			self.status.set(text)
 
-		print('handle mouse button 1: %d %d' % (event.x, event.y))
+		#print('handle mouse button 1: %d %d' % (event.x, event.y))
 		self.baseClick = (event.x, event.y)
 
 	def handleMouseButton2(self, event):

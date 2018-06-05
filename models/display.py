@@ -18,7 +18,7 @@ from .drone import Drone
 from .config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .targetArea import targetArea
-
+from .BaseStation import BaseStation
 
 debug = False
 
@@ -26,6 +26,7 @@ FONTCOLOR = "#b2b6b9"
 FRAMECOLOR = "#1f1f1f"
 BKGCOLOR = "#161616"
 TXTBOXCOLOR = '#303030'
+BASESTATIONCLR = "#004C99"
 
 
 # create a class to build and manage the display
@@ -168,6 +169,26 @@ class DisplayApp:
 		self.status.set(text)
 		return
 
+
+
+	def createBaseStation(self, dx=None, algorithm=NaiveAlgorithm, event=None):
+		if dx is None:
+			dx = self.droneSize/2
+		x = int(self.entry5.get())
+		y = int(self.entry6.get())
+
+		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=BASESTATIONCLR, outline='')
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt)
+		self.drones.append(baseStation)
+
+		self.updateDroneView()
+
+		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
+		self.status.set(text)
+		return
+
+
+
 	def createTargetArea(self, event=None):
 		self.tareab = True
 		w = int(self.entry2.get())
@@ -185,10 +206,10 @@ class DisplayApp:
 			self.canvas.delete(line)
 		self.lines = []
 
-		if self.tareab:
-			self.canvas.delete(self.tarea.getRect())
-			self.tareab = False
-		
+		self.canvas.delete(self.tarea.getRect())
+		self.tareab = False
+
+
 		text = "Cleared the screen"
 		self.status.set(text)
 		print('Cleared the screen')
@@ -268,7 +289,8 @@ class DisplayApp:
 		if not self.drones:
 			return energy
 		for drone in self.drones:
-			energy += drone.get_battery_level()
+			if type(drone) != "<class 'models.BaseStation.BaseStation'>" :
+				energy += drone.get_battery_level()
 		return energy/len(self.drones)
 
 	# update the statistic panel
@@ -324,6 +346,40 @@ class DisplayApp:
 		createRandomDroneButton.pack(side=tk.TOP)
 
 
+		#---- Base Station Generator ----#
+		label = tk.Label( rightcntlframe, text="Base Station Generator", width=20, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=10 )
+
+		#---- Input Area Width and Height ----#
+		label = tk.Label( rightcntlframe, text="x,y coords", width=10, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=2 )
+
+		self.areaWidth = tk.IntVar(None)
+		self.entry5 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
+		self.entry5.insert(0, 2)
+		self.entry5.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
+		self.entry5.pack(side = tk.TOP) # draw the entry form for area width
+
+		self.areaHeight = tk.IntVar(None)
+		self.entry6 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
+		self.entry6.insert(0, 2)
+		self.entry6.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
+		self.entry6.pack(side = tk.TOP) # draw the entry form for area height
+
+
+		#---- Spawn the Base Station ----#
+		createBaseStationButton = tk.Button( rightcntlframe, text="Generate Base Station", command=self.createBaseStation)
+		createBaseStationButton.configure(highlightbackground=FRAMECOLOR)
+		createBaseStationButton.pack(side=tk.TOP)
+
+
+
+
+
+
+
 
 
 
@@ -333,11 +389,20 @@ class DisplayApp:
 		label.pack( side=tk.TOP, pady=10 )
 
 		#---- Input Area Width and Height ----#
+		label = tk.Label( rightcntlframe, text="Width", width=10, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=1 )
 		self.areaWidth = tk.IntVar(None)
 		self.entry2 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
 		self.entry2.insert(0, 50)
 		self.entry2.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry2.pack(side = tk.TOP) # draw the entry form for area width
+
+
+
+		label = tk.Label( rightcntlframe, text="Height", width=10, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=1 )
 		self.areaHeight = tk.IntVar(None)
 		self.entry3 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
 		self.entry3.insert(0, 50)
@@ -547,7 +612,7 @@ class DisplayApp:
 			text = "No point at %sx%s" % (event.x, event.y)
 			self.status.set(text)
 
-		#print('handle mouse button 1: %d %d' % (event.x, event.y))
+		print('handle mouse button 1: %d %d' % (event.x, event.y))
 		self.baseClick = (event.x, event.y)
 
 	def handleMouseButton2(self, event):
@@ -577,7 +642,7 @@ class DisplayApp:
 		text = 'X-Position: %s	  Y-Position: %s' % (event.x, event.y) # print the x and y coordinates of the mouse motion in frame
 		self.mouse1coord.set(text)
 
-		#print('handle button1 motion %d %d' % (diff[0], diff[1]))
+		print('handle button1 motion %d %d' % (diff[0], diff[1]))
 
 	# This is called if the right click mouse button is being moved
 	def handleMouseButton2Motion(self, event):

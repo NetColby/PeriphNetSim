@@ -86,7 +86,9 @@ class DisplayApp:
 		# set up the key bindings
 		self.setBindings()
 
-
+		#sets selected drone to None
+		self.selectedDrone = None
+		
 	def buildMenus(self):
 
 		#---- Declare Menu Object ----#
@@ -217,20 +219,24 @@ class DisplayApp:
 		return
 
 	def moveDroneUp(self, event=None):
-		self.selectedDrone.move(0, -1)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(0, -1)
+			self.updateDroneView()
 
 	def moveDroneLeft(self, event=None):
-		self.selectedDrone.move(-1, 0)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(-1, 0)
+			self.updateDroneView()
 
 	def moveDroneRight(self, event=None):
-		self.selectedDrone.move(1, 0)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(1, 0)
+			self.updateDroneView()
 
 	def moveDroneDown(self, event=None):
-		self.selectedDrone.move(0, 1)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(0, 1)
+			self.updateDroneView()
 
 	def droneStepSingle(self, event=None):
 		self.selectedDrone.do_step()

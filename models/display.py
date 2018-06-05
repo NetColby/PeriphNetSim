@@ -547,7 +547,7 @@ class DisplayApp:
 			text = "No point at %sx%s" % (event.x, event.y)
 			self.status.set(text)
 
-		print('handle mouse button 1: %d %d' % (event.x, event.y))
+		#print('handle mouse button 1: %d %d' % (event.x, event.y))
 		self.baseClick = (event.x, event.y)
 
 	def handleMouseButton2(self, event):
@@ -577,7 +577,7 @@ class DisplayApp:
 		text = 'X-Position: %s	  Y-Position: %s' % (event.x, event.y) # print the x and y coordinates of the mouse motion in frame
 		self.mouse1coord.set(text)
 
-		print('handle button1 motion %d %d' % (diff[0], diff[1]))
+		#print('handle button1 motion %d %d' % (diff[0], diff[1]))
 
 	# This is called if the right click mouse button is being moved
 	def handleMouseButton2Motion(self, event):

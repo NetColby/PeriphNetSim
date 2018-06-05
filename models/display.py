@@ -17,6 +17,8 @@ import time
 from .drone import Drone
 from .config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
+from .targetArea import targetArea
+from .BaseStation import BaseStation
 
 debug = False
 
@@ -24,6 +26,8 @@ FONTCOLOR = "#b2b6b9"
 FRAMECOLOR = "#1f1f1f"
 BKGCOLOR = "#161616"
 TXTBOXCOLOR = '#303030'
+BASESTATIONCLR = "#004C99"
+
 
 # create a class to build and manage the display
 class DisplayApp:
@@ -45,13 +49,15 @@ class DisplayApp:
 		self.root.title(eval("'Hi %s, have fun using my GUI!' % (getpass.getuser())"))
 
 		# set the maximum size of the window for resizing
-		self.root.maxsize( 1600, 900 )
-		
-		
+		self.root.maxsize( 1200, 675 )
+
+
 		# set up the application state
 		self.drones = [] # list of drones with canvas point
 		self.lines = [] # list of lines connecting drones
 		self.data = None # will hold the raw data someday.
+		self.tareab = False #presence of a target area
+		self.tarea = None #target area field
 		self.baseClick = None # used to keep track of mouse movement
 		self.view_tx = 0
 		self.view_ty = 0
@@ -131,16 +137,22 @@ class DisplayApp:
 					menulist[i].add_command( label = menutext[i][j], command=menucmd[i][j] )
 				else:
 					menulist[i].add_separator()
-					
+
 	def createRandomDrones(self, event=None):
 		num_drones = self.entry1.get()
 		for i in range(int(num_drones)):
 			self.createRandomDrone()
 		return
-		
+
 	def createRandomDrone(self, event=None):
-		x = random.gauss(self.initDx/2, self.initDx/15)
-		y = random.gauss(self.initDy/2, self.initDy/15)
+		if not self.tareab :
+			x = random.gauss(self.initDx/2, self.initDx/15)
+			y = random.gauss(self.initDy/2, self.initDy/15)
+
+		else:
+			x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
+			y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
+
 		self.createDrone(x, y)
 		return
 
@@ -157,9 +169,34 @@ class DisplayApp:
 		self.status.set(text)
 		return
 
+
+
+	def createBaseStation(self, dx=None, algorithm=NaiveAlgorithm, event=None):
+		if dx is None:
+			dx = self.droneSize/2
+		x = int(self.entry5.get())
+		y = int(self.entry6.get())
+
+		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=BASESTATIONCLR, outline='')
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt)
+		self.drones.append(baseStation)
+
+		self.updateDroneView()
+
+		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
+		self.status.set(text)
+		return
+
+
+
 	def createTargetArea(self, event=None):
-		return 
-		
+		self.tareab = True
+		w = int(self.entry2.get())
+		h = int(self.entry3.get())
+		# print("w is " + w + " type " + str(type(w)))
+		self.tarea = targetArea(w,h,self.canvas)
+		return
+
 	def clearData(self, event=None):
 		for drone in self.drones:
 			self.canvas.delete(drone.get_pt())
@@ -168,6 +205,10 @@ class DisplayApp:
 		for line in self.lines:
 			self.canvas.delete(line)
 		self.lines = []
+
+		self.canvas.delete(self.tarea.getRect())
+		self.tareab = False
+
 
 		text = "Cleared the screen"
 		self.status.set(text)
@@ -202,14 +243,15 @@ class DisplayApp:
 		self.updateDroneView()
 
 	def multiStep(self, event=None):
-		for i in range(100):
-			self.root.after(125*i, self.droneStep)
+	  steps = self.entry4.get()
+	  for i in range(int(steps)):
+	   self.root.after(125*i, self.droneStep)
 
 	def updateDroneView(self, event=None):
 		self.updateStatisticPanel()
 		for line in self.lines:
 			self.canvas.delete(line)
-		
+
 		self.lines = []
 
 		pairs = list(itertools.combinations(list(range(0, len(self.drones))), r=2))
@@ -230,7 +272,7 @@ class DisplayApp:
 												bcoordcanvas[1]+self.droneSize/2,
 												fill="red", dash=(4, 2))
 					self.lines.append(l)
-			
+
 	# return the num of alive drones
 	def numAliveDrones(self):
 		num = 0
@@ -240,23 +282,24 @@ class DisplayApp:
 			if drone.get_battery_level() > 0:
 				num += 1
 		return num
-		
+
 	# return the average energy level of the drones
 	def avgEnergyLevel(self):
 		energy = 0.0
 		if not self.drones:
 			return energy
 		for drone in self.drones:
-			energy += drone.get_battery_level()
+			if type(drone) != "<class 'models.BaseStation.BaseStation'>" :
+				energy += drone.get_battery_level()
 		return energy/len(self.drones)
-	
-	# update the statistic panel	
+
+	# update the statistic panel
 	def updateStatisticPanel(self, event=None):
 		text = "Alive Drones: " + str(self.numAliveDrones())
 		self.statAliveDrone.set(text)
 		text = "Avg. Energy Level: " + str(round(self.avgEnergyLevel(), 2))
 		self.statAvgEnergy.set(text)
-		
+
 	# create the canvas object
 	def buildCanvas(self):
 		self.canvas = tk.Canvas( self.root, width=self.initDx, height=self.initDy )
@@ -271,7 +314,7 @@ class DisplayApp:
 	# build a frame and put controls in it
 	def buildControls(self):
 		#---- Menu and Menu Item Declarations (ordered) ----#
-		
+
 		#---- Right Panel ----#
 		# make a control frame on the right
 		rightcntlframe = tk.Frame(self.root)
@@ -282,7 +325,7 @@ class DisplayApp:
 		# make a separator frame
 		sep = tk.Frame( self.root, height=self.initDy, width=2, bg=BKGCOLOR)
 		sep.pack( side=tk.RIGHT, padx = 2, pady = 2 ) # draw the side frame border
-		
+
 		#---- Creator Region Label ----#
 		# use a label to set the size of the right panel
 		label = tk.Label( rightcntlframe, text="Random Drone Generator", width=20, fg=FONTCOLOR )
@@ -295,24 +338,71 @@ class DisplayApp:
 		self.entry1.insert(0, 1)
 		self.entry1.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry1.pack(side = tk.TOP) # draw the entry form for number of random points
-		
+
+
 		#---- Create Random Drone ----#
 		createRandomDroneButton = tk.Button( rightcntlframe, text="Create Random Drones", command=self.createRandomDrones)
 		createRandomDroneButton.configure(highlightbackground=FRAMECOLOR)
 		createRandomDroneButton.pack(side=tk.TOP)
- 
-		
+
+
+		#---- Base Station Generator ----#
+		label = tk.Label( rightcntlframe, text="Base Station Generator", width=20, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=10 )
+
+		#---- Input Area Width and Height ----#
+		label = tk.Label( rightcntlframe, text="x,y coords", width=10, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=2 )
+
+		self.areaWidth = tk.IntVar(None)
+		self.entry5 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
+		self.entry5.insert(0, 2)
+		self.entry5.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
+		self.entry5.pack(side = tk.TOP) # draw the entry form for area width
+
+		self.areaHeight = tk.IntVar(None)
+		self.entry6 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
+		self.entry6.insert(0, 2)
+		self.entry6.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
+		self.entry6.pack(side = tk.TOP) # draw the entry form for area height
+
+
+		#---- Spawn the Base Station ----#
+		createBaseStationButton = tk.Button( rightcntlframe, text="Generate Base Station", command=self.createBaseStation)
+		createBaseStationButton.configure(highlightbackground=FRAMECOLOR)
+		createBaseStationButton.pack(side=tk.TOP)
+
+
+
+
+
+
+
+
+
+
 		# use a label to set the size of the right panel
 		label = tk.Label( rightcntlframe, text="Target Area Generator", width=20, fg=FONTCOLOR )
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
 
 		#---- Input Area Width and Height ----#
+		label = tk.Label( rightcntlframe, text="Width", width=10, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=1 )
 		self.areaWidth = tk.IntVar(None)
 		self.entry2 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
 		self.entry2.insert(0, 50)
 		self.entry2.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry2.pack(side = tk.TOP) # draw the entry form for area width
+
+
+
+		label = tk.Label( rightcntlframe, text="Height", width=10, fg=FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=1 )
 		self.areaHeight = tk.IntVar(None)
 		self.entry3 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
 		self.entry3.insert(0, 50)
@@ -323,8 +413,8 @@ class DisplayApp:
 		createTargetAreaButton = tk.Button( rightcntlframe, text="Create Target Area", command=self.createTargetArea)
 		createTargetAreaButton.configure(highlightbackground=FRAMECOLOR)
 		createTargetAreaButton.pack(side=tk.TOP)
-		
-		
+
+
 		#---- Location Modification Label ----#
 		# use a label to set the size of the right panel
 		label = tk.Label( rightcntlframe, text="Adjust Selected Drone Loc", width=20, fg = FONTCOLOR )
@@ -357,16 +447,17 @@ class DisplayApp:
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
 
-		#---- Step ----#
-		droneStepButton = tk.Button( rightcntlframe, text="Step Selected Drone", command=self.droneStepSingle )
-		droneStepButton.configure(highlightbackground=FRAMECOLOR)
-		droneStepButton.pack(side=tk.TOP)
-
+		#---- Input Number of Steps ----#
+		self.randomDataText = tk.IntVar(None)
+		self.entry4 = tk.Entry(rightcntlframe, textvariable = self.randomDataText, width=10, fg=FONTCOLOR)
+		self.entry4.insert(0, 10)
+		self.entry4.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
+		self.entry4.pack(side = tk.TOP) # draw the entry form for number of random points
 		#---- MultiStep ----#
-		droneMultiStepButton = tk.Button( rightcntlframe, text="Step Drones x100", command=self.multiStep )
+		droneMultiStepButton = tk.Button( rightcntlframe, text="Step Drones", command=self.multiStep )
 		droneMultiStepButton.configure(highlightbackground=FRAMECOLOR)
 		droneMultiStepButton.pack(side=tk.TOP)
-		
+
 		#---- Reset Simulation ----#
 		# use a label to set the size of the right panel
 		label = tk.Label( rightcntlframe, text="Reset Simulation", width=20, fg = FONTCOLOR )
@@ -393,9 +484,9 @@ class DisplayApp:
 		#---- Statistic Region Label ----#
 		# use a label to set the size of the right panel
 		label = tk.Label( leftcntlframe, text="Statistic Panel", width=20, fg=FONTCOLOR )
-		label.configure(background=FRAMECOLOR)	
+		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
-		
+
 		#---- Alive Drone Count ----#
 		# label to display the number of alive drones
 		self.statAliveDrone = tk.StringVar()
@@ -404,7 +495,7 @@ class DisplayApp:
 		label = tk.Label( leftcntlframe, textvariable = self.statAliveDrone, width = 20, fg=FONTCOLOR)
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
-		
+
 		#---- Average Energy Level ----#
 		# label to display the number of alive drones
 		self.statAvgEnergy = tk.StringVar()
@@ -511,7 +602,7 @@ class DisplayApp:
 				coords = drone.get_coords_for_print()
 				color = self.canvas.itemcget(drone.get_pt(), "fill")
 				self.selectedDrone = drone
-				foundMatch = True  
+				foundMatch = True
 				continue
 
 		if foundMatch:
@@ -521,7 +612,7 @@ class DisplayApp:
 			text = "No point at %sx%s" % (event.x, event.y)
 			self.status.set(text)
 
-		print('handle mouse button 1: %d %d' % (event.x, event.y))
+		#print('handle mouse button 1: %d %d' % (event.x, event.y))
 		self.baseClick = (event.x, event.y)
 
 	def handleMouseButton2(self, event):

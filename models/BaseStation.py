@@ -1,24 +1,19 @@
-# Drone Simluator
+# BaseStation Simluator
 #
-# Selim Hassairi
-# June 2018
+#Emmett Burns & Selim Hassairi
+#June 2018
 
-from .drone import Drone
+import math
+from .agent import Agent
 
-class BaseStation(Drone):
-    def __init__(self,x,y,canvas,pt) :
-        Drone.__init__(self,x,y,canvas,pt,None)
-        self.battery_level = 999999
-        #allows the distinguishing between base stations and drones when they are in the same list
-
-    def move(self, x, y):
-        pass
+class BaseStation(Agent):
+    def __init__(self, x, y, canvas, pt, algorithm_provider):
+        Agent.__init__(self, x, y, canvas, pt)
+        self.algorithm_provider = algorithm_provider
+        self.dead = False
 
     def idle(self):
         pass
 
-    def update_life_state(self):
-        pass
-
     def do_step(self):
-        pass
+        self.algorithm_provider.run(self)

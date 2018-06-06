@@ -19,6 +19,7 @@ from .config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .targetArea import targetArea
 from .BaseStation import BaseStation
+from .agent import Agent
 
 debug = False
 
@@ -183,7 +184,7 @@ class DisplayApp:
 		y = int(self.entry6.get())
 
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=BASESTATIONCLR, outline='')
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt, algorithm(self.config, self.drones))
 		self.drones.append(baseStation)
 
 		self.updateDroneView()
@@ -229,7 +230,7 @@ class DisplayApp:
 			self.updateDroneView()
 
 	def moveDroneLeft(self, event=None):
-		if self.selectedDrone:
+		if self.selectedDrone: 
 			self.selectedDrone.move(-1, 0)
 			self.updateDroneView()
 
@@ -301,7 +302,7 @@ class DisplayApp:
 		if not self.drones:
 			return num
 		for drone in self.drones:
-			if drone.get_battery_level() > 1 and type(drone) is not BaseStation:
+			if type(drone) is Drone and not drone.isDead():
 				num += 1
 		return num
 

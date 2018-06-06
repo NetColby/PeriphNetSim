@@ -88,7 +88,7 @@ class DisplayApp:
 
 		#sets selected drone to None
 		self.selectedDrone = None
-		
+
 	def buildMenus(self):
 
 		#---- Declare Menu Object ----#
@@ -212,6 +212,8 @@ class DisplayApp:
 			self.canvas.delete(self.tarea.getRect())
 			self.tareab = False
 
+		self.updateStatisticPanel()
+		self.updateDroneView()
 
 		text = "Cleared the screen"
 		self.status.set(text)
@@ -286,7 +288,7 @@ class DisplayApp:
 		if not self.drones:
 			return num
 		for drone in self.drones:
-			if drone.get_battery_level() > 0:
+			if drone.get_battery_level() > 1:
 				num += 1
 		return num
 
@@ -296,7 +298,7 @@ class DisplayApp:
 		if not self.drones:
 			return energy
 		for drone in self.drones:
-			if type(drone) != "<class 'models.BaseStation.BaseStation'>" :
+			if type(drone) is not BaseStation :
 				energy += drone.get_battery_level()
 		return energy/len(self.drones)
 

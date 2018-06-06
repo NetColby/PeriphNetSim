@@ -1,13 +1,22 @@
-###   Drone Simulation Settings   ###
+###   Drone Simulation Settings      ###
 
 # Number of drones to spawn
 numdrones=10
+
+# x,y Coordinates of the drones (optional)
+1,1
+19,99
+56,109
+45,187
+1,10
+
+
 
 # Number of steps (increments in time)
 steps=20
 
 # Target Area or not
-tareaboolean=False
+tareaboolean=True
 
 # Target Area settings (Ignore if tareaboolean=False )
 tareaWidth=100

@@ -301,7 +301,7 @@ class DisplayApp:
 		if not self.drones:
 			return num
 		for drone in self.drones:
-			if drone.get_battery_level() > 1 and not drone.isBaseStation():
+			if drone.get_battery_level() > 1 and type(drone) is not BaseStation:
 				num += 1
 		return num
 

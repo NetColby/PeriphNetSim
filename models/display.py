@@ -89,6 +89,9 @@ class DisplayApp:
 		#sets selected drone to None
 		self.selectedDrone = None
 
+		#field to keep track of how often to print statusMessages
+		self.iterations = 0
+
 	def buildMenus(self):
 
 		#---- Declare Menu Object ----#
@@ -245,16 +248,26 @@ class DisplayApp:
 		self.updateDroneView()
 
 	def droneStep(self, event=None):
+		if self.iterations == 0:
+			self.statusMessage(True)
+		elif self.iterations%10 == 9:
+			self.statusMessage()
+		self.iterations += 1
 		for drone in self.drones:
 			drone.do_step()
 			#print(drone.get_battery_level())
 		#print("\n\n")
 		self.updateDroneView()
 
+
+
 	def multiStep(self, event=None):
-	  steps = self.entry4.get()
-	  for i in range(int(steps)):
-	   self.root.after(125*i, self.droneStep)
+		steps = self.entry4.get()
+		self.iterations = 0
+		for i in range(int(steps)):
+			self.root.after(125*i, self.droneStep)
+		
+
 
 	def updateDroneView(self, event=None):
 		self.updateStatisticPanel()
@@ -288,9 +301,17 @@ class DisplayApp:
 		if not self.drones:
 			return num
 		for drone in self.drones:
-			if drone.get_battery_level() > 1:
+			if drone.get_battery_level() > 1 and not drone.isBaseStation():
 				num += 1
 		return num
+
+	#prints the status of a simulation when in begins
+	#set numDrones to True when it becomes necessary to display the number of drones
+	def statusMessage(self, numDrones = False):
+		if numDrones:
+			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
+		print(str(self.numAliveDrones()) + " drones alive.")
+
 
 	# return the average energy level of the drones
 	def avgEnergyLevel(self):

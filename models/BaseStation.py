@@ -9,6 +9,8 @@ class BaseStation(Drone):
     def __init__(self,x,y,canvas,pt) :
         Drone.__init__(self,x,y,canvas,pt,None)
         self.battery_level = 999999
+        #allows the distinguishing between base stations and drones when they are in the same list
+        self.base = True
 
     def move(self, x, y):
         pass

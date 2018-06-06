@@ -13,7 +13,6 @@ class Drone:
         self.battery_level = 100.0
         self.algorithm_provider = algorithm_provider
         self.dead = False
-        #allows the distinguishing between base stations and drones when they are in the same list
 
     def get_battery_level(self):
         # return the current battery level of the drone

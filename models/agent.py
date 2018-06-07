@@ -6,8 +6,7 @@
 import math
 
 class Agent:
-    def __init__(self, x, y, canvas, pt):
-        self.pt = pt
+    def __init__(self, x, y, canvas):
         self.canvas = canvas
         self.x, self.y = x, y
         self.moves = False
@@ -28,16 +27,3 @@ class Agent:
         # setter method for coordinates
         self.x = x
         self.y = y
-
-    def move(self, x, y):
-        # move drone object by unit vector in direction x/y
-        magnitude = math.hypot(x, y)
-
-        x = x/magnitude
-        y = y/magnitude
-
-        self.canvas.move(self.get_pt(), x, y)
-        self.set_coords(self.x + x, self.y + y)
-
-    def doesMove(self):
-        return self.moves

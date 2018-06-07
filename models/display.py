@@ -2,6 +2,8 @@
 #
 # CP Majgaard & Theo Satloff
 # January 2018
+# updated by Emmett Burns & Selim Hassairi
+# June 2018
 
 import getpass
 import math

@@ -14,12 +14,14 @@ import tkinter.simpledialog
 import itertools
 import time
 
+
 from .drone import Drone
 from .config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .targetArea import targetArea
 from .BaseStation import BaseStation
 from .agent import Agent
+from .Obstacle import Obstacle
 
 debug = False
 
@@ -77,6 +79,11 @@ class DisplayApp:
 
 		# build the Canvas
 		self.buildCanvas()
+
+		# Generating an initial obstacle
+		# self.obstacle = Obstacle(canvas=self.canvas) #Obstacle field
+		self.obstacle = Obstacle(500,300,100,100,canvas=self.canvas) #HARDCODED ONE JUST FOR TESTING
+
 
 		# bring the window to the front
 		self.root.lift()
@@ -151,13 +158,29 @@ class DisplayApp:
 		return
 
 	def createRandomDrone(self, event=None):
-		if not self.tareab :
-			x = random.gauss(self.initDx/2, self.initDx/15)
-			y = random.gauss(self.initDy/2, self.initDy/15)
+		x = None
+		y = None
+		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
+			print("attempt to place drone")
+			if not self.tareab :
+				x = random.gauss(self.initDx/2, self.initDx/15)
+				y = random.gauss(self.initDy/2, self.initDy/15)
 
-		else:
-			x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
-			y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
+			# Outdated : too spreadout in the T.Area
+			# else:
+			# 	x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
+			# 	y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
+
+
+			else:
+				x = random.gauss(self.initDx/2, self.initDx/15)
+				while x < 450-(self.tarea.getTAwidth()/2) or x > 450+(self.tarea.getTAwidth()/2):
+					x = random.gauss(self.initDx/2, self.initDx/15)
+
+				y = random.gauss(self.initDy/2, self.initDy/15)
+				while y < 338-(self.tarea.getTAheight()/2) or y > 338+(self.tarea.getTAheight()/2):
+					y = random.gauss(self.initDy/2, self.initDy/15)
+
 
 		self.createDrone(x, y)
 		return
@@ -230,7 +253,7 @@ class DisplayApp:
 			self.updateDroneView()
 
 	def moveDroneLeft(self, event=None):
-		if self.selectedDrone: 
+		if self.selectedDrone:
 			self.selectedDrone.move(-1, 0)
 			self.updateDroneView()
 
@@ -267,7 +290,7 @@ class DisplayApp:
 		self.iterations = 0
 		for i in range(int(steps)):
 			self.root.after(125*i, self.droneStep)
-		
+
 
 
 	def updateDroneView(self, event=None):
@@ -389,13 +412,13 @@ class DisplayApp:
 
 		self.areaWidth = tk.IntVar(None)
 		self.entry5 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
-		self.entry5.insert(0, 2)
+		self.entry5.insert(0, 35)
 		self.entry5.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry5.pack(side = tk.TOP) # draw the entry form for area width
 
 		self.areaHeight = tk.IntVar(None)
 		self.entry6 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
-		self.entry6.insert(0, 2)
+		self.entry6.insert(0, 40)
 		self.entry6.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry6.pack(side = tk.TOP) # draw the entry form for area height
 

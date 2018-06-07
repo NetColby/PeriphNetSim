@@ -21,6 +21,7 @@ from .algorithms.naive_algorithm import NaiveAlgorithm
 from .targetArea import targetArea
 from .BaseStation import BaseStation
 from .agent import Agent
+from .Obstacle import Obstacle
 
 debug = False
 
@@ -78,6 +79,11 @@ class DisplayApp:
 
 		# build the Canvas
 		self.buildCanvas()
+
+		# Generating an initial obstacle
+		# self.obstacle = Obstacle(canvas=self.canvas) #Obstacle field
+		self.obstacle = Obstacle(500,300,100,100,canvas=self.canvas) #HARDCODED ONE JUST FOR TESTING
+
 
 		# bring the window to the front
 		self.root.lift()
@@ -152,25 +158,28 @@ class DisplayApp:
 		return
 
 	def createRandomDrone(self, event=None):
-		if not self.tareab :
-			x = random.gauss(self.initDx/2, self.initDx/15)
-			y = random.gauss(self.initDy/2, self.initDy/15)
-
-		# Outdated : too spreadout in the T.Area
-		# else:
-		# 	x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
-		# 	y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
-
-
-		else:
-
-			x = random.gauss(self.initDx/2, self.initDx/15)
-			while x < 450-(self.tarea.getTAwidth()/2) or x > 450+(self.tarea.getTAwidth()/2):
+		x = None
+		y = None
+		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
+			print("attempt to place drone")
+			if not self.tareab :
 				x = random.gauss(self.initDx/2, self.initDx/15)
-
-			y = random.gauss(self.initDy/2, self.initDy/15)
-			while y < 338-(self.tarea.getTAheight()/2) or y > 338+(self.tarea.getTAheight()/2):
 				y = random.gauss(self.initDy/2, self.initDy/15)
+
+			# Outdated : too spreadout in the T.Area
+			# else:
+			# 	x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
+			# 	y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
+
+
+			else:
+				x = random.gauss(self.initDx/2, self.initDx/15)
+				while x < 450-(self.tarea.getTAwidth()/2) or x > 450+(self.tarea.getTAwidth()/2):
+					x = random.gauss(self.initDx/2, self.initDx/15)
+
+				y = random.gauss(self.initDy/2, self.initDy/15)
+				while y < 338-(self.tarea.getTAheight()/2) or y > 338+(self.tarea.getTAheight()/2):
+					y = random.gauss(self.initDy/2, self.initDy/15)
 
 
 		self.createDrone(x, y)

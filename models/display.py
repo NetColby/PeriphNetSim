@@ -2,8 +2,6 @@
 #
 # CP Majgaard & Theo Satloff
 # January 2018
-# updated by Emmett Burns & Selim Hassairi
-# June 2018
 
 import getpass
 import math
@@ -102,6 +100,9 @@ class DisplayApp:
 		#field to keep track of how often to print statusMessages
 		self.iterations = 0
 
+		#holds the command line arguments from run.py
+		self.args = []
+
 	def buildMenus(self):
 
 		#---- Declare Menu Object ----#
@@ -163,7 +164,7 @@ class DisplayApp:
 		x = None
 		y = None
 		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
-			print("attempt to place drone")
+			#print("attempt to place drone")
 			if not self.tareab :
 				x = random.gauss(self.initDx/2, self.initDx/15)
 				y = random.gauss(self.initDy/2, self.initDy/15)
@@ -274,16 +275,22 @@ class DisplayApp:
 		self.updateDroneView()
 
 	def droneStep(self, event=None):
-		if self.iterations == 0:
+		steps = int(self.entry4.get())
+		frequency = self.interpretFrequency()
+		if self.iterations == 0 and frequency != 0:
 			self.statusMessage(True)
-		elif self.iterations%10 == 9:
-			self.statusMessage()
-		self.iterations += 1
 		for drone in self.drones:
 			drone.do_step()
 			#print(drone.get_battery_level())
 		#print("\n\n")
 		self.updateDroneView()
+
+		if frequency != 0:
+			if self.iterations%frequency == frequency-1:
+				self.statusMessage()
+			if frequency == 1 and self.iterations == steps:
+				self.statusMessage()
+			self.iterations += 1
 
 
 
@@ -334,6 +341,7 @@ class DisplayApp:
 	#prints the status of a simulation when in begins
 	#set numDrones to True when it becomes necessary to display the number of drones
 	def statusMessage(self, numDrones = False):
+		print("__________Status Message__________")
 		if numDrones:
 			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
 		print(str(self.numAliveDrones()) + " drones alive.")
@@ -342,7 +350,7 @@ class DisplayApp:
 			print("_________Drones_________")
 			for agent in self.drones:
 				if type(agent) is Drone:
-					print("Drone at " + str(agent.get_coords()))
+					print("Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()))
 		if(self.numBases() > 0):
 			print("______Base Stations______")
 			for agent in self.drones:
@@ -735,6 +743,22 @@ class DisplayApp:
 	# This is called if the right click mouse button is being moved
 	def handleMouseButton2Motion(self, event):
 		print('handle button2 motion')
+
+	#gets arguements from run.py which run.py gets from the command line
+	def getArgs(self, args):
+		self.args = args
+		print(self.args)
+
+
+	#interprets the frequency at which to print status updates to terminal
+	def interpretFrequency(self):
+		frequencyOfPrint = 10
+		if "-F" in self.args:
+			index = self.args.index("-F")
+			frequencyOfPrint = int(self.args[index + 1])
+		return frequencyOfPrint
+			
+			
 
 	def main(self):
 		print('Entering main loop')

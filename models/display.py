@@ -335,6 +335,18 @@ class DisplayApp:
 		if numDrones:
 			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
 		print(str(self.numAliveDrones()) + " drones alive.")
+		print("Average Energy Level: " + str(self.avgEnergyLevel()))
+		if(self.numDrones() > 0):
+			print("_________Drones_________")
+			for agent in self.drones:
+				if type(agent) is Drone:
+					print("Drone at " + str(agent.get_coords()))
+		if(self.numBases() > 0):
+			print("______Base Stations______")
+			for agent in self.drones:
+				if type(agent) is BaseStation:
+					print("Base Station at " + str(agent.get_coords()))
+		print("")
 
 
 	# return the average energy level of the drones
@@ -343,9 +355,25 @@ class DisplayApp:
 		if not self.drones:
 			return energy
 		for drone in self.drones:
-			if type(drone) is not BaseStation :
+			if type(drone) is Drone:
 				energy += drone.get_battery_level()
-		return energy/len(self.drones)
+		return energy/self.numDrones()
+
+	#returns the number of drones in the drones list
+	def numDrones(self):
+		numDrones = 0
+		for agent in self.drones:
+			if type(agent) is Drone:
+				numDrones += 1
+		return numDrones
+
+	#returns the number of Base Stations in the drones list
+	def numBases(self):
+		numBases = 0
+		for agent in self.drones:
+			if type(agent) is BaseStation:
+				numBases += 1
+		return numBases
 
 	# update the statistic panel
 	def updateStatisticPanel(self, event=None):

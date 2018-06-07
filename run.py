@@ -1,4 +1,7 @@
 from models import display
+import sys
+
+print(str(sys.argv))
 
 
 # Variable initialization (relevant)
@@ -70,4 +73,5 @@ print('______________________________________')
 
 # dapp = display.DisplayApp(1200, 675, numdrones, coordinatesList, tareaboolean, tareaWidth, tareaHeight)
 dapp = display.DisplayApp(1200, 675)
+dapp.getArgs(sys.argv)
 dapp.main()

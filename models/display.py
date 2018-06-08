@@ -18,6 +18,7 @@ import time
 from .drone import Drone
 from .config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
+from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
 from .targetArea import targetArea
 from .BaseStation import BaseStation
 from .agent import Agent
@@ -188,7 +189,7 @@ class DisplayApp:
 		self.createDrone(x, y)
 		return
 
-	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithm, event=None):
+	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
@@ -203,7 +204,7 @@ class DisplayApp:
 
 
 
-	def createBaseStation(self, dx=None, algorithm=NaiveAlgorithm, event=None):
+	def createBaseStation(self, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
 			dx = self.droneSize/2
 		x = int(self.entry5.get())
@@ -271,7 +272,7 @@ class DisplayApp:
 			self.updateDroneView()
 
 	def droneStepSingle(self, event=None):
-		self.selectedDrone.do_step()
+		self.selectedDrone.do_step(self.obstacle)
 		self.updateDroneView()
 
 	def droneStep(self, event=None):
@@ -280,7 +281,7 @@ class DisplayApp:
 		if self.iterations == 0 and frequency != 0:
 			self.statusMessage(True)
 		for drone in self.drones:
-			drone.do_step()
+			drone.do_step(self.obstacle)
 			#print(drone.get_battery_level())
 		#print("\n\n")
 		self.updateDroneView()
@@ -757,8 +758,8 @@ class DisplayApp:
 			index = self.args.index("-F")
 			frequencyOfPrint = int(self.args[index + 1])
 		return frequencyOfPrint
-			
-			
+
+
 
 	def main(self):
 		print('Entering main loop')

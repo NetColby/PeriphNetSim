@@ -20,11 +20,6 @@ class Drone(BaseStation):
 
     def move(self, x, y):
         # move drone object by unit vector in direction x/y
-        magnitude = math.hypot(x, y)
-
-        x = x/magnitude
-        y = y/magnitude
-
         self.canvas.move(self.get_pt(), x, y)
         self.set_coords(self.x + x, self.y + y)
         self.battery_level -= self.algorithm_provider.config.move_consumption
@@ -42,6 +37,6 @@ class Drone(BaseStation):
     def isDead(self):
         return self.dead
 
-    def do_step(self):
+    def do_step(self,obstacle):
         if not self.dead:
-            self.algorithm_provider.run(self)
+            self.algorithm_provider.run(self,obstacle)

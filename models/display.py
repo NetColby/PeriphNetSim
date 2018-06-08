@@ -103,6 +103,9 @@ class DisplayApp:
 
 		#holds the command line arguments from run.py
 		self.args = []
+		
+		#holds the initial starting statistics to be added to the output file
+		initialOuput = ""
 
 	def buildMenus(self):
 
@@ -278,12 +281,14 @@ class DisplayApp:
 	def droneStep(self, event=None):
 		steps = int(self.entry4.get())
 		frequency = self.interpretFrequency()
-		if self.iterations == 0 and frequency != 0:
-			self.statusMessage(True)
+		if self.iterations == 0:
+			#print(self.statsToOutputFile())
+			self.initialStats = self.statsToOutputFile()
+			if frequency != 0:
+				self.statusMessage(True)
 		for drone in self.drones:
-			drone.do_step(self.obstacle)
+			drone.do_step()
 			#print(drone.get_battery_level())
-		#print("\n\n")
 		self.updateDroneView()
 
 		if frequency != 0:
@@ -291,10 +296,11 @@ class DisplayApp:
 				self.statusMessage()
 			if frequency == 1 and self.iterations == steps:
 				self.statusMessage()
+			if self.iterations == steps-1:
+				self.statsToOutputFile(self.initialStats)
 			self.iterations += 1
 
-
-
+			
 	def multiStep(self, event=None):
 		steps = self.entry4.get()
 		self.iterations = 0
@@ -342,7 +348,10 @@ class DisplayApp:
 	#prints the status of a simulation when in begins
 	#set numDrones to True when it becomes necessary to display the number of drones
 	def statusMessage(self, numDrones = False):
-		print("__________Status Message__________")
+		if self.iterations == 0: 
+			print("__________Status Message(after " + str(self.iterations) + " steps)__________")
+		else: 
+			print("__________Status Message(after " + str(self.iterations + 1) + " steps)__________")
 		if numDrones:
 			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
 		print(str(self.numAliveDrones()) + " drones alive.")
@@ -358,6 +367,33 @@ class DisplayApp:
 				if type(agent) is BaseStation:
 					print("Base Station at " + str(agent.get_coords()))
 		print("")
+
+	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats
+	def statsToOutputFile(self, initialStats = None):
+		stats = ""
+		if initialStats == None:
+			stats = "__________Before Simulation__________\nTotal Drones:  " + str(self.numDrones()) + "\n" 
+		else:
+			stats = initialStats
+			stats += "\n\n__________After Simulation(" + str(self.iterations + 1) +" steps)__________\nTotal Drones:  " + str(self.numDrones()) + "\n" 
+		stats += "Alive Drones: " + str(self.numAliveDrones()) + "\n"
+		if(self.numDrones() > 0):
+			stats += ("\nDrones:\n")
+			for agent in self.drones:
+				if type(agent) is Drone:
+					stats += "Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()) + "\n"
+		if(self.numBases() > 0):
+			stats += "\nBase Stations:\n"
+			for agent in self.drones:
+				if type(agent) is BaseStation:
+					stats += "Base Station at " + str(agent.get_coords()) + "\n"
+		if initialStats == None:
+			return stats
+	#self.initialOuput += stats
+		if initialStats != None:
+			text_file = open("Output.txt", "w")
+			text_file.write("%s" % stats)
+			text_file.close()
 
 
 	# return the average energy level of the drones

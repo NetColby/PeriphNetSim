@@ -287,7 +287,7 @@ class DisplayApp:
 			if frequency != 0:
 				self.statusMessage(True)
 		for drone in self.drones:
-			drone.do_step()
+			drone.do_step(self.obstacle)
 			#print(drone.get_battery_level())
 		self.updateDroneView()
 

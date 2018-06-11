@@ -21,7 +21,7 @@ class Obstacle(Area):
     # Check if a set of coordinates falls into the Obstacle or not
     def inObstacle(self, x, y) :
        if (x>self.x-(self.w/2) and x<self.x+(self.w/2)) and (y>self.y-(self.h/2) and y<self.y+(self.h/2)):
-           print("Agent is in Obstacle")
+           #print("Agent is in Obstacle")
            return True
        else :
            return False

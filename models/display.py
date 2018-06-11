@@ -110,16 +110,19 @@ class DisplayApp:
 		self.args = []
 
 		#holds the initial starting statistics to be added to the output file
-		initialOuput = ""
-
-		#hold the number of steps to be used when the runWithoutGUI method is used
-		self.steps = None
+		self.initialOuput = ""
 
 		#holds whether or not to print to an output file
 		self.output = False
 
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
+
+		#hold the number of steps to be used when the runWithoutGUI method is used
+		self.steps = None
+		if not gui:
+			self.steps = steps
+
 
 		#fields from input file
 		self.inputDrones = numdrones
@@ -885,7 +888,6 @@ class DisplayApp:
 
 	#runs multiple rapid iterations of the same simulation to gather data
 	def runWithoutGUI(self, iterations):
-		self.steps = self.interpretSteps()
 		cumulativeEnergy = 0
 		cumulativeAlive = 0
 		cumulativeTotalDrones = 0

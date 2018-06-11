@@ -98,7 +98,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 
 			cte = 2
 			while obstacle.inObstacle(drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude) :
-				print("stuck here")
+				#print("stuck here")
 				avx = random.random()*cte - cte/2
 				avy = random.random()*cte - cte/2
 

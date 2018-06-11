@@ -15,7 +15,7 @@ class targetArea(Area):
         Area.__init__(self, 450,338,w,h, canvas)
         self.rect = self.canvas.create_rectangle(
             450-(w/2),338+(h/2),450+(w/2),338-(h/2),
-            outline = TAREABORDER, fill = TAREA, width= 4)
+            outline = TAREABORDER, width= 4)
 
     def getTAwidth(self) :
         return Area.getAwidth(self)

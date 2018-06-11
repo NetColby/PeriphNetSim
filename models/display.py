@@ -36,8 +36,10 @@ BASESTATIONCLR = "#004C99"
 # create a class to build and manage the display
 class DisplayApp:
 
-	def __init__(self, width, height):
-
+	def __init__(self, width, height, numdrones=None,
+				dronescoordinatesList=None, numbasestation=None,
+				basestationcoordinatesList=None, tareaboolean=None,
+				tareaWidth=None, tareaHeight=None, steps=None):
 		# create a tk object, which is the root window
 		self.root = tk.Tk()
 		self.root.configure(background='#161616')
@@ -103,7 +105,7 @@ class DisplayApp:
 
 		#holds the command line arguments from run.py
 		self.args = []
-		
+
 		#holds the initial starting statistics to be added to the output file
 		initialOuput = ""
 
@@ -112,6 +114,42 @@ class DisplayApp:
 
 		#holds whether or not to print to an output file
 		self.output = False
+
+		# Set up and run the simulation from the file settings
+		if numdrones != None :
+			self.setUpSimulation(numdrones, dronescoordinatesList,
+			numbasestation, basestationcoordinatesList, tareaboolean,
+			tareaWidth, tareaHeight, steps)
+
+
+	# Set up and run the simulation from the file settings
+	def setUpSimulation(self,numdrones, dronescoordinatesList, numbasestation,
+	basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps ) :
+
+		# Target Area Generator
+		if tareaboolean :
+			self.createTargetArea(tareaWidth, tareaHeight)
+
+		# Generate drones, both specified and random
+		for coords in dronescoordinatesList:
+			self.createDrone(coords[0], coords[1])
+
+		if numdrones != len(dronescoordinatesList) :
+			for i in range(numdrones - len(dronescoordinatesList)):
+				self.createRandomDrone()
+
+		# Generate Base Stations, both specified and random
+		for coords in basestationcoordinatesList:
+			self.createBaseStation(coords[0], coords[1])
+
+		if numbasestation != len(basestationcoordinatesList):
+			for i in range(numbasestation - len(basestationcoordinatesList)) :
+				pass
+
+		# Run the simulation
+		self.multiStep(steps)
+
+
 
 	def buildMenus(self):
 
@@ -213,11 +251,12 @@ class DisplayApp:
 
 
 
-	def createBaseStation(self, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
 			dx = self.droneSize/2
-		x = int(self.entry5.get())
-		y = int(self.entry6.get())
+		if x == None and y == None:
+			x = int(self.entry5.get())
+			y = int(self.entry6.get())
 
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=BASESTATIONCLR, outline='')
 		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt, algorithm(self.config, self.drones))
@@ -231,13 +270,15 @@ class DisplayApp:
 
 
 
-	def createTargetArea(self, event=None):
+	def createTargetArea(self, w=None, h=None, event=None):
 		self.tareab = True
-		w = int(self.entry2.get())
-		h = int(self.entry3.get())
+		if w == None and h == None:
+			w = int(self.entry2.get())
+			h = int(self.entry3.get())
 		# print("w is " + w + " type " + str(type(w)))
 		self.tarea = targetArea(w,h,self.canvas)
 		return
+
 
 	def clearData(self, event=None):
 		for drone in self.drones:
@@ -292,7 +333,7 @@ class DisplayApp:
 	#returning a tuple to be used for data analysis
 	def droneStep(self, event=None, returnStats=False):
 		if self.steps == None:
-			steps = self.entry4.get()
+			steps = int(self.entry4.get())
 		else:
 			steps = self.steps
 		frequency = self.interpretFrequency()
@@ -318,7 +359,7 @@ class DisplayApp:
 		if returnStats:
 			return (self.avgEnergyLevel(), self.numAliveDrones(), self.numDrones(), self.numBases())
 
-			
+
 	def multiStep(self, event=None):
 		#with GUI
 		self.iterations = 0
@@ -333,7 +374,7 @@ class DisplayApp:
 				#if statement makes code more efficient by only updating tuple during final iteration
 				if i+1 != self.steps:
 					self.droneStep()
-				else: 
+				else:
 					(energy, alive, totalDrones, totalBases) = self.droneStep(None, True)
 			return (energy, alive, totalDrones, totalBases)
 
@@ -377,9 +418,9 @@ class DisplayApp:
 	#prints the status of a simulation when in begins
 	#set numDrones to True when it becomes necessary to display the number of drones
 	def statusMessage(self, numDrones = False):
-		if self.iterations == 0: 
+		if self.iterations == 0:
 			print("__________Status Message(after " + str(self.iterations) + " steps)__________")
-		else: 
+		else:
 			print("__________Status Message(after " + str(self.iterations + 1) + " steps)__________")
 		if numDrones:
 			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
@@ -401,10 +442,10 @@ class DisplayApp:
 	def statsToOutputFile(self, initialStats = None):
 		stats = ""
 		if initialStats == None:
-			stats = "__________Before Simulation__________\nTotal Drones:  " + str(self.numDrones()) + "\n" 
+			stats = "__________Before Simulation__________\nTotal Drones:  " + str(self.numDrones()) + "\n"
 		else:
 			stats = initialStats
-			stats += "\n\n__________After Simulation(" + str(self.iterations + 1) +" steps)__________\nTotal Drones:  " + str(self.numDrones()) + "\n" 
+			stats += "\n\n__________After Simulation(" + str(self.iterations + 1) +" steps)__________\nTotal Drones:  " + str(self.numDrones()) + "\n"
 		stats += "Alive Drones: " + str(self.numAliveDrones()) + "\n"
 		if(self.numDrones() > 0):
 			stats += ("\nDrones:\n")

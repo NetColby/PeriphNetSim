@@ -39,7 +39,7 @@ class DisplayApp:
 	def __init__(self, width, height, numdrones=None,
 				dronescoordinatesList=None, numbasestation=None,
 				basestationcoordinatesList=None, tareaboolean=None,
-				tareaWidth=None, tareaHeight=None, steps=None):
+				tareaWidth=None, tareaHeight=None, steps=None, gui=True):
 		# create a tk object, which is the root window
 		self.root = tk.Tk()
 		self.root.configure(background='#161616')
@@ -115,8 +115,21 @@ class DisplayApp:
 		#holds whether or not to print to an output file
 		self.output = False
 
-		# Set up and run the simulation from the file settings
-		if numdrones != None :
+		#field that holds whether or not to run the simulation without the GUI
+		self.gui = gui
+
+		#fields from input file
+		self.inputDrones = numdrones 
+		self.inputDroneCoords = dronescoordinatesList
+		self.inputBaaseStations = numbasestation
+		self.inputBaseStationCoords = basestationcoordinatesList
+		self.inputTargetAreaBoolean = tareaboolean
+		self.inputTargetWidth = tareaWidth
+		self.inputTargetHeight = tareaHeight
+		self.inputSteps = steps
+
+		#Set up and run the simulation from the file settings
+		if numdrones != None and self.gui:
 			self.setUpSimulation(numdrones, dronescoordinatesList,
 			numbasestation, basestationcoordinatesList, tareaboolean,
 			tareaWidth, tareaHeight, steps)
@@ -147,7 +160,8 @@ class DisplayApp:
 				pass
 
 		# Run the simulation
-		self.multiStep(steps)
+		if self.gui:
+			self.multiStep(steps)
 
 
 
@@ -867,15 +881,14 @@ class DisplayApp:
 		print(self.args)
 
 	#runs multiple rapid iterations of the same simulation to gather data
-	def runWithoutGUI(self, iterations, num_drones):
+	def runWithoutGUI(self, iterations):
 		self.steps = self.interpretSteps()
 		cumulativeEnergy = 0
 		cumulativeAlive = 0
 		cumulativeTotalDrones = 0
 		cumulativeBases = 0
 		for i in range(iterations):
-			for i in range(num_drones):
-				self.createRandomDrone()
+			self.setUpSimulation(self.inputDrones, self.inputDroneCoords, self.inputBaaseStations, self.inputBaseStationCoords, self.inputTargetAreaBoolean, self.inputTargetWidth, self.inputTargetHeight, self.inputSteps)
 			(energy, alive, totDrones, totBases) = self.multiStep()
 			(cumulativeEnergy, cumulativeAlive, cumulativeTotalDrones, cumulativeBases) = (cumulativeEnergy + energy, cumulativeAlive + alive, cumulativeTotalDrones + totDrones, cumulativeBases + totBases)
 			self.clearData()
@@ -883,7 +896,7 @@ class DisplayApp:
 		averageAlive = cumulativeAlive/iterations
 		avergageTotalDrones = cumulativeTotalDrones/iterations
 		averageTotalBases = cumulativeBases/iterations
-		output = str(iterations) + " simulations were run with " + str(num_drones) + " drones.\n\n"
+		output = str(iterations) + " simulations were run with " + "ADD IN LATER" + " drones.\n\n"
 		output += "____________Statistics After " + str(self.steps) + " Steps__________\n"
 		output += "Average Energy Level: " + str(avgEnergy) + "\nAverage Number of Live Drones: " + str(averageAlive) + "\n"
 		output += "Number of Drones: " + str(avergageTotalDrones) + "\nNumber of Base Stations: " + str(averageTotalBases)
@@ -907,6 +920,12 @@ class DisplayApp:
 			index = self.args.index("-S")
 			numberOfSteps = int(self.args[index + 1])
 		return numberOfSteps
+
+	#interpretes whether or not to run the GUI
+	def interpretGUI():
+		if "-W" in self.args:
+			index = self.args.index("-W")
+			self.gui = False
 
 	def main(self):
 		print('Entering main loop')

@@ -1,3 +1,11 @@
+# Drone Simluator
+#
+# CP Majgaard & Theo Satloff
+# January 2018
+
+# Updated by Emmett Burns and Selim Hassairi
+#June 2018
+
 from models import display
 import sys
 
@@ -115,7 +123,7 @@ gui = True
 #interpretes whether or not to run the GUI
 if "-W" in sys.argv:
     gui = False
-            
+
 dapp = display.DisplayApp(1200, 675, numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps, gui)
 # dapp = display.DisplayApp(1200, 675)
 dapp.getArgs(sys.argv)

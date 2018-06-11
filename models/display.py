@@ -14,11 +14,15 @@ import tkinter.simpledialog
 import itertools
 import time
 
+
 from .drone import Drone
 from .config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
+from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
 from .targetArea import targetArea
 from .BaseStation import BaseStation
+from .agent import Agent
+from .Obstacle import Obstacle
 
 debug = False
 
@@ -32,7 +36,10 @@ BASESTATIONCLR = "#004C99"
 # create a class to build and manage the display
 class DisplayApp:
 
-	def __init__(self, width, height):
+	def __init__(self, width, height, numdrones=None,
+				dronescoordinatesList=None, numbasestation=None,
+				basestationcoordinatesList=None, tareaboolean=None,
+				tareaWidth=None, tareaHeight=None, steps=None):
 
 		# create a tk object, which is the root window
 		self.root = tk.Tk()
@@ -77,6 +84,11 @@ class DisplayApp:
 		# build the Canvas
 		self.buildCanvas()
 
+		# Generating an initial obstacle
+		# self.obstacle = Obstacle(canvas=self.canvas) #Obstacle field
+		self.obstacle = Obstacle(500,300,100,100,canvas=self.canvas) #HARDCODED ONE JUST FOR TESTING
+
+
 		# bring the window to the front
 		self.root.lift()
 
@@ -86,9 +98,50 @@ class DisplayApp:
 		# set up the key bindings
 		self.setBindings()
 
+		#sets selected drone to None
+		self.selectedDrone = None
+
+		#field to keep track of how often to print statusMessages
+		self.iterations = 0
+
+		#holds the command line arguments from run.py
+		self.args = []
+
+		# Set up and run the simulation from the file settings
+		if numdrones != None :
+			self.setUpSimulation(numdrones, dronescoordinatesList,
+			numbasestation, basestationcoordinatesList, tareaboolean,
+			tareaWidth, tareaHeight, steps)
+
+
+	# Set up and run the simulation from the file settings
+	def setUpSimulation(self,numdrones, dronescoordinatesList, numbasestation,
+	basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps ) :
+
+		# Target Area Generator
+		if tareaboolean :
+			self.createTargetArea(tareaWidth, tareaHeight)
+
+		# Generate drones, both specified and random
+		for coords in dronescoordinatesList:
+			self.createDrone(coords[0], coords[1])
+
+		if numdrones != len(dronescoordinatesList) :
+			for i in range(numdrones - len(dronescoordinatesList)):
+				self.createRandomDrone()
+
+		# Generate Base Stations, both specified and random
+		for coords in basestationcoordinatesList:
+			self.createBaseStation(coords[0], coords[1])
+
+		if numbasestation != len(basestationcoordinatesList):
+			for i in range(numbasestation - len(basestationcoordinatesList)) :
+				pass
+
+		# Run the simulation
+		self.multiStep(steps)
 
 	def buildMenus(self):
-
 		#---- Declare Menu Object ----#
 		# create a new menu object
 		menu = tk.Menu(self.root)
@@ -145,18 +198,34 @@ class DisplayApp:
 		return
 
 	def createRandomDrone(self, event=None):
-		if not self.tareab :
-			x = random.gauss(self.initDx/2, self.initDx/15)
-			y = random.gauss(self.initDy/2, self.initDy/15)
+		x = None
+		y = None
+		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
+			#print("attempt to place drone")
+			if not self.tareab :
+				x = random.gauss(self.initDx/2, self.initDx/15)
+				y = random.gauss(self.initDy/2, self.initDy/15)
 
-		else:
-			x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
-			y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
+			# Outdated : too spreadout in the T.Area
+			# else:
+			# 	x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
+			# 	y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
+
+
+			else:
+				x = random.gauss(self.initDx/2, self.initDx/15)
+				while x < 450-(self.tarea.getTAwidth()/2) or x > 450+(self.tarea.getTAwidth()/2):
+					x = random.gauss(self.initDx/2, self.initDx/15)
+
+				y = random.gauss(self.initDy/2, self.initDy/15)
+				while y < 338-(self.tarea.getTAheight()/2) or y > 338+(self.tarea.getTAheight()/2):
+					y = random.gauss(self.initDy/2, self.initDy/15)
+
 
 		self.createDrone(x, y)
 		return
 
-	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithm, event=None):
+	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
@@ -171,14 +240,15 @@ class DisplayApp:
 
 
 
-	def createBaseStation(self, dx=None, algorithm=NaiveAlgorithm, event=None):
+	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
 			dx = self.droneSize/2
-		x = int(self.entry5.get())
-		y = int(self.entry6.get())
+		if x == None and y == None:
+			x = int(self.entry5.get())
+			y = int(self.entry6.get())
 
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=BASESTATIONCLR, outline='')
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt, algorithm(self.config, self.drones))
 		self.drones.append(baseStation)
 
 		self.updateDroneView()
@@ -189,10 +259,11 @@ class DisplayApp:
 
 
 
-	def createTargetArea(self, event=None):
+	def createTargetArea(self, w=None, h=None, event=None):
 		self.tareab = True
-		w = int(self.entry2.get())
-		h = int(self.entry3.get())
+		if w == None and h == None:
+			w = int(self.entry2.get())
+			h = int(self.entry3.get())
 		# print("w is " + w + " type " + str(type(w)))
 		self.tarea = targetArea(w,h,self.canvas)
 		return
@@ -206,9 +277,12 @@ class DisplayApp:
 			self.canvas.delete(line)
 		self.lines = []
 
-		self.canvas.delete(self.tarea.getRect())
-		self.tareab = False
+		if self.tareab:
+			self.canvas.delete(self.tarea.getRect())
+			self.tareab = False
 
+		self.updateStatisticPanel()
+		self.updateDroneView()
 
 		text = "Cleared the screen"
 		self.status.set(text)
@@ -216,36 +290,57 @@ class DisplayApp:
 		return
 
 	def moveDroneUp(self, event=None):
-		self.selectedDrone.move(0, -1)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(0, -1)
+			self.updateDroneView()
 
 	def moveDroneLeft(self, event=None):
-		self.selectedDrone.move(-1, 0)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(-1, 0)
+			self.updateDroneView()
 
 	def moveDroneRight(self, event=None):
-		self.selectedDrone.move(1, 0)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(1, 0)
+			self.updateDroneView()
 
 	def moveDroneDown(self, event=None):
-		self.selectedDrone.move(0, 1)
-		self.updateDroneView()
+		if self.selectedDrone:
+			self.selectedDrone.move(0, 1)
+			self.updateDroneView()
 
 	def droneStepSingle(self, event=None):
-		self.selectedDrone.do_step()
+		self.selectedDrone.do_step(self.obstacle)
 		self.updateDroneView()
 
 	def droneStep(self, event=None):
+		steps = int(self.entry4.get())
+		frequency = self.interpretFrequency()
+		if self.iterations == 0 and frequency != 0:
+			self.statusMessage(True)
 		for drone in self.drones:
-			drone.do_step()
+			drone.do_step(self.obstacle)
 			#print(drone.get_battery_level())
 		#print("\n\n")
 		self.updateDroneView()
 
-	def multiStep(self, event=None):
-	  steps = self.entry4.get()
-	  for i in range(int(steps)):
-	   self.root.after(125*i, self.droneStep)
+		if frequency != 0:
+			if self.iterations%frequency == frequency-1:
+				self.statusMessage()
+			if frequency == 1 and self.iterations == steps:
+				self.statusMessage()
+			self.iterations += 1
+
+
+
+	def multiStep(self, steps=None, event=None):
+		if steps==None:
+			steps = self.entry4.get()
+		self.iterations = 0
+		for i in range(int(steps)):
+			self.root.after(125*i, self.droneStep)
+
+
 
 	def updateDroneView(self, event=None):
 		self.updateStatisticPanel()
@@ -279,9 +374,30 @@ class DisplayApp:
 		if not self.drones:
 			return num
 		for drone in self.drones:
-			if drone.get_battery_level() > 0:
+			if type(drone) is Drone and not drone.isDead():
 				num += 1
 		return num
+
+	#prints the status of a simulation when in begins
+	#set numDrones to True when it becomes necessary to display the number of drones
+	def statusMessage(self, numDrones = False):
+		print("__________Status Message__________")
+		if numDrones:
+			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
+		print(str(self.numAliveDrones()) + " drones alive.")
+		print("Average Energy Level: " + str(self.avgEnergyLevel()))
+		if(self.numDrones() > 0):
+			print("_________Drones_________")
+			for agent in self.drones:
+				if type(agent) is Drone:
+					print("Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()))
+		if(self.numBases() > 0):
+			print("______Base Stations______")
+			for agent in self.drones:
+				if type(agent) is BaseStation:
+					print("Base Station at " + str(agent.get_coords()))
+		print("")
+
 
 	# return the average energy level of the drones
 	def avgEnergyLevel(self):
@@ -289,9 +405,25 @@ class DisplayApp:
 		if not self.drones:
 			return energy
 		for drone in self.drones:
-			if type(drone) != "<class 'models.BaseStation.BaseStation'>" :
+			if type(drone) is Drone:
 				energy += drone.get_battery_level()
-		return energy/len(self.drones)
+		return energy/self.numDrones()
+
+	#returns the number of drones in the drones list
+	def numDrones(self):
+		numDrones = 0
+		for agent in self.drones:
+			if type(agent) is Drone:
+				numDrones += 1
+		return numDrones
+
+	#returns the number of Base Stations in the drones list
+	def numBases(self):
+		numBases = 0
+		for agent in self.drones:
+			if type(agent) is BaseStation:
+				numBases += 1
+		return numBases
 
 	# update the statistic panel
 	def updateStatisticPanel(self, event=None):
@@ -358,13 +490,13 @@ class DisplayApp:
 
 		self.areaWidth = tk.IntVar(None)
 		self.entry5 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
-		self.entry5.insert(0, 2)
+		self.entry5.insert(0, 35)
 		self.entry5.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry5.pack(side = tk.TOP) # draw the entry form for area width
 
 		self.areaHeight = tk.IntVar(None)
 		self.entry6 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
-		self.entry6.insert(0, 2)
+		self.entry6.insert(0, 40)
 		self.entry6.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry6.pack(side = tk.TOP) # draw the entry form for area height
 
@@ -420,26 +552,30 @@ class DisplayApp:
 		label = tk.Label( rightcntlframe, text="Adjust Selected Drone Loc", width=20, fg = FONTCOLOR )
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
+		#creating a blank label to take up space for the location table
+		label = tk.Label( rightcntlframe, text="", width=20, fg = FONTCOLOR )
+		label.configure(background=FRAMECOLOR)
+		label.pack( side=tk.TOP, pady=30 )
 
 		#---- Up ----#
-		droneUp = tk.Button( rightcntlframe, text="Move Drone Up", command=self.moveDroneUp )
+		droneUp = tk.Button( rightcntlframe, text="Up", command=self.moveDroneUp )
 		droneUp.configure(highlightbackground=FRAMECOLOR)
-		droneUp.pack(side=tk.TOP)
+		droneUp.place(x=60, y=405)
 
 		#---- Left ----#
-		droneLeft = tk.Button( rightcntlframe, text="Move Drone Left", command=self.moveDroneLeft )
+		droneLeft = tk.Button( rightcntlframe, text="Left", command=self.moveDroneLeft )
 		droneLeft.configure(highlightbackground=FRAMECOLOR)
-		droneLeft.pack(side=tk.TOP)
+		droneLeft.place(x=28, y=435)
 
 		#---- Down ----#
-		droneDown = tk.Button( rightcntlframe, text="Move Drone Down", command=self.moveDroneDown )
+		droneDown = tk.Button( rightcntlframe, text="Down", command=self.moveDroneDown )
 		droneDown.configure(highlightbackground=FRAMECOLOR)
-		droneDown.pack(side=tk.TOP)
+		droneDown.place(x=53, y=465)
 
 		#---- Right ----#
-		droneRight = tk.Button( rightcntlframe, text="Move Drone Right", command=self.moveDroneRight )
+		droneRight = tk.Button( rightcntlframe, text="Right", command=self.moveDroneRight )
 		droneRight.configure(highlightbackground=FRAMECOLOR)
-		droneRight.pack(side=tk.TOP)
+		droneRight.place(x=87, y=435)
 
 		#---- Run Simulation Label ----#
 		# use a label to set the size of the right panel
@@ -612,7 +748,7 @@ class DisplayApp:
 			text = "No point at %sx%s" % (event.x, event.y)
 			self.status.set(text)
 
-		#print('handle mouse button 1: %d %d' % (event.x, event.y))
+		print('handle mouse button 1: %d %d' % (event.x, event.y))
 		self.baseClick = (event.x, event.y)
 
 	def handleMouseButton2(self, event):
@@ -642,11 +778,27 @@ class DisplayApp:
 		text = 'X-Position: %s	  Y-Position: %s' % (event.x, event.y) # print the x and y coordinates of the mouse motion in frame
 		self.mouse1coord.set(text)
 
-		print('handle button1 motion %d %d' % (diff[0], diff[1]))
+		#print('handle button1 motion %d %d' % (diff[0], diff[1]))
 
 	# This is called if the right click mouse button is being moved
 	def handleMouseButton2Motion(self, event):
 		print('handle button2 motion')
+
+	#gets arguements from run.py which run.py gets from the command line
+	def getArgs(self, args):
+		self.args = args
+		print(self.args)
+
+
+	#interprets the frequency at which to print status updates to terminal
+	def interpretFrequency(self):
+		frequencyOfPrint = 10
+		if "-F" in self.args:
+			index = self.args.index("-F")
+			frequencyOfPrint = int(self.args[index + 1])
+		return frequencyOfPrint
+
+
 
 	def main(self):
 		print('Entering main loop')

@@ -3,6 +3,9 @@
 # CP Majgaard & Theo Satloff
 # January 2018
 
+# Updated by Emmett Burns and Selim Hassairi
+#June 2018
+
 import getpass
 import math
 import os
@@ -119,7 +122,7 @@ class DisplayApp:
 		self.gui = gui
 
 		#fields from input file
-		self.inputDrones = numdrones 
+		self.inputDrones = numdrones
 		self.inputDroneCoords = dronescoordinatesList
 		self.inputBaaseStations = numbasestation
 		self.inputBaseStationCoords = basestationcoordinatesList

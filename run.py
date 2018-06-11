@@ -110,10 +110,16 @@ if tareaboolean :
 print("~ Running the simulation for a number of   : " + str(steps) + " steps")
 print('______________________________________')
 
-
-
-
-dapp = display.DisplayApp(1200, 675, numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps)
+#determines whether or not the GUI should run
+gui = True
+#interpretes whether or not to run the GUI
+if "-W" in sys.argv:
+    gui = False
+            
+dapp = display.DisplayApp(1200, 675, numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps, gui)
 # dapp = display.DisplayApp(1200, 675)
 dapp.getArgs(sys.argv)
-dapp.main()
+if gui:
+    dapp.main()
+else:
+    dapp.runWithoutGUI(10)

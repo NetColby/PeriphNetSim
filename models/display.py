@@ -36,10 +36,7 @@ BASESTATIONCLR = "#004C99"
 # create a class to build and manage the display
 class DisplayApp:
 
-	def __init__(self, width, height, numdrones=None,
-				dronescoordinatesList=None, numbasestation=None,
-				basestationcoordinatesList=None, tareaboolean=None,
-				tareaWidth=None, tareaHeight=None, steps=None):
+	def __init__(self, width, height):
 
 		# create a tk object, which is the root window
 		self.root = tk.Tk()
@@ -106,42 +103,18 @@ class DisplayApp:
 
 		#holds the command line arguments from run.py
 		self.args = []
+		
+		#holds the initial starting statistics to be added to the output file
+		initialOuput = ""
 
-		# Set up and run the simulation from the file settings
-		if numdrones != None :
-			self.setUpSimulation(numdrones, dronescoordinatesList,
-			numbasestation, basestationcoordinatesList, tareaboolean,
-			tareaWidth, tareaHeight, steps)
+		#hold the number of steps to be used when the runWithoutGUI method is used
+		self.steps = None
 
-
-	# Set up and run the simulation from the file settings
-	def setUpSimulation(self,numdrones, dronescoordinatesList, numbasestation,
-	basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps ) :
-
-		# Target Area Generator
-		if tareaboolean :
-			self.createTargetArea(tareaWidth, tareaHeight)
-
-		# Generate drones, both specified and random
-		for coords in dronescoordinatesList:
-			self.createDrone(coords[0], coords[1])
-
-		if numdrones != len(dronescoordinatesList) :
-			for i in range(numdrones - len(dronescoordinatesList)):
-				self.createRandomDrone()
-
-		# Generate Base Stations, both specified and random
-		for coords in basestationcoordinatesList:
-			self.createBaseStation(coords[0], coords[1])
-
-		if numbasestation != len(basestationcoordinatesList):
-			for i in range(numbasestation - len(basestationcoordinatesList)) :
-				pass
-
-		# Run the simulation
-		self.multiStep(steps)
+		#holds whether or not to print to an output file
+		self.output = False
 
 	def buildMenus(self):
+
 		#---- Declare Menu Object ----#
 		# create a new menu object
 		menu = tk.Menu(self.root)
@@ -240,12 +213,11 @@ class DisplayApp:
 
 
 
-	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+	def createBaseStation(self, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
 			dx = self.droneSize/2
-		if x == None and y == None:
-			x = int(self.entry5.get())
-			y = int(self.entry6.get())
+		x = int(self.entry5.get())
+		y = int(self.entry6.get())
 
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=BASESTATIONCLR, outline='')
 		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt, algorithm(self.config, self.drones))
@@ -259,11 +231,10 @@ class DisplayApp:
 
 
 
-	def createTargetArea(self, w=None, h=None, event=None):
+	def createTargetArea(self, event=None):
 		self.tareab = True
-		if w == None and h == None:
-			w = int(self.entry2.get())
-			h = int(self.entry3.get())
+		w = int(self.entry2.get())
+		h = int(self.entry3.get())
 		# print("w is " + w + " type " + str(type(w)))
 		self.tarea = targetArea(w,h,self.canvas)
 		return
@@ -286,7 +257,7 @@ class DisplayApp:
 
 		text = "Cleared the screen"
 		self.status.set(text)
-		print('Cleared the screen')
+		#print('Cleared the screen')
 		return
 
 	def moveDroneUp(self, event=None):
@@ -313,15 +284,27 @@ class DisplayApp:
 		self.selectedDrone.do_step(self.obstacle)
 		self.updateDroneView()
 
-	def droneStep(self, event=None):
-		steps = int(self.entry4.get())
+	#sorry that this method is a mess
+	#this is reponsibe for:
+	#putting the drones through one iteration
+	#outputting updates to the terminal
+	#saving an output file of statistics when necessary
+	#returning a tuple to be used for data analysis
+	def droneStep(self, event=None, returnStats=False):
+		if self.steps == None:
+			steps = self.entry4.get()
+		else:
+			steps = self.steps
 		frequency = self.interpretFrequency()
-		if self.iterations == 0 and frequency != 0:
-			self.statusMessage(True)
+		if self.iterations == 0:
+			#print(self.statsToOutputFile())
+			if self.output:
+				self.initialStats = self.statsToOutputFile()
+			if frequency != 0:
+				self.statusMessage(True)
 		for drone in self.drones:
 			drone.do_step(self.obstacle)
 			#print(drone.get_battery_level())
-		#print("\n\n")
 		self.updateDroneView()
 
 		if frequency != 0:
@@ -329,17 +312,30 @@ class DisplayApp:
 				self.statusMessage()
 			if frequency == 1 and self.iterations == steps:
 				self.statusMessage()
-			self.iterations += 1
+		if self.iterations == steps-1 and self.output:
+			self.statsToOutputFile(self.initialStats)
+		self.iterations += 1
+		if returnStats:
+			return (self.avgEnergyLevel(), self.numAliveDrones(), self.numDrones(), self.numBases())
 
-
-
-	def multiStep(self, steps=None, event=None):
-		if steps==None:
-			steps = self.entry4.get()
+			
+	def multiStep(self, event=None):
+		#with GUI
 		self.iterations = 0
-		for i in range(int(steps)):
-			self.root.after(125*i, self.droneStep)
-
+		if self.steps == None:
+			steps = self.entry4.get()
+			for i in range(int(steps)):
+				self.root.after(125*i, self.droneStep)
+		#without GUI
+		else:
+			#steps = self.steps
+			for i in range(self.steps):
+				#if statement makes code more efficient by only updating tuple during final iteration
+				if i+1 != self.steps:
+					self.droneStep()
+				else: 
+					(energy, alive, totalDrones, totalBases) = self.droneStep(None, True)
+			return (energy, alive, totalDrones, totalBases)
 
 
 	def updateDroneView(self, event=None):
@@ -381,7 +377,10 @@ class DisplayApp:
 	#prints the status of a simulation when in begins
 	#set numDrones to True when it becomes necessary to display the number of drones
 	def statusMessage(self, numDrones = False):
-		print("__________Status Message__________")
+		if self.iterations == 0: 
+			print("__________Status Message(after " + str(self.iterations) + " steps)__________")
+		else: 
+			print("__________Status Message(after " + str(self.iterations + 1) + " steps)__________")
 		if numDrones:
 			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
 		print(str(self.numAliveDrones()) + " drones alive.")
@@ -398,6 +397,43 @@ class DisplayApp:
 					print("Base Station at " + str(agent.get_coords()))
 		print("")
 
+	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats
+	def statsToOutputFile(self, initialStats = None):
+		stats = ""
+		if initialStats == None:
+			stats = "__________Before Simulation__________\nTotal Drones:  " + str(self.numDrones()) + "\n" 
+		else:
+			stats = initialStats
+			stats += "\n\n__________After Simulation(" + str(self.iterations + 1) +" steps)__________\nTotal Drones:  " + str(self.numDrones()) + "\n" 
+		stats += "Alive Drones: " + str(self.numAliveDrones()) + "\n"
+		if(self.numDrones() > 0):
+			stats += ("\nDrones:\n")
+			for agent in self.drones:
+				if type(agent) is Drone:
+					stats += "Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()) + "\n"
+		if(self.numBases() > 0):
+			stats += "\nBase Stations:\n"
+			for agent in self.drones:
+				if type(agent) is BaseStation:
+					stats += "Base Station at " + str(agent.get_coords()) + "\n"
+		if initialStats == None:
+			return stats
+	#self.initialOuput += stats
+		if initialStats != None:
+			text_file = open("Output.txt", "w")
+			text_file.write("%s" % stats)
+			text_file.close()
+
+	#the total time it takes the drones to cover a uniform network
+	def time():
+		pass
+
+	#calculates and returns the coverage of the network
+	def coverage():
+		pass
+	#calculates and returns the uniformity of the network
+	def uniformity():
+		pass
 
 	# return the average energy level of the drones
 	def avgEnergyLevel(self):
@@ -789,6 +825,31 @@ class DisplayApp:
 		self.args = args
 		print(self.args)
 
+	#runs multiple rapid iterations of the same simulation to gather data
+	def runWithoutGUI(self, iterations, num_drones):
+		self.steps = self.interpretSteps()
+		cumulativeEnergy = 0
+		cumulativeAlive = 0
+		cumulativeTotalDrones = 0
+		cumulativeBases = 0
+		for i in range(iterations):
+			for i in range(num_drones):
+				self.createRandomDrone()
+			(energy, alive, totDrones, totBases) = self.multiStep()
+			(cumulativeEnergy, cumulativeAlive, cumulativeTotalDrones, cumulativeBases) = (cumulativeEnergy + energy, cumulativeAlive + alive, cumulativeTotalDrones + totDrones, cumulativeBases + totBases)
+			self.clearData()
+		avgEnergy = cumulativeEnergy/iterations
+		averageAlive = cumulativeAlive/iterations
+		avergageTotalDrones = cumulativeTotalDrones/iterations
+		averageTotalBases = cumulativeBases/iterations
+		output = str(iterations) + " simulations were run with " + str(num_drones) + " drones.\n\n"
+		output += "____________Statistics After " + str(self.steps) + " Steps__________\n"
+		output += "Average Energy Level: " + str(avgEnergy) + "\nAverage Number of Live Drones: " + str(averageAlive) + "\n"
+		output += "Number of Drones: " + str(avergageTotalDrones) + "\nNumber of Base Stations: " + str(averageTotalBases)
+		text_file = open("stats_without_GUI.txt", "w")
+		text_file.write("%s" % output)
+		text_file.close()
+
 
 	#interprets the frequency at which to print status updates to terminal
 	def interpretFrequency(self):
@@ -798,7 +859,13 @@ class DisplayApp:
 			frequencyOfPrint = int(self.args[index + 1])
 		return frequencyOfPrint
 
-
+	#interprets the number of steps to be gone through in runWithoutGUI()
+	def interpretSteps(self):
+		numberOfSteps = 10
+		if "-S" in self.args:
+			index = self.args.index("-S")
+			numberOfSteps = int(self.args[index + 1])
+		return numberOfSteps
 
 	def main(self):
 		print('Entering main loop')

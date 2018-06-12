@@ -41,8 +41,10 @@ class DisplayApp:
 
 	def __init__(self, width, height, numdrones=None,
 				dronescoordinatesList=None, numbasestation=None,
-				basestationcoordinatesList=None, tareaboolean=None,
-				tareaWidth=None, tareaHeight=None, steps=None, gui=True):
+				basestationcoordinatesList=None,
+				tareaboolean=None, tareaWidth=None, tareaHeight=None, tareaCoords=None,
+				obstclboolean=None, obstclWidth=None, obstclHeight=None, obstclCoords=None,
+				steps=None, gui=True):
 		# create a tk object, which is the root window
 		self.root = tk.Tk()
 		self.root.configure(background='#161616')
@@ -65,7 +67,10 @@ class DisplayApp:
 		self.drones = [] # list of drones with canvas point
 		self.lines = [] # list of lines connecting drones
 		self.data = None # will hold the raw data someday.
-		self.tareab = False #presence of a target area
+		if tareaboolean != None:
+			self.tareab = tareaboolean
+		else:
+			self.tareab = False #presence of a target area
 		self.tarea = None #target area field
 		self.baseClick = None # used to keep track of mouse movement
 		self.view_tx = 0
@@ -88,7 +93,10 @@ class DisplayApp:
 
 		# Generating an initial obstacle
 		# self.obstacle = Obstacle(canvas=self.canvas) #Obstacle field
-		self.obstacle = Obstacle(500,300,100,100,canvas=self.canvas) #HARDCODED ONE JUST FOR TESTING
+		if obstclboolean :
+			self.obstacle = Obstacle(obstclCoords[0],obstclCoords[1],obstclWidth, obstclHeight, canvas=self.canvas)
+		else :
+			self.obstacle = Obstacle(0,0,0,0, canvas=self.canvas)
 
 
 		# bring the window to the front
@@ -132,22 +140,32 @@ class DisplayApp:
 		self.inputTargetAreaBoolean = tareaboolean
 		self.inputTargetWidth = tareaWidth
 		self.inputTargetHeight = tareaHeight
+		self.inputTargetCoords = tareaCoords
+		self.inputObsctlAreaBoolean = obstclboolean
+		self.inputObsctlWidth = obstclWidth
+		self.inputObsctlHeight = obstclHeight
+		self.inputObsctlCoords = obstclCoords
 		self.inputSteps = steps
 
 		#Set up and run the simulation from the file settings
 		if numdrones != None and self.gui:
-			self.setUpSimulation(numdrones, dronescoordinatesList,
-			numbasestation, basestationcoordinatesList, tareaboolean,
-			tareaWidth, tareaHeight, steps)
+			self.setUpSimulation(numdrones, dronescoordinatesList, numbasestation,
+				basestationcoordinatesList,
+				tareaboolean, tareaWidth, tareaHeight, tareaCoords,
+				obstclboolean, obstclWidth, obstclHeight, obstclCoords,
+				steps )
 
 
 	# Set up and run the simulation from the file settings
 	def setUpSimulation(self,numdrones, dronescoordinatesList, numbasestation,
-	basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps ) :
+		basestationcoordinatesList,
+		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
+		obstclboolean, obstclWidth, obstclHeight, obstclCoords,
+		steps ) :
 
 		# Target Area Generator
 		if tareaboolean :
-			self.createTargetArea(tareaWidth, tareaHeight)
+			self.createTargetArea(x=tareaCoords[0],y=tareaCoords[1],w=tareaWidth, h=tareaHeight)
 
 		# Generate drones, both specified and random
 		for coords in dronescoordinatesList:
@@ -231,9 +249,11 @@ class DisplayApp:
 	def createRandomDrone(self, event=None):
 		x = None
 		y = None
+		print(self.tareab)
 		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
-			#print("attempt to place drone")
 			if not self.tareab :
+
+
 				x = random.gauss(self.initDx/2, self.initDx/15)
 				y = random.gauss(self.initDy/2, self.initDy/15)
 
@@ -244,13 +264,13 @@ class DisplayApp:
 
 
 			else:
-				x = random.gauss(self.initDx/2, self.initDx/15)
-				while x < 450-(self.tarea.getTAwidth()/2) or x > 450+(self.tarea.getTAwidth()/2):
-					x = random.gauss(self.initDx/2, self.initDx/15)
+				x = random.gauss(self.tarea.getCoords()[0], self.initDx/15)
+				while x < self.tarea.getCoords()[0]-(self.tarea.getTAwidth()/2) or x > self.tarea.getCoords()[0]+(self.tarea.getTAwidth()/2):
+					x = random.gauss(self.tarea.getCoords()[0], self.initDx/15)
 
-				y = random.gauss(self.initDy/2, self.initDy/15)
-				while y < 338-(self.tarea.getTAheight()/2) or y > 338+(self.tarea.getTAheight()/2):
-					y = random.gauss(self.initDy/2, self.initDy/15)
+				y = random.gauss( self.tarea.getCoords()[1], self.initDy/15)
+				while y < self.tarea.getCoords()[1]-(self.tarea.getTAheight()/2) or y > self.tarea.getCoords()[1]+(self.tarea.getTAheight()/2):
+					y = random.gauss(self.tarea.getCoords()[0], self.initDy/15)
 
 
 		self.createDrone(x, y)
@@ -278,7 +298,7 @@ class DisplayApp:
 			x = int(self.entry5.get())
 			y = int(self.entry6.get())
 
-		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=BASESTATIONCLR, outline='')
+		pt = self.canvas.create_oval(x-3*dx, y-3*dx, x+3*dx, y+3*dx, fill=BASESTATIONCLR, outline='')
 		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, self.canvas, pt, algorithm(self.config, self.drones))
 		self.drones.append(baseStation)
 
@@ -290,13 +310,13 @@ class DisplayApp:
 
 
 
-	def createTargetArea(self, w=None, h=None, event=None):
+	def createTargetArea(self, x=450, y=338, w=None, h=None, event=None):
 		self.tareab = True
 		if w == None and h == None:
 			w = int(self.entry2.get())
 			h = int(self.entry3.get())
 		# print("w is " + w + " type " + str(type(w)))
-		self.tarea = targetArea(w,h,self.canvas)
+		self.tarea = targetArea(x,y,w,h,self.canvas)
 		return
 
 

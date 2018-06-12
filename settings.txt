@@ -1,7 +1,7 @@
 ###   Drone Simulation Settings      ###
 
 # Number of drones to spawn
-numdrones=20
+numdrones=30
 
 # x,y Coordinates of the drones (optional)
 #300,400
@@ -15,7 +15,7 @@ numdrones=20
 numbasestation=1
 
 # x,y Coordinates of the base stations (required)
-300,300
+200,550
 
 
 # Number of steps (increments in time)
@@ -24,11 +24,19 @@ steps=200
 # Target Area or not
 tareaboolean=True
 
+# Target Area coordinates
+(xt,yt) = (400,350)
+
 # Target Area settings (Ignore if tareaboolean=False )
-tareaWidth=100
-tareaHeight=120
+tareaWidth=400
+tareaHeight=400
 
 # Obstacle
 obstclboolean=True
 
-#
+# Obstacle coordinates
+(xo,yo) = (400,400)
+
+# Obstacle settings (Ignore if obstclboolean=False )
+obstclWidth=130
+obstclHeight=130

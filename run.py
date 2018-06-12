@@ -93,10 +93,15 @@ for i in range(len(lines)):
                     xycoordBaseStationb = False
 
 
+
+
             ## Else execute the line (declare the variables)
             else :
                 exec(lines[i])
 
+
+tareaCoords = (xt,yt)
+obstclCoords = (xo,yo)
 
 
 
@@ -115,6 +120,11 @@ print("~ " + str(basestationcoordinatesList))
 print("~ Presence of a Target Area                : " + str(tareaboolean))
 if tareaboolean :
     print("~ Dimmensions of Target Area are WxH       : " + str(tareaWidth) + " x " + str(tareaHeight) )
+
+print("~ Presence of an Obstacle                : " + str(obstclboolean))
+if obstclboolean :
+    print("~ Dimmensions of Obstacle are WxH       : " + str(obstclWidth) + " x " + str(obstclHeight) )
+
 print("~ Running the simulation for a number of   : " + str(steps) + " steps")
 print('______________________________________')
 
@@ -124,7 +134,11 @@ gui = True
 if "-W" in sys.argv:
     gui = False
 
-dapp = display.DisplayApp(1200, 675, numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, steps, gui)
+dapp = display.DisplayApp(1200, 675, numdrones, dronescoordinatesList, numbasestation,
+                                basestationcoordinatesList,
+                                tareaboolean, tareaWidth, tareaHeight, tareaCoords,
+                                obstclboolean, obstclWidth, obstclHeight, obstclCoords,
+                                steps, gui)
 # dapp = display.DisplayApp(1200, 675)
 dapp.getArgs(sys.argv)
 if gui:

@@ -466,6 +466,8 @@ class DisplayApp:
 			print("Running simualation with " + str(self.numAliveDrones()) + " drones.")
 		print(str(self.numAliveDrones()) + " drones alive.")
 		print("Average Energy Level: " + str(self.avgEnergyLevel()))
+		print("Coverage: " + str(self.coverage(105)))
+		print("Uniformity: " + str(self.uniformity(105)))
 		if(self.numDrones() > 0):
 			print("_________Drones_________")
 			for agent in self.drones:
@@ -510,21 +512,35 @@ class DisplayApp:
 		pass
 
 	#calculates and returns the coverage of the network
-	def coverage():
-		pass
-	#calculates and returns the uniformity of the network
-	def uniformity():
-		pass
+	def coverage(self, rng):
+		prelimCoverage = set({})
+		coverage = set({})
+		for agent in self.drones:
+			if type(agent) is Drone:
+				droneCoverage = agent.getCoverage(rng)
+				prelimCoverage = prelimCoverage.union(droneCoverage)
+		#if there is a target area
+		if self.tareab:
+			for point in prelimCoverage:
+				if self.tarea.inArea(point):
+					coverage.add(point)
+			totalPixelsInRange = len(coverage)
+			targetAreasArea = self.tarea.getArea()
+			droneArea = math.pi * (rng**2)
+			c = (totalPixelsInRange * droneArea) / targetAreasArea
+		else:
+			c = "No ROI (coverage incalculable)"
+		return(c)
 
-	# return the average energy level of the drones
-	def avgEnergyLevel(self):
-		energy = 0.0
-		if not self.drones:
-			return energy
-		for drone in self.drones:
-			if type(drone) is Drone:
-				energy += drone.get_battery_level()
-		return energy/self.numDrones()
+
+	#calculates and returns the uniformity of the network
+	def uniformity(self, rng):
+		total = 0
+		for agent in self.drones:
+			if type(agent) is Drone:
+				total += agent.droneUniformity(self.drones, rng)
+		output = total/self.numDrones()
+		return output
 
 	#returns the number of drones in the drones list
 	def numDrones(self):

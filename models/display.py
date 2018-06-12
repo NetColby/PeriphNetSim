@@ -541,6 +541,16 @@ class DisplayApp:
 				total += agent.droneUniformity(self.drones, rng)
 		output = total/self.numDrones()
 		return output
+	
+	# return the average energy level of the drones
+	def avgEnergyLevel(self):
+		energy = 0.0
+		if not self.drones:
+			return energy
+		for drone in self.drones:
+			if type(drone) is Drone:
+				energy += drone.get_battery_level()
+		return energy/self.numDrones()
 
 	#returns the number of drones in the drones list
 	def numDrones(self):

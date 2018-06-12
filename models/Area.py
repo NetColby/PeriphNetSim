@@ -23,3 +23,9 @@ class Area(Agent):
 
     def getAheight(self) :
        return self.h
+
+    def inArea(self, coords):
+        return self.x <= coords[0] < (self.x + self.w) and self.y <= coords[1] < (self.y + self.h)
+
+    def getArea(self):
+        return self.w * self.h

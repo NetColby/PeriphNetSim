@@ -27,3 +27,8 @@ tareaboolean=True
 # Target Area settings (Ignore if tareaboolean=False )
 tareaWidth=100
 tareaHeight=120
+
+# Obstacle
+obstclboolean=True
+
+#

@@ -526,8 +526,7 @@ class DisplayApp:
 					coverage.add(point)
 			totalPixelsInRange = len(coverage)
 			targetAreasArea = self.tarea.getArea()
-			droneArea = math.pi * (rng**2)
-			c = (totalPixelsInRange * droneArea) / targetAreasArea
+			c = (totalPixelsInRange) / targetAreasArea
 		else:
 			c = "No ROI (coverage incalculable)"
 		return(c)

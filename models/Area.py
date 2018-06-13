@@ -3,7 +3,7 @@
 # Selim Hassairi
 # June 2018
 
-from .Agent import Agent
+from .agent import Agent
 
 class Area(Agent):
     # target area class
@@ -25,7 +25,9 @@ class Area(Agent):
        return self.h
 
     def inArea(self, coords):
-        return self.x <= coords[0] < (self.x + self.w) and self.y <= coords[1] < (self.y + self.h)
+
+        return (self.x - (self.w/2)) <= coords[0] and coords[0] < (self.x + (self.w/2)) and (self.y-(self.h/2)) <= coords[1] and coords[1] < (self.y + (self.h/2))
 
     def getArea(self):
         return self.w * self.h
+

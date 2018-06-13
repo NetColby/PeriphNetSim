@@ -4,7 +4,7 @@
 #June 2018
 
 import math
-from .agent import Agent
+from .Agent import Agent
 
 class BaseStation(Agent):
     def __init__(self, x, y, canvas, pt, algorithm_provider):

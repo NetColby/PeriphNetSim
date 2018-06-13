@@ -3,7 +3,7 @@
 # Selim Hassairi
 # June 2018
 
-from .agent import Agent
+from .Agent import Agent
 
 class Area(Agent):
     # target area class

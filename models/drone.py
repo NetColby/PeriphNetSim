@@ -67,7 +67,7 @@ class Drone(BaseStation):
         for t in [i for i in drones if not i.dead and type(i) is Drone]:
             tcoord = t.get_coords()
             euclidian = math.hypot(dronecoord[0]-tcoord[0], dronecoord[1]-tcoord[1])
-            
+
             if euclidian < rng and self is not t:
                 drones_in_range.append(t)
 
@@ -85,7 +85,7 @@ class Drone(BaseStation):
         else:
             return None
 
-    #calculates individual drones contribution to uniformity 
+    #calculates individual drones contribution to uniformity
     def droneUniformity(self, drones, rng):
         neighbors = self.getNeighbors(drones, rng)
         total = 0

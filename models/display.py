@@ -18,13 +18,13 @@ import itertools
 import time
 
 
-from .drone import Drone
-from .config import Config
+from .Drone import Drone
+from .Config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
-from .targetArea import targetArea
+from .TargetArea import targetArea
 from .BaseStation import BaseStation
-from .agent import Agent
+from .Agent import Agent
 from .Obstacle import Obstacle
 
 debug = False
@@ -541,7 +541,7 @@ class DisplayApp:
 				total += agent.droneUniformity(self.drones, rng)
 		output = total/self.numDrones()
 		return output
-	
+
 	# return the average energy level of the drones
 	def avgEnergyLevel(self):
 		energy = 0.0

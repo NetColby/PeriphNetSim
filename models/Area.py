@@ -3,7 +3,7 @@
 # Selim Hassairi
 # June 2018
 
-from .agent import Agent
+from .Agent import Agent
 
 class Area(Agent):
     # target area class
@@ -30,4 +30,3 @@ class Area(Agent):
 
     def getArea(self):
         return self.w * self.h
-

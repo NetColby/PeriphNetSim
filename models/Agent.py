@@ -6,7 +6,7 @@
 import math
 
 class Agent:
-    def __init__(self, x, y, canvas):
+    def __init__(self, x, y, canvas=None):
         self.canvas = canvas
         self.x, self.y = x, y
         self.moves = False
@@ -27,3 +27,6 @@ class Agent:
         # setter method for coordinates
         self.x = x
         self.y = y
+
+    def assignCanvas(canvas):
+        self.canvas = canvas

@@ -11,12 +11,12 @@ from .Area import Area
 
 class targetArea(Area):
     # target area class
-    def __init__(self, x, y, w, h, canvas):
-        Area.__init__(self, x,y,w,h, canvas)
-        self.rect = self.canvas.create_rectangle(
-            x-(w/2),y+(h/2),x+(w/2),y-(h/2),
-            outline = TAREABORDER, width= 4)
-
+    def __init__(self, x, y, w, h, canvas=None):
+        Area.__init__(self, x, y, w, h, canvas)
+        if canvas:
+            self.rect = self.canvas.create_rectangle(
+                x-(w/2),y+(h/2),x+(w/2),y-(h/2),
+                outline = TAREABORDER, width= 4)
 
     def getTAwidth(self) :
         return Area.getAwidth(self)

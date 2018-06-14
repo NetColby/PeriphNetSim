@@ -7,10 +7,10 @@ import math
 from .Agent import Agent
 
 class BaseStation(Agent):
-    def __init__(self, x, y, canvas, pt, algorithm_provider):
+    def __init__(self, x, y, algorithmProvider, pt=None, canvas=False):
         Agent.__init__(self, x, y, canvas)
         self.pt = pt
-        self.algorithm_provider = algorithm_provider
+        self.algorithm_provider = algorithmProvider
         self.dead = False
 
     def idle(self):

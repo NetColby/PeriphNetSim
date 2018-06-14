@@ -24,6 +24,7 @@ from .TargetArea import targetArea
 from .BaseStation import BaseStation
 from .Agent import Agent
 from .Obstacle import Obstacle
+from .Simulation import Simulation
 
 debug = False
 
@@ -34,12 +35,31 @@ TXTBOXCOLOR = '#303030'
 BASESTATIONCLR = "#004C99"
 
 # create a class to build and manage the display
-class DisplayApp:
+class DisplayApp(Simulation):
 
-	def __init__(self, width, height):
+	def __init__(self
+		, width, height, numdrones, dronescoordinatesList, numbasestation,
+		basestationcoordinatesList,
+		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
+		obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui=True):
+
+		Simulation.__init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
+		basestationcoordinatesList,
+		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
+		obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui=True)
+		# # width and height of the window (these are here because they are used in the construcion of the window)
+		# self.initDx = width
+		# self.initDy = height
+
 		# create a tk object, which is the root window
 		self.root = tk.Tk()
 		self.root.configure(background='#161616')
+
+		# #creates the simulation
+		# self.simulation = Simulation(width, height, numdrones, dronescoordinatesList, numbasestation,
+		# basestationcoordinatesList,
+		# tareaboolean, tareaWidth, tareaHeight, tareaCoords,
+		# obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui)
 
 		# set up the geometry for the window
 		self.root.geometry( "%dx%d+50+30" % (self.initDx, self.initDy) )
@@ -78,6 +98,80 @@ class DisplayApp:
 
 		#sets selected drone to None
 		self.selectedDrone = None
+
+	#creates and places a drone in a random location
+	def createRandomDrone(self, event=None):
+		x = None
+		y = None
+		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
+			if not self.tareab :
+
+
+				x = random.gauss(self.initDx/2, self.initDx/15)
+				y = random.gauss(self.initDy/2, self.initDy/15)
+
+			# Outdated : too spreadout in the T.Area
+			# else:
+			# 	x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
+			# 	y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
+
+
+			else:
+				x = random.gauss(self.tarea.getCoords()[0], self.initDx/15)
+				while x < self.tarea.getCoords()[0]-(self.tarea.getTAwidth()/2) or x > self.tarea.getCoords()[0]+(self.tarea.getTAwidth()/2):
+					x = random.gauss(self.tarea.getCoords()[0], self.initDx/15)
+
+				y = random.gauss( self.tarea.getCoords()[1], self.initDy/15)
+				while y < self.tarea.getCoords()[1]-(self.tarea.getTAheight()/2) or y > self.tarea.getCoords()[1]+(self.tarea.getTAheight()/2):
+					y = random.gauss(self.tarea.getCoords()[0], self.initDy/15)
+
+		self.createDrone(x, y)
+
+	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+		if dx is None:
+			dx = self.droneSize/2
+		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
+		Simulation.createDrone(self, x, y, algorithm, pt, self.canvas)
+		self.updateDroneView()
+		text = "Created a drone at %s x %s!" % (int(x), int(y))
+		self.status.set(text)
+		return
+
+	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+		if dx is None:
+			dx = self.droneSize/2
+		if x == None and y == None:
+			x = int(self.entry5.get())
+			y = int(self.entry6.get())
+		pt = self.canvas.create_oval(x-3*dx, y-3*dx, x+3*dx, y+3*dx, fill=BASESTATIONCLR, outline='')
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt)
+		self.drones.append(baseStation)
+		self.updateDroneView()
+		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
+		self.status.set(text)
+		return
+
+	#clears the canvas to reset the simulation
+	def clearData(self, event=None):
+		for drone in self.drones:
+			self.canvas.delete(drone.get_pt())
+		del self.drones[:]
+
+		for line in self.lines:
+			self.canvas.delete(line)
+		self.lines = []
+
+		if self.tareab:
+			self.canvas.delete(self.tarea.getRect())
+			self.tareab = False
+
+		self.updateStatisticPanel()
+		self.updateDroneView()
+
+		text = "Cleared the screen"
+		self.status.set(text)
+		#print('Cleared the screen')
+		return
 
 	def buildMenus(self):
 

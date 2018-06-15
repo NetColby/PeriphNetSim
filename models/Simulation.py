@@ -259,12 +259,19 @@ class Simulation:
 			for agent in self.drones:
 				if type(agent) is Drone:
 					output += "Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()) + "\n"
-			output += "\n"
 		if(self.numBases() > 0):
-			output += "______Base Stations______\n"
+			output += "\n______Base Station(s)______\n"
 			for agent in self.drones:
 				if type(agent) is BaseStation:
 					output += "Base Station at " + str(agent.get_coords()) + "\n"
+		if self.tareab:
+			output += "\n______Target Area______\n"
+			output += "Coordinates of Center: " + str(self.tarea.get_coords_for_print()) + "\n"
+			output += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
+		if self.isObstacle:
+			output += "\n______Obstacle______\n"
+			output += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
+			output += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
 		return output
 
 	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats

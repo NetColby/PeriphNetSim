@@ -135,6 +135,7 @@ gui = True
 if "-W" in sys.argv:
     gui = False
 
-dapp = Display.DisplayApp(1000, 1000, 2, [(100, 100), (200, 200)], 1, [(150, 150)], True, 125, 125, (150, 150), True, 2, 2, (125, 125))
+# dapp = Display.DisplayApp(1000, 1000, 2, [(100, 100), (200, 200)], 1, [(150, 150)], True, 125, 125, (150, 150), True, 2, 2, (125, 125))
+dapp = Display.DisplayApp(1200, 675, numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords,gui)
 
 dapp.main()

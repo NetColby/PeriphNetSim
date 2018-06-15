@@ -8,7 +8,7 @@ from .Agent import Agent
 
 class BaseStation(Agent):
     def __init__(self, x, y, algorithmProvider, pt=None, canvas=False):
-        Agent.__init__(self, x, y, canvas)
+        Agent.__init__(self, x, y, canvas=canvas)
         self.pt = pt
         self.algorithm_provider = algorithmProvider
         self.dead = False

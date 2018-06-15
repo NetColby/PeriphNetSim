@@ -39,7 +39,7 @@ class Simulation:
 		self.drones = [] # list of drones with canvas point
 		self.lines = [] # list of lines connecting drones
 		self.data = None # will hold the raw data someday.
-		
+
 		self.tareab = False
 		self.isObstacle = False
 
@@ -68,7 +68,8 @@ class Simulation:
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
-		self.setUpSimulation(0, [], 0, [], False, 0, 0, (0, 0), True, 0, 0, (0, 0))
+		# self.setUpSimulation(0, [], 0, [], False, 0, 0, (0, 0), True, 0, 0, (0, 0))
+		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
 
 
 	# Set up and run the simulation from the file settings
@@ -137,16 +138,16 @@ class Simulation:
 		self.createDrone(x, y)
 
 	#creates a drone at the given location
-	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider, pt=None, event=None):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt)
+	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones))
 		self.drones.append(drone)
 
-	#creates a base station at the given location 
-	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoider, pt=None, event=None):
+	#creates a base station at the given location
+	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones))
 		self.drones.append(baseStation)
 
-	#creates a target area given x and y coordinates at the target area's center and 
+	#creates a target area given x and y coordinates at the target area's center and
 
 	#at this point I begin commenting out line that I would like to remove
 
@@ -188,7 +189,7 @@ class Simulation:
 
 		if self.isObstacle:
 			self.isObstacle = False
-			self.obstacle = None 
+			self.obstacle = None
 
 		print('Simulation has been reset.')
 
@@ -208,7 +209,7 @@ class Simulation:
 		for drone in self.drones:
 			drone.do_step(self.obstacle)
 			#print(drone.get_battery_level())
-		# self.updateDroneView()
+		self.updateDroneView()
 
 		# if frequency != 0:
 		# 	if self.iterations%frequency == frequency-1:
@@ -387,15 +388,15 @@ class Simulation:
 	def main(self, iterations, steps):
 		for i in range(iterations):
 			self.clearData()
-			self.setUpSimulation(self.numdrones, self.dronescoordinatesList, self.numbasestation, 
-				self.basestationcoordinatesList, self.tareaboolean, self.tareaWidth, self.tareaHeight, 
+			self.setUpSimulation(self.numdrones, self.dronescoordinatesList, self.numbasestation,
+				self.basestationcoordinatesList, self.tareaboolean, self.tareaWidth, self.tareaHeight,
 				self.tareaCoords, self.obstclboolean, self.obstclWidth, self.obstclHeight, self.obstclCoords)
 			self.multiStep(steps, 10)
 
 	#__________________________________Getters and setters to be used in Display.py__________________________________
 
 
-		
+
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

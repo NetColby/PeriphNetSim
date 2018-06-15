@@ -99,39 +99,23 @@ class DisplayApp(Simulation):
 		#sets selected drone to None
 		self.selectedDrone = None
 
-	#creates and places a drone in a random location
-	def createRandomDrone(self, event=None):
-		x = None
-		y = None
-		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
-			if not self.tareab :
+
+	def multiStep(self, event=None):
+		steps = int(self.entry4.get())
+		frequency = self.interpretFrequency()
+		# Simulation.multiStep(self, steps,frequency)
+
+		for i in range(int(steps)):
+			self.root.after(125*i, self.droneStep)
 
 
-				x = random.gauss(self.initDx/2, self.initDx/15)
-				y = random.gauss(self.initDy/2, self.initDy/15)
-
-			# Outdated : too spreadout in the T.Area
-			# else:
-			# 	x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
-			# 	y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
-
-
-			else:
-				x = random.gauss(self.tarea.getCoords()[0], self.initDx/15)
-				while x < self.tarea.getCoords()[0]-(self.tarea.getTAwidth()/2) or x > self.tarea.getCoords()[0]+(self.tarea.getTAwidth()/2):
-					x = random.gauss(self.tarea.getCoords()[0], self.initDx/15)
-
-				y = random.gauss( self.tarea.getCoords()[1], self.initDy/15)
-				while y < self.tarea.getCoords()[1]-(self.tarea.getTAheight()/2) or y > self.tarea.getCoords()[1]+(self.tarea.getTAheight()/2):
-					y = random.gauss(self.tarea.getCoords()[0], self.initDy/15)
-
-		self.createDrone(x, y)
 
 	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		Simulation.createDrone(self, x, y, algorithm, pt, self.canvas)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt, self.canvas)
+		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
@@ -150,6 +134,25 @@ class DisplayApp(Simulation):
 		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
 		return
+
+	def droneStep(self):
+		for drone in self.drones:
+			drone.do_step(self.obstacle)
+		self.updateDroneView()
+
+
+
+	def createTargetArea(self, x=450, y=338, w=None, h=None, event=None):
+		self.tareab = True
+		if w == None and h == None:
+			w = int(self.entry2.get())
+			h = int(self.entry3.get())
+		# print("w is " + w + " type " + str(type(w)))
+		self.tarea = targetArea(x,y,w,h,self.canvas)
+		return
+
+
+
 
 	#clears the canvas to reset the simulation
 	def clearData(self, event=None):

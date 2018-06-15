@@ -10,7 +10,7 @@ from .BaseStation import BaseStation
 
 class Drone(BaseStation):
     def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, batteryLevel=100.0):
-        BaseStation.__init__(self, x, y, algorithmProvider, canvas, pt)
+        BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas)
         self.battery_level = batteryLevel
         self.moves = True
 
@@ -20,8 +20,8 @@ class Drone(BaseStation):
 
     def move(self, x, y):
         # move drone object by unit vector in direction x/y
-        # if type(self.canvas) is not None:
-        #     self.canvas.move(self.get_pt(), x, y)
+        if type(self.canvas) is not None:
+            self.canvas.move(self.get_pt(), x, y)
         self.set_coords(self.x + x, self.y + y)
         self.battery_level -= self.algorithm_provider.config.move_consumption
         self.update_life_state()

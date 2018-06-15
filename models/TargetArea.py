@@ -13,7 +13,7 @@ class targetArea(Area):
     # target area class
     def __init__(self, x, y, w, h, canvas=None):
         Area.__init__(self, x, y, w, h, canvas)
-        if canvas:
+        if canvas != None:
             self.rect = self.canvas.create_rectangle(
                 x-(w/2),y+(h/2),x+(w/2),y-(h/2),
                 outline = TAREABORDER, width= 4)

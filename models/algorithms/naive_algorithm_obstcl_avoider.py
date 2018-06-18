@@ -5,7 +5,7 @@ import random
 class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 	# Attempts to move the given drone to a target distance
 	# away from the average coordinates of its neighbors (very naive)
-	def run(self, drone, obstacle):
+	def run(self, drone, obstacles):
 		avx = 0
 		avy = 0
 		if drone.doesMove():
@@ -97,7 +97,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 			magnitude = math.hypot(avx, avy)
 
 			cte = 2
-			while (False if obstacle==None else True) and (obstacle.inObstacle(drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude)) :
+			while (False if obstacles==None else True) and (self.inObstacles(drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude, obstacles)) :
 				avx = random.random()*cte - cte/2
 				avy = random.random()*cte - cte/2
 
@@ -113,3 +113,9 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 		c2 = d2.get_coords()
 
 		return math.hypot(c1[0] - c2[0], c1[1] - c2[1])
+		
+	def inObstacles(self, x, y, obstacles):
+		for obstacle in obstacles :
+			if obstacle.inObstacle(x, y):
+				return True
+		return False

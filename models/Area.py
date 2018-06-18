@@ -8,7 +8,7 @@ from .Agent import Agent
 class Area(Agent):
     # target area class
     def __init__(self, x, y, w, h, canvas=None):
-        Agent.__init__(self, x, y, canvas=None)
+        Agent.__init__(self, x, y, canvas)
         self.w = w
         self.h = h
         # self.rect = self.canvas.create_rectangle(

@@ -20,7 +20,7 @@ class Drone(BaseStation):
 
     def move(self, x, y):
         # move drone object by unit vector in direction x/y
-        if type(self.canvas) is not None:
+        if self.canvas is not None:
             self.canvas.move(self.get_pt(), x, y)
         self.set_coords(self.x + x, self.y + y)
         self.battery_level -= self.algorithm_provider.config.move_consumption
@@ -33,7 +33,8 @@ class Drone(BaseStation):
     def update_life_state(self):
         if self.battery_level < 0.5:
             self.dead = True
-            self.canvas.itemconfig(self.pt, fill="red")
+            if self.canvas is not None:
+                self.canvas.itemconfig(self.pt, fill="red")
 
     def isDead(self):
         return self.dead

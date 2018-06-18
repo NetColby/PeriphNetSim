@@ -99,6 +99,11 @@ class DisplayApp(Simulation):
 		#sets selected drone to None
 		self.selectedDrone = None
 
+		# Set up the simulation
+		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
+
+
+
 
 	def multiStep(self, event=None):
 		steps = int(self.entry4.get())
@@ -127,7 +132,7 @@ class DisplayApp(Simulation):
 		if x == None and y == None:
 			x = int(self.entry5.get())
 			y = int(self.entry6.get())
-		pt = self.canvas.create_oval(x-3*dx, y-3*dx, x+3*dx, y+3*dx, fill=BASESTATIONCLR, outline='')
+		pt = self.canvas.create_oval(x-1.5*dx, y-1.5*dx, x+1.5*dx, y+1.5*dx, fill=BASESTATIONCLR, outline='')
 		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt)
 		self.drones.append(baseStation)
 		self.updateDroneView()
@@ -142,7 +147,7 @@ class DisplayApp(Simulation):
 
 
 
-	def createTargetArea(self, x=450, y=338, w=None, h=None, event=None):
+	def createTargetArea(self, x=450, y=338, w=None, h=None):
 		self.tareab = True
 		if w == None and h == None:
 			w = int(self.entry2.get())
@@ -151,7 +156,9 @@ class DisplayApp(Simulation):
 		self.tarea = targetArea(x,y,w,h,self.canvas)
 		return
 
-
+	def createObstacle(self, x=450, y=338, w=None, h=None):
+		self.obstclb = True
+		self.obstacle = Obstacle(x,y,w,h,self.canvas)
 
 
 	#clears the canvas to reset the simulation

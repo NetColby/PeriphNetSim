@@ -40,8 +40,9 @@ class Simulation:
 		self.lines = [] # list of lines connecting drones
 		self.data = None # will hold the raw data someday.
 
+		# Presence or abscence of T.Area and Obstacle
 		self.tareab = False
-		self.isObstacle = False
+		self.obstclb = False
 
 		self.view_tx = 0
 		self.view_ty = 0
@@ -69,7 +70,8 @@ class Simulation:
 		self.gui = gui
 
 		# self.setUpSimulation(0, [], 0, [], False, 0, 0, (0, 0), True, 0, 0, (0, 0))
-		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
+		if not gui:
+			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
 
 
 	# Set up and run the simulation from the file settings
@@ -84,8 +86,7 @@ class Simulation:
 		self.obstacle = None
 		if obstclboolean:
 			self.createObstacle(obstclCoords[0],obstclCoords[1],obstclWidth, obstclHeight)
-		else:
-			self.createObstacle(0, 0, 0, 0)
+
 
 
 		# Generate drones, both specified and random
@@ -104,19 +105,20 @@ class Simulation:
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
 
+		
+
 	#creates the given number of random drones
 	def createRandomDrones(self, numDrones=10):
 		for i in range(numDrones):
 			self.createRandomDrone()
 
+
 	#creates and places a drone in a random location
 	def createRandomDrone(self, event=None):
 		x = None
 		y = None
-		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y)) :
+		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y) if self.obstacle!=None else False) :
 			if not self.tareab :
-
-
 				x = random.gauss(self.initDx/2, self.initDx/15)
 				y = random.gauss(self.initDy/2, self.initDy/15)
 
@@ -174,7 +176,7 @@ class Simulation:
 		self.tarea = targetArea(x, y, w, h)
 
 	def createObstacle(self, x=450, y=338, w=None, h=None, event=None):
-		self.isObstacle = True
+		self.obstclb = True
 		del self.drones[:]
 		self.obstacle = Obstacle(x, y, w, h)
 
@@ -187,8 +189,8 @@ class Simulation:
 			self.tareab = False
 			self.tarea = None
 
-		if self.isObstacle:
-			self.isObstacle = False
+		if self.obstclb:
+			self.obstclb = False
 			self.obstacle = None
 
 		print('Simulation has been reset.')
@@ -209,7 +211,7 @@ class Simulation:
 		for drone in self.drones:
 			drone.do_step(self.obstacle)
 			#print(drone.get_battery_level())
-		self.updateDroneView()
+		# self.updateDroneView()
 
 		# if frequency != 0:
 		# 	if self.iterations%frequency == frequency-1:
@@ -252,13 +254,13 @@ class Simulation:
 		output = "________________________Statistics after " + str(stepsForStatus) + " steps:________________________\n"
 		output += str(self.numAliveDrones()) + " drones alive.\n"
 		output += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
-# 		output += "Coverage: " + str(self.coverage(105)) + "\n"
+		# output += "Coverage: " + str(self.coverage(105)) + "\n"
 		output += "Uniformity: " + str(self.uniformity(105)) + "\n\n"
 		if(self.numDrones() > 0):
 			output += "_________Drones_________\n"
 			for agent in self.drones:
 				if type(agent) is Drone:
-					output += "Drone at (" + "%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
+					output += "Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()) + "\n"
 		if(self.numBases() > 0):
 			output += "\n______Base Station(s)______\n"
 			for agent in self.drones:
@@ -268,7 +270,7 @@ class Simulation:
 			output += "\n______Target Area______\n"
 			output += "Coordinates of Center: " + str(self.tarea.get_coords_for_print()) + "\n"
 			output += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
-		if self.isObstacle:
+		if self.obstclb:
 			output += "\n______Obstacle______\n"
 			output += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
 			output += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
@@ -276,40 +278,31 @@ class Simulation:
 
 	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats
 	def statsToOutputFile(self, initialStats = None, stepsForStatus=None):
+		stats = ""
 		if initialStats == None:
-			stats = "__________Before Simulation of " + str(self.numDrones()) + " Drones__________\n\n"
+			stats = "__________Before Simulation__________\nTotal Drones:  " + str(self.numDrones()) + "\n"
 		else:
 			stats = initialStats
-			stats += "\n\n__________After Simulation(" + str(stepsForStatus) +" steps)__________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
+			stats += "\n\n__________After Simulation(" + str(stepsForStatus) +" steps)__________\nTotal Drones:  " + str(self.numDrones()) + "\n"
 		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n"
-		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
-		stats += "Coverage: " + str(self.coverage(105)) + "\n"
-		stats += "Uniformity: " + str(self.uniformity(105)) + "\n"
 		if(self.numDrones() > 0):
-			stats += "\n_________Drones_________\n"
+			stats += ("\nDrones:\n")
 			for agent in self.drones:
 				if type(agent) is Drone:
-					stats += "Drone at (" + "%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
+					stats += "Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()) + "\n"
 		if(self.numBases() > 0):
-			stats += "\n______Base Station(s)______\n"
+			stats += "\nBase Stations:\n"
 			for agent in self.drones:
 				if type(agent) is BaseStation:
 					stats += "Base Station at " + str(agent.get_coords()) + "\n"
-		if self.tareab:
-			stats += "\n______Target Area______\n"
-			stats += "Coordinates of Center: " + str(self.tarea.get_coords_for_print()) + "\n"
-			stats += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
-		if self.isObstacle:
-			stats += "\n______Obstacle______\n"
-			stats += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
-			stats += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
 		if initialStats == None:
 			return stats
-		if else:
+	#self.initialOuput += stats
+		if initialStats != None:
 			text_file = open("Output.txt", "w")
 			text_file.write("%s" % stats)
 			text_file.close()
-			
+
 	#the total time it takes the drones to cover a uniform network
 	def time():
 		pass

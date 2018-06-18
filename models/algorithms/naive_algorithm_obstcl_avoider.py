@@ -97,7 +97,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 			magnitude = math.hypot(avx, avy)
 
 			cte = 2
-			while obstacle.inObstacle(drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude) :
+			while (False if obstacle==None else True) and (obstacle.inObstacle(drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude)) :
 				avx = random.random()*cte - cte/2
 				avy = random.random()*cte - cte/2
 

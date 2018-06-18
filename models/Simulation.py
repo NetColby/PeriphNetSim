@@ -258,7 +258,7 @@ class Simulation:
 			output += "_________Drones_________\n"
 			for agent in self.drones:
 				if type(agent) is Drone:
-					output += "Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()) + "\n"
+					output += "Drone at (" + "%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
 		if(self.numBases() > 0):
 			output += "\n______Base Station(s)______\n"
 			for agent in self.drones:

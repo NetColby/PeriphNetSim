@@ -252,7 +252,7 @@ class Simulation:
 		output = "________________________Statistics after " + str(stepsForStatus) + " steps:________________________\n"
 		output += str(self.numAliveDrones()) + " drones alive.\n"
 		output += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
-		output += "Coverage: " + str(self.coverage(105)) + "\n"
+# 		output += "Coverage: " + str(self.coverage(105)) + "\n"
 		output += "Uniformity: " + str(self.uniformity(105)) + "\n\n"
 		if(self.numDrones() > 0):
 			output += "_________Drones_________\n"
@@ -276,31 +276,40 @@ class Simulation:
 
 	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats
 	def statsToOutputFile(self, initialStats = None, stepsForStatus=None):
-		stats = ""
 		if initialStats == None:
-			stats = "__________Before Simulation__________\nTotal Drones:  " + str(self.numDrones()) + "\n"
+			stats = "__________Before Simulation of " + str(self.numDrones()) + " Drones__________\n\n"
 		else:
 			stats = initialStats
-			stats += "\n\n__________After Simulation(" + str(stepsForStatus) +" steps)__________\nTotal Drones:  " + str(self.numDrones()) + "\n"
+			stats += "\n\n__________After Simulation(" + str(stepsForStatus) +" steps)__________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
 		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n"
+		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
+		stats += "Coverage: " + str(self.coverage(105)) + "\n"
+		stats += "Uniformity: " + str(self.uniformity(105)) + "\n"
 		if(self.numDrones() > 0):
-			stats += ("\nDrones:\n")
+			stats += "\n_________Drones_________\n"
 			for agent in self.drones:
 				if type(agent) is Drone:
-					stats += "Drone at " + str(agent.get_coords()) + " Alive: " + str(not agent.isDead()) + "\n"
+					stats += "Drone at (" + "%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
 		if(self.numBases() > 0):
-			stats += "\nBase Stations:\n"
+			stats += "\n______Base Station(s)______\n"
 			for agent in self.drones:
 				if type(agent) is BaseStation:
 					stats += "Base Station at " + str(agent.get_coords()) + "\n"
+		if self.tareab:
+			stats += "\n______Target Area______\n"
+			stats += "Coordinates of Center: " + str(self.tarea.get_coords_for_print()) + "\n"
+			stats += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
+		if self.isObstacle:
+			stats += "\n______Obstacle______\n"
+			stats += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
+			stats += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
 		if initialStats == None:
 			return stats
-	#self.initialOuput += stats
-		if initialStats != None:
+		if else:
 			text_file = open("Output.txt", "w")
 			text_file.write("%s" % stats)
 			text_file.close()
-
+			
 	#the total time it takes the drones to cover a uniform network
 	def time():
 		pass

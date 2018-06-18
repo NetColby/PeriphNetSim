@@ -68,7 +68,7 @@ class DisplayApp(Simulation):
 		self.root.title(eval("'Hi %s, have fun using my GUI!' % (getpass.getuser())"))
 
 		# set the maximum size of the window for resizing
-		self.root.maxsize( 1200, 675 )
+		self.root.maxsize( width, height )
 
 		self.baseClick = None # used to keep track of mouse movement
 
@@ -367,7 +367,7 @@ class DisplayApp(Simulation):
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
 
-		#---- Input Target Area Width and Height ----#
+		#---- Input Area Width and Height ----#
 		#height
 		label = tk.Label( rightcntlframe, text="Width", width=10, fg=FONTCOLOR )
 		label.configure(background=FRAMECOLOR)
@@ -401,27 +401,42 @@ class DisplayApp(Simulation):
 		#creating a blank label to take up space for the location table
 		label = tk.Label( rightcntlframe, text="", width=20, fg = FONTCOLOR )
 		label.configure(background=FRAMECOLOR)
-		label.pack( side=tk.TOP, pady=30 )
+		if os.name == "posix":
+			label.pack( side=tk.TOP, pady=20)
+		else:
+			label.pack( side=tk.TOP, pady=30)
 
 		#---- Up ----#
 		droneUp = tk.Button( rightcntlframe, text="Up", command=self.moveDroneUp )
 		droneUp.configure(highlightbackground=FRAMECOLOR)
-		droneUp.place(x=60, y=405)
+		if os.name == "posix":
+			droneUp.place(x=60, y=455)
+		else:
+			droneUp.place(x=60, y=405)
 
 		#---- Left ----#
 		droneLeft = tk.Button( rightcntlframe, text="Left", command=self.moveDroneLeft )
 		droneLeft.configure(highlightbackground=FRAMECOLOR)
-		droneLeft.place(x=28, y=435)
+		if os.name == "posix":
+			droneLeft.place(x=28, y=480)
+		else:
+			droneLeft.place(x=28, y=435)
 
 		#---- Down ----#
 		droneDown = tk.Button( rightcntlframe, text="Down", command=self.moveDroneDown )
 		droneDown.configure(highlightbackground=FRAMECOLOR)
-		droneDown.place(x=53, y=465)
+		if os.name == "posix":
+			droneDown.place(x=53, y=505)
+		else:
+			droneDown.place(x=53, y=465)
 
 		#---- Right ----#
 		droneRight = tk.Button( rightcntlframe, text="Right", command=self.moveDroneRight )
 		droneRight.configure(highlightbackground=FRAMECOLOR)
-		droneRight.place(x=87, y=435)
+		if os.name == "posix":
+			droneRight.place(x=87, y=480)
+		else:
+			droneRight.place(x=87, y=435)
 
 		#---- Run Simulation Label ----#
 		# use a label to set the size of the right panel
@@ -432,7 +447,7 @@ class DisplayApp(Simulation):
 		#---- Input Number of Steps ----#
 		self.randomDataText = tk.IntVar(None)
 		self.entry4 = tk.Entry(rightcntlframe, textvariable = self.randomDataText, width=10, fg=FONTCOLOR)
-		self.entry4.insert(10, 10)
+		self.entry4.insert(0, 10)
 		self.entry4.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry4.pack(side = tk.TOP) # draw the entry form for number of random points
 		#---- MultiStep ----#

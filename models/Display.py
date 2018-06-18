@@ -68,7 +68,7 @@ class DisplayApp(Simulation):
 		self.root.title(eval("'Hi %s, have fun using my GUI!' % (getpass.getuser())"))
 
 		# set the maximum size of the window for resizing
-		self.root.maxsize( 1200, 675 )
+		self.root.maxsize( width, height )
 
 		self.baseClick = None # used to keep track of mouse movement
 
@@ -158,7 +158,7 @@ class DisplayApp(Simulation):
 
 	def createObstacle(self, x=450, y=338, w=None, h=None):
 		self.obstclb = True
-		self.obstacle = Obstacle(x,y,w,h,self.canvas)
+		self.obstacles.append(Obstacle(x,y,w,h,self.canvas))
 
 
 	#clears the canvas to reset the simulation
@@ -326,7 +326,7 @@ class DisplayApp(Simulation):
 		#---- Input Number of Drones ----#
 		self.randomDataText = tk.IntVar(None)
 		self.entry1 = tk.Entry(rightcntlframe, textvariable = self.randomDataText, width=10, fg=FONTCOLOR)
-		self.entry1.insert(0, 1)
+		self.entry1.insert(10, self.numdrones)
 		self.entry1.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry1.pack(side = tk.TOP) # draw the entry form for number of random points
 
@@ -340,20 +340,20 @@ class DisplayApp(Simulation):
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=10 )
 
-		#---- Input Area Width and Height ----#
+		#---- Input Base Station Coords ----#
 		label = tk.Label( rightcntlframe, text="x,y coords", width=10, fg=FONTCOLOR )
 		label.configure(background=FRAMECOLOR)
 		label.pack( side=tk.TOP, pady=2 )
 
 		self.areaWidth = tk.IntVar(None)
 		self.entry5 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
-		self.entry5.insert(0, 35)
+		self.entry5.insert(10, self.basestationcoordinatesList[0][0])
 		self.entry5.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry5.pack(side = tk.TOP) # draw the entry form for area width
 
 		self.areaHeight = tk.IntVar(None)
 		self.entry6 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
-		self.entry6.insert(0, 40)
+		self.entry6.insert(10, self.basestationcoordinatesList[0][1])
 		self.entry6.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry6.pack(side = tk.TOP) # draw the entry form for area height
 
@@ -374,7 +374,7 @@ class DisplayApp(Simulation):
 		label.pack( side=tk.TOP, pady=1 )
 		self.areaWidth = tk.IntVar(None)
 		self.entry2 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
-		self.entry2.insert(0, 50)
+		self.entry2.insert(10, self.tareaHeight)
 		self.entry2.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry2.pack(side = tk.TOP) # draw the entry form for area width
 
@@ -384,7 +384,7 @@ class DisplayApp(Simulation):
 		label.pack( side=tk.TOP, pady=1 )
 		self.areaHeight = tk.IntVar(None)
 		self.entry3 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
-		self.entry3.insert(0, 50)
+		self.entry3.insert(10, self.tareaWidth)
 		self.entry3.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry3.pack(side = tk.TOP) # draw the entry form for area height
 
@@ -401,27 +401,42 @@ class DisplayApp(Simulation):
 		#creating a blank label to take up space for the location table
 		label = tk.Label( rightcntlframe, text="", width=20, fg = FONTCOLOR )
 		label.configure(background=FRAMECOLOR)
-		label.pack( side=tk.TOP, pady=30 )
+		if os.name == "posix":
+			label.pack( side=tk.TOP, pady=20)
+		else:
+			label.pack( side=tk.TOP, pady=30)
 
 		#---- Up ----#
 		droneUp = tk.Button( rightcntlframe, text="Up", command=self.moveDroneUp )
 		droneUp.configure(highlightbackground=FRAMECOLOR)
-		droneUp.place(x=60, y=405)
+		if os.name == "posix":
+			droneUp.place(x=60, y=455)
+		else:
+			droneUp.place(x=60, y=405)
 
 		#---- Left ----#
 		droneLeft = tk.Button( rightcntlframe, text="Left", command=self.moveDroneLeft )
 		droneLeft.configure(highlightbackground=FRAMECOLOR)
-		droneLeft.place(x=28, y=435)
+		if os.name == "posix":
+			droneLeft.place(x=28, y=480)
+		else:
+			droneLeft.place(x=28, y=435)
 
 		#---- Down ----#
 		droneDown = tk.Button( rightcntlframe, text="Down", command=self.moveDroneDown )
 		droneDown.configure(highlightbackground=FRAMECOLOR)
-		droneDown.place(x=53, y=465)
+		if os.name == "posix":
+			droneDown.place(x=53, y=505)
+		else:
+			droneDown.place(x=53, y=465)
 
 		#---- Right ----#
 		droneRight = tk.Button( rightcntlframe, text="Right", command=self.moveDroneRight )
 		droneRight.configure(highlightbackground=FRAMECOLOR)
-		droneRight.place(x=87, y=435)
+		if os.name == "posix":
+			droneRight.place(x=87, y=480)
+		else:
+			droneRight.place(x=87, y=435)
 
 		#---- Run Simulation Label ----#
 		# use a label to set the size of the right panel

@@ -29,7 +29,7 @@ class Simulation:
 	def __init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui=False):
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=False):
 
 		# width and height of the window (these are here because they maintain uniform spawning of the drones)
 		self.initDx = width
@@ -62,30 +62,32 @@ class Simulation:
 		self.tareaHeight = tareaHeight
 		self.tareaCoords = tareaCoords
 		self.obstclboolean = obstclboolean
-		self.obstclWidth = obstclWidth
-		self.obstclHeight = obstclHeight
-		self.obstclCoords = obstclCoords
+		self.obstclWidthList = obstclWidthList
+		self.obstclHeightList = obstclHeightList
+		self.obstclCoordsList = obstclCoordsList
 
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
 		# self.setUpSimulation(0, [], 0, [], False, 0, 0, (0, 0), True, 0, 0, (0, 0))
 		if not gui:
-			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
+			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
 
 
 	# Set up and run the simulation from the file settings
 	def setUpSimulation(self, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidth, obstclHeight, obstclCoords):
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList):
 
 		self.tarea = None
 		if tareaboolean :
 			self.createTargetArea(tareaCoords[0], tareaCoords[1], tareaWidth, tareaHeight)
 
-		self.obstacle = None
+		self.obstacles = None
 		if obstclboolean:
-			self.createObstacle(obstclCoords[0],obstclCoords[1],obstclWidth, obstclHeight)
+			if( len(obstclWidthList) == len(obstclHeightList) == len(obstclCoordsList) ):
+				for i in range(len(obstclWidthList)):
+					self.createObstacle(obstclCoords[2*i],obstclCoords[(2*i)+1], obstclWidthList[i], obstclHeight[i])
 
 
 
@@ -117,7 +119,7 @@ class Simulation:
 	def createRandomDrone(self, event=None):
 		x = None
 		y = None
-		while (x == None and y == None ) or (self.obstacle.inObstacle(x,y) if self.obstacle!=None else False) :
+		while (x == None and y == None ) or (self.inObstacles(x,y) if self.obstacles!=None else False) :
 			if not self.tareab :
 				x = random.gauss(self.initDx/2, self.initDx/15)
 				y = random.gauss(self.initDy/2, self.initDy/15)
@@ -178,7 +180,15 @@ class Simulation:
 	def createObstacle(self, x=450, y=338, w=None, h=None, event=None):
 		self.obstclb = True
 		del self.drones[:]
-		self.obstacle = Obstacle(x, y, w, h)
+		self.obstacles.append(Obstacle(x, y, w, h))
+		
+	#returns True if the given coordinate falls within and obstacle
+	def inObstacles(self, x, y):
+		for obstacle in self.obstacles:
+			if obstacle.inObstacle(x, y):
+				return True
+		return False
+			
 
 	#resets the simulation
 	def clearData(self, event=None):
@@ -191,7 +201,7 @@ class Simulation:
 
 		if self.obstclb:
 			self.obstclb = False
-			self.obstacle = None
+			self.obstacles = None
 
 		print('Simulation has been reset.')
 
@@ -209,7 +219,7 @@ class Simulation:
 		# 	if frequency != 0:
 		# 		self.statusMessage(True)
 		for drone in self.drones:
-			drone.do_step(self.obstacle)
+			drone.do_step(self.obstacles)
 			#print(drone.get_battery_level())
 		# self.updateDroneView()
 
@@ -270,10 +280,10 @@ class Simulation:
 			output += "\n______Target Area______\n"
 			output += "Coordinates of Center: " + str(self.tarea.get_coords_for_print()) + "\n"
 			output += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
-		if self.isObstacle:
+		if self.obstclb:
 			output += "\n______Obstacle______\n"
-			output += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
-			output += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
+			# output += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
+# 			output += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
 		return output
 
 	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats
@@ -301,10 +311,10 @@ class Simulation:
 			stats += "\n______Target Area______\n"
 			stats += "Coordinates of Center: " + str(self.tarea.get_coords_for_print()) + "\n"
 			stats += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
-		if self.isObstacle:
+		if self.obstclb:
 			stats += "\n______Obstacle______\n"
-			stats += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
-			stats += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
+			# stats += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
+# 			stats += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
 		if initialStats == None:
 			return stats
 		else:
@@ -408,7 +418,7 @@ class Simulation:
 			self.clearData()
 			self.setUpSimulation(self.numdrones, self.dronescoordinatesList, self.numbasestation,
 				self.basestationcoordinatesList, self.tareaboolean, self.tareaWidth, self.tareaHeight,
-				self.tareaCoords, self.obstclboolean, self.obstclWidth, self.obstclHeight, self.obstclCoords)
+				self.tareaCoords, self.obstclboolean, self.obstclWidthList, self.obstclHeightList, self.obstclCoordsList)
 			self.multiStep(steps, 10)
 
 	#__________________________________Getters and setters to be used in Display.py__________________________________

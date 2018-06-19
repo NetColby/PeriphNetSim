@@ -125,6 +125,12 @@ class DisplayApp(Simulation):
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
 		return
+	
+	#creates the given number of random drones
+	def createRandomDrones(self):
+		numDrones = int(self.entry1.get())
+		for i in range(numDrones):
+			self.createRandomDrone()
 
 	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:

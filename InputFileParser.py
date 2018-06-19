@@ -59,7 +59,8 @@ class InputFileParser:
                   "tareaboolean" : False, "tareaCoords" : (0,0),
                   "tareaWidth" : 0, "tareaHeight" : 0,
                   "obstclboolean" : False, "numobstacle" : None,  "obstclCoordinatesList" : [],
-                  "obstclWidth" : 0, "obstclHeight" : 0,
+                  "obstclWidth" : 0, "obstclHeight" : 0, 
+                  "comRange" : 0, "batteryLevel" : 0, "moveConsumption" : 0.0, "idleConsumption" : 0.0
                 }
 
         # Reading lines form file
@@ -72,7 +73,7 @@ class InputFileParser:
 
                 if lines[i][0] != "#" : #avoiding executing comments
 
-                    if lines[i][0] in ["n","l","s","t","o"] : # Seperate variable decalrations and coords
+                    if lines[i][0] in ["n","l","s","t","o","c","b","m","i"] : # Seperate variable decalrations and coords
                         splitLine = lines[i].split("=")
                         self.input[splitLine[0]] = splitLine[1]
                         # print(self.input)
@@ -160,6 +161,10 @@ class InputFileParser:
         self.input["steps"] = int(self.input.get("steps"))
         self.input["tareaboolean"] = self.input.get("tareaboolean") == "True"
         self.input["obstclboolean"] = self.input.get("obstclboolean") == "True"
+        self.input["comRange"] = int(self.input.get("comRange"))
+        self.input["batteryLevel"] = int(self.input.get("batteryLevel"))
+        self.input["moveConsumption"] = float(self.input.get("moveConsumption"))
+        self.input["idleConsumption"] = float(self.input.get("idleConsumption"))
 
     def getInput(self):
         numdrones             = self.input.get("numdrones")
@@ -175,8 +180,12 @@ class InputFileParser:
         obstclCoordinatesList = self.input.get("obstclCoordinatesList")
         obstclWidth = self.input.get("obstclWidth")
         obstclHeight = self.input.get("obstclHeight")
+        comRange = self.input.get("comRange")
+        batteryLevel = self.input.get("batteryLevel")
+        moveConsumption = self.input.get("moveConsumption")
+        idleConsumption = self.input.get("idleConsumption")
 
-        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight
+        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, comRange, batteryLevel, moveConsumption, idleConsumption
 
     def statusMessage(self):
         # Console messages
@@ -199,9 +208,13 @@ class InputFileParser:
         print("~ Number of obstacles                      : " + str(self.input["numobstacle"]) )
         if self.input["obstclboolean"]:
             print("~ " + str(self.input["obstclCoordinatesList"]) )
-            print("~ Dimmensions of Obstacle are WxH          : " + str(self.input["obstclWidth"]) + " x " + str(self.input["obstclHeight"]) )
+            print("~ Dimmensions of Obstacle are WxH           : " + str(self.input["obstclWidth"]) + " x " + str(self.input["obstclHeight"]) )
 
-        print("~ Running the simulation for a number of   : " + str(self.input["steps"]) + " steps")
+        print("~ Running the simulation for a number of        : " + str(self.input["steps"]) + " steps")
+        print("~ Communication range of drones and base staions: " + str(self.input["comRange"]))
+        print("~ Starting battery level of drones              : " + str(self.input["batteryLevel"]))
+        print("~ Amount of energy used during a drone's move   : " + str(self.input["moveConsumption"]))
+        print("~ Amount of energy used during a drone's idle   : " + str(self.input["idleConsumption"]))
         print('______________________________________')
 
 

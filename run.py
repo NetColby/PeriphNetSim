@@ -18,7 +18,7 @@ print(str(sys.argv))
 filename = "settings.txt"
 parser = InputFileParser(filename)
 parser.parse()
-numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight = parser.getInput()
+numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, comRange, batteryLevel, moveConsumption, idleConsumption = parser.getInput()
 parser.statusMessage()
 
 
@@ -27,6 +27,11 @@ gui = True
 #interpretes whether or not to run the GUI
 if "-W" in sys.argv:
     gui = False
+
+print(comRange)
+print(batteryLevel)
+print(moveConsumption)
+print(idleConsumption)
 
 # dapp = Display.DisplayApp(1000, 1000, 2, [(100, 100), (200, 200)], 1, [(150, 150)], True, 125, 125, (150, 150), True, 2, 2, (125, 125))
 sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclCoordinatesList, obstclWidth, obstclHeight, False)

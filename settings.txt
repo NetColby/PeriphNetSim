@@ -4,18 +4,19 @@
 numdrones=10
 
 # x,y Coordinates of the drones (optional)
-#300,400
-#350,400
-#350,450
-#400,400
+300,400
+350,400
+350,450
+400,400
 #440,300
 
 
 # Number of base stations to spawn
-numbasestation=1
+numbasestation=2
 
 # x,y Coordinates of the base stations (required)
 200,550
+300,400
 
 
 # Number of steps (increments in time)
@@ -25,18 +26,32 @@ steps=30
 tareaboolean=True
 
 # Target Area coordinates
-(xt,yt) = (400,350)
+400,350
 
 # Target Area settings (Ignore if tareaboolean=False )
 tareaWidth=400
 tareaHeight=400
 
 # Obstacle
-obstclboolean=False
+obstclboolean=True
+
+# Obstacle number
+numobstacle=2
 
 # Obstacle coordinates
-(xo,yo) = (400,400)
+400,400
+300,300
+
+
+
 
 # Obstacle settings (Ignore if obstclboolean=False )
 obstclWidth=130
 obstclHeight=130
+
+
+
+
+
+# End of the file
+end.

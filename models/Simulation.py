@@ -15,7 +15,6 @@ import random
 
 
 from .Drone import Drone
-from .Config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
 from .TargetArea import targetArea
@@ -46,8 +45,6 @@ class Simulation:
 
 		self.view_tx = 0
 		self.view_ty = 0
-
-		self.config = Config()
 
 		#holds the command line arguments from run.py
 		self.args = []
@@ -143,12 +140,12 @@ class Simulation:
 
 	#creates a drone at the given location
 	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider, event=None):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones))
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones))
 		self.drones.append(drone)
 
 	#creates a base station at the given location
 	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoider, event=None):
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones))
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones))
 		self.drones.append(baseStation)
 
 	#creates a target area given x and y coordinates at the target area's center and
@@ -264,8 +261,8 @@ class Simulation:
 		output = "________________________Statistics after " + str(stepsForStatus) + " steps:________________________\n"
 		output += str(self.numAliveDrones()) + " drones alive.\n"
 		output += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
-# 		output += "Coverage: " + str(self.coverage(self.config.com_range)) + "\n"
-		output += "Uniformity: " + str(self.uniformity(self.config.com_range)) + "\n\n"
+# 		output += "Coverage: " + str(self.coverage(105)) + "\n"
+		output += "Uniformity: " + str(self.uniformity(105)) + "\n\n"
 		if(self.numDrones() > 0):
 			output += "_________Drones_________\n"
 			for agent in self.drones:
@@ -295,8 +292,8 @@ class Simulation:
 			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
 		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n"
 		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
-		stats += "Coverage: " + str(self.coverage(self.config.com_range)) + "\n"
-		stats += "Uniformity: " + str(self.uniformity(self.config.com_range)) + "\n"
+		stats += "Coverage: " + str(self.coverage(105)) + "\n"
+		stats += "Uniformity: " + str(self.uniformity(105)) + "\n"
 		if(self.numDrones() > 0):
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:

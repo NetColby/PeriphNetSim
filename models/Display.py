@@ -17,7 +17,6 @@ import time
 
 
 from .Drone import Drone
-from .Config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
 from .TargetArea import targetArea
@@ -76,8 +75,6 @@ class DisplayApp(Simulation):
 		self.droneSize = 10 # set default size to 10 pixels
 		self.colorOption = "#F1A9A0"
 
-		self.config = Config()
-
 		# setup the menus
 		self.buildMenus()
 
@@ -117,7 +114,7 @@ class DisplayApp(Simulation):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt, self.canvas)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
@@ -138,7 +135,7 @@ class DisplayApp(Simulation):
 			x = int(self.entry5.get())
 			y = int(self.entry6.get())
 		pt = self.canvas.create_oval(x-1.5*dx, y-1.5*dx, x+1.5*dx, y+1.5*dx, fill=BASESTATIONCLR, outline='')
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt)
 		self.drones.append(baseStation)
 		self.updateDroneView()
 		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
@@ -278,7 +275,7 @@ class DisplayApp(Simulation):
 				bcoord = self.drones[db].get_coords()
 				euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
 
-				if euclidian < self.config.com_range:
+				if euclidian < self.drones[0].comRange:
 					acoordcanvas = self.canvas.coords(self.drones[da].get_pt())
 					bcoordcanvas = self.canvas.coords(self.drones[db].get_pt())
 

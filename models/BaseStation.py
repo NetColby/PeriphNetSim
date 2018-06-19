@@ -7,8 +7,9 @@ import math
 from .Agent import Agent
 
 class BaseStation(Agent):
-    def __init__(self, x, y, algorithmProvider, pt=None, canvas=False):
+    def __init__(self, x, y, algorithmProvider, pt=None, canvas=False, comRange=105):
         Agent.__init__(self, x, y, canvas=canvas)
+        self.comRange = comRange
         self.pt = pt
         self.algorithm_provider = algorithmProvider
         self.dead = False

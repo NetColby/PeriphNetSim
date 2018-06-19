@@ -9,10 +9,12 @@ import math
 from .BaseStation import BaseStation
 
 class Drone(BaseStation):
-    def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, batteryLevel=100.0):
-        BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas)
+    def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comRange=105, batteryLevel=100.0, moveConsumption=0.9, idleConsumption=0.8):
+        BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comRange)
         self.battery_level = batteryLevel
         self.moves = True
+        self.moveConsumption = moveConsumption
+        self.idleConsumption = idleConsumption
 
     def get_battery_level(self):
         # return the current battery level of the drone
@@ -23,11 +25,11 @@ class Drone(BaseStation):
         if self.canvas is not None:
             self.canvas.move(self.get_pt(), x, y)
         self.set_coords(self.x + x, self.y + y)
-        self.battery_level -= self.algorithm_provider.config.move_consumption
+        self.battery_level -= self.moveConsumption
         self.update_life_state()
 
     def idle(self):
-        self.battery_level -= self.algorithm_provider.config.idle_consumption
+        self.battery_level -= self.idleConsumption
         self.update_life_state()
 
     def update_life_state(self):

@@ -17,7 +17,6 @@ import time
 
 
 from .Drone import Drone
-from .Config import Config
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
 from .TargetArea import targetArea
@@ -41,12 +40,12 @@ class DisplayApp(Simulation):
 		, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui=True):
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=True):
 
 		Simulation.__init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui=True)
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=True)
 		# # width and height of the window (these are here because they are used in the construcion of the window)
 		# self.initDx = width
 		# self.initDy = height
@@ -76,8 +75,6 @@ class DisplayApp(Simulation):
 		self.droneSize = 10 # set default size to 10 pixels
 		self.colorOption = "#F1A9A0"
 
-		self.config = Config()
-
 		# setup the menus
 		self.buildMenus()
 
@@ -100,9 +97,7 @@ class DisplayApp(Simulation):
 		self.selectedDrone = None
 
 		# Set up the simulation
-		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
-
-
+		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
 
 
 	def multiStep(self, event=None):
@@ -110,7 +105,7 @@ class DisplayApp(Simulation):
 		frequency = self.interpretFrequency()
 		# Simulation.multiStep(self, steps,frequency)
 
-		for i in range(int(steps)):
+		for i in range(steps):
 			self.root.after(125*i, self.droneStep)
 
 
@@ -119,12 +114,19 @@ class DisplayApp(Simulation):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt, self.canvas)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
 		return
+		
+	#creates the given number of random drones
+	def createRandomDrones(self):
+		numDrones = int(self.entry1.get())
+		for i in range(numDrones):
+			self.createRandomDrone()
+
 
 	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
@@ -133,7 +135,7 @@ class DisplayApp(Simulation):
 			x = int(self.entry5.get())
 			y = int(self.entry6.get())
 		pt = self.canvas.create_oval(x-1.5*dx, y-1.5*dx, x+1.5*dx, y+1.5*dx, fill=BASESTATIONCLR, outline='')
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.config, self.drones), pt)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt)
 		self.drones.append(baseStation)
 		self.updateDroneView()
 		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
@@ -142,7 +144,7 @@ class DisplayApp(Simulation):
 
 	def droneStep(self):
 		for drone in self.drones:
-			drone.do_step(self.obstacle)
+			drone.do_step(self.obstacles)
 		self.updateDroneView()
 
 
@@ -154,11 +156,11 @@ class DisplayApp(Simulation):
 			h = int(self.entry3.get())
 		# print("w is " + w + " type " + str(type(w)))
 		self.tarea = targetArea(x,y,w,h,self.canvas)
-		return
+# 		return
 
 	def createObstacle(self, x=450, y=338, w=None, h=None):
 		self.obstclb = True
-		self.obstacle = Obstacle(x,y,w,h,self.canvas)
+		self.obstacles.append(Obstacle(x,y,w,h,self.canvas))
 
 
 	#clears the canvas to reset the simulation
@@ -273,7 +275,7 @@ class DisplayApp(Simulation):
 				bcoord = self.drones[db].get_coords()
 				euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
 
-				if euclidian < self.config.com_range:
+				if euclidian < self.drones[0].comRange:
 					acoordcanvas = self.canvas.coords(self.drones[da].get_pt())
 					bcoordcanvas = self.canvas.coords(self.drones[db].get_pt())
 

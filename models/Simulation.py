@@ -83,11 +83,11 @@ class Simulation:
 		if tareaboolean :
 			self.createTargetArea(tareaCoords[0], tareaCoords[1], tareaWidth, tareaHeight)
 
-		self.obstacles = None
+		self.obstacles = []
 		if obstclboolean:
 			if( len(obstclWidthList) == len(obstclHeightList) == len(obstclCoordsList) ):
 				for i in range(len(obstclWidthList)):
-					self.createObstacle(obstclCoords[2*i],obstclCoords[(2*i)+1], obstclWidthList[i], obstclHeight[i])
+					self.createObstacle(obstclCoordsList[i][0], obstclCoordsList[i][1], obstclWidthList[i], obstclHeightList[i])
 
 
 

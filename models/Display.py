@@ -103,14 +103,12 @@ class DisplayApp(Simulation):
 		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
 
 
-
-
 	def multiStep(self, event=None):
 		steps = int(self.entry4.get())
 		frequency = self.interpretFrequency()
 		# Simulation.multiStep(self, steps,frequency)
 
-		for i in range(int(steps)):
+		for i in range(steps):
 			self.root.after(125*i, self.droneStep)
 
 
@@ -125,12 +123,13 @@ class DisplayApp(Simulation):
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
 		return
-	
+		
 	#creates the given number of random drones
 	def createRandomDrones(self):
 		numDrones = int(self.entry1.get())
 		for i in range(numDrones):
 			self.createRandomDrone()
+
 
 	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
 		if dx is None:
@@ -148,7 +147,7 @@ class DisplayApp(Simulation):
 
 	def droneStep(self):
 		for drone in self.drones:
-			drone.do_step(self.obstacle)
+			drone.do_step(self.obstacles)
 		self.updateDroneView()
 
 
@@ -160,7 +159,7 @@ class DisplayApp(Simulation):
 			h = int(self.entry3.get())
 		# print("w is " + w + " type " + str(type(w)))
 		self.tarea = targetArea(x,y,w,h,self.canvas)
-		return
+# 		return
 
 	def createObstacle(self, x=450, y=338, w=None, h=None):
 		self.obstclb = True

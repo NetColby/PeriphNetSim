@@ -29,12 +29,12 @@ if "-W" in sys.argv:
     gui = False
 
 # dapp = Display.DisplayApp(1000, 1000, 2, [(100, 100), (200, 200)], 1, [(150, 150)], True, 125, 125, (150, 150), True, 2, 2, (125, 125))
-# sim = Simulation.Simulation(1200, 675, numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords, False)
-# sim.main(1, steps)
+sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclCoordinatesList, obstclWidth, obstclHeight, False)
+sim.main(1, 100)
 print("####################################################################################")
 print("####################################################################################")
 print("Simulation Done. Now proceeding to Display")
 print("####################################################################################")
 print("####################################################################################")
-dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, True)
+dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclCoordinatesList, obstclWidth, obstclHeight, True)
 dapp.main()

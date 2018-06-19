@@ -40,12 +40,12 @@ class DisplayApp(Simulation):
 		, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui=True):
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=True):
 
 		Simulation.__init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidth, obstclHeight, obstclCoords, gui=True)
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=True)
 		# # width and height of the window (these are here because they are used in the construcion of the window)
 		# self.initDx = width
 		# self.initDy = height
@@ -97,7 +97,7 @@ class DisplayApp(Simulation):
 		self.selectedDrone = None
 
 		# Set up the simulation
-		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoords)
+		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
 
 
 	def multiStep(self, event=None):

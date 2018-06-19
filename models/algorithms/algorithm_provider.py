@@ -3,8 +3,7 @@ import math
 
 class AlgorithmProvider(ABC):
 
-    def __init__(self, config, drones):
-        self.config = config
+    def __init__(self, drones):
         self.drones = drones
         super().__init__()
 
@@ -20,7 +19,7 @@ class AlgorithmProvider(ABC):
             tcoord = t.get_coords()
             euclidian = math.hypot(dronecoord[0]-tcoord[0], dronecoord[1]-tcoord[1])
             
-            if euclidian < self.config.com_range and drone is not t:
+            if euclidian < self.drones[0].comRange and drone is not t:
                 drones_in_range.append(t)
 
         return drones_in_range

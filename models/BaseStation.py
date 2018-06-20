@@ -17,6 +17,7 @@ class BaseStation(Agent):
             self.comModel = comModel
         self.pt = pt
         self.algorithm_provider = algorithmProvider
+        self.neighbors = []
         self.dead = False
 
     def getComRange(self):
@@ -31,11 +32,28 @@ class BaseStation(Agent):
     def do_step(self, obstacle):
         self.algorithm_provider.run(self, obstacle)
 
-
     def move(self, x, y):
         # move drone object by unit vector in direction x/y
         self.canvas.move(self.get_pt(), x, y)
         self.set_coords(self.x + x, self.y + y)
+
+     #returns the neighbors of the drone
+    def getNeighbors(self, drones, rng):
+        # returns a list of drones within communications range
+        dronecoord = self.get_coords()
+        drones_in_range = []
+        for t in [i for i in drones if not i.dead and type(i) is Drone]:
+            tcoord = t.get_coords()
+            euclidian = math.hypot(dronecoord[0]-tcoord[0], dronecoord[1]-tcoord[1])
+
+            if euclidian < rng and self is not t:
+                drones_in_range.append(t)
+
+        return drones_in_range
+
+    #updates the neighbors field to hold the drones currently being communicating with
+    def updateNeighbors(self, neighbors):
+        self.neighbors = neighbors
 
     def doesMove(self):
         return self.moves

@@ -11,6 +11,7 @@ from .TargetArea import targetArea
 from .BaseStation import BaseStation
 from .Agent import Agent
 from .Obstacle import Obstacle
+from .communicationModels.Disk import Disk
 
 # create a class to build and manage the display
 class Simulation:
@@ -52,7 +53,7 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
-		
+		self.comModel =  Disk(120)								################################################################################################### CHANNGE
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
@@ -132,13 +133,13 @@ class Simulation:
 		self.createDrone(x, y)
 
 	#creates a drone at the given location
-	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider, event=None):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones))
+	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider):
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel)
 		self.drones.append(drone)
 
 	#creates a base station at the given location
 	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoider, event=None):
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones))
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel)
 		self.drones.append(baseStation)
 
 	#creates a target area given x and y coordinates, width and height
@@ -147,7 +148,7 @@ class Simulation:
 		self.tarea = targetArea(x, y, w, h)
 
 	#creates an obstacle given x and y coordinates, width and height
-	def createObstacle(self, x=450, y=338, w=None, h=None, event=None):
+	def createObstacle(self, x=450, y=338, w=None, h=None):
 		self.obstclb = True
 		del self.drones[:]
 		self.obstacles.append(Obstacle(x, y, w, h))

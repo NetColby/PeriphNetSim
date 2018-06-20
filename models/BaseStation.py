@@ -22,6 +22,8 @@ class BaseStation(Agent):
     def getComRange(self):
         return self.comModel.getComRange()
 
+    def attemptCommunication(self, euclidianDist):
+        return self.comModel.attemptCommunication(euclidianDist)
 
     def idle(self):
         pass

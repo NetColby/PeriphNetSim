@@ -6,6 +6,9 @@
 # Updated by Emmett Burns and Selim Hassairi
 #June 2018
 
+print("wtf")
+
+
 from models import Display
 from models import Simulation
 from InputFileParser import InputFileParser

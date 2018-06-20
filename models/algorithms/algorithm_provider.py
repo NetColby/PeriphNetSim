@@ -19,7 +19,7 @@ class AlgorithmProvider(ABC):
             tcoord = t.get_coords()
             euclidian = math.hypot(dronecoord[0]-tcoord[0], dronecoord[1]-tcoord[1])
 
-            if euclidian < self.drones[0].getComRange() and drone is not t:
+            if self.drones[0].attemptCommunication(euclidian) and drone is not t:
                 drones_in_range.append(t)
-                
+
         return drones_in_range

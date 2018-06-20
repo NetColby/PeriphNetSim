@@ -12,6 +12,7 @@ from .BaseStation import BaseStation
 from .Agent import Agent
 from .Obstacle import Obstacle
 from .communicationModels.Disk import Disk
+from .communicationModels.Probabilistic import Probabilistic
 
 # create a class to build and manage the display
 class Simulation:
@@ -53,7 +54,7 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
-		self.comModel =  Disk(120)								################################################################################################### CHANNGE
+		self.comModel =  Disk(130)								################################################################################################### CHANNGE
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
@@ -72,10 +73,10 @@ class Simulation:
 
 		self.obstacles = []
 		#temporary fix for obstclHeight and obstcleWidth not being lists
-		
-		#if the given width, height and coords lists are not the same length, the shorter lists will be lengthened to 
+
+		#if the given width, height and coords lists are not the same length, the shorter lists will be lengthened to
 		#the length of the longer lists by repeating the last element in the shorter lists
-		
+
 		if type(obstclWidth) != list:
 			obstclWidthList = [int(obstclWidth)]
 		if type(obstclHeight) != list:
@@ -152,14 +153,14 @@ class Simulation:
 		self.obstclb = True
 		del self.drones[:]
 		self.obstacles.append(Obstacle(x, y, w, h))
-		
+
 	#returns True if the given coordinate falls within and obstacle
 	def inObstacles(self, x, y):
 		for obstacle in self.obstacles:
 			if obstacle.inObstacle(x, y):
 				return True
 		return False
-			
+
 	#resets the simulation
 	def clearData(self, event=None):
 		del self.drones[:]
@@ -218,7 +219,7 @@ class Simulation:
 			output += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
 		if self.obstclb:
 			output += "\n______Obstacle______\n"
-			for obstacle in self.obstacles:	
+			for obstacle in self.obstacles:
 				output += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" % obstacle.get_coords()[1] + ")\n"
 				output += "Width x Height: " + str(obstacle.getAwidth()) + " x " + str(obstacle.getAheight()) + "\n"
 		return output
@@ -250,7 +251,7 @@ class Simulation:
 			stats += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
 		if self.obstclb:
 			stats += "\n______Obstacle______\n"
-			for obstacle in self.obstacles:	
+			for obstacle in self.obstacles:
 				stats += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" % obstacle.get_coords()[1] + ")\n"
 				stats += "Width x Height: " + str(obstacle.getAwidth()) + " x " + str(obstacle.getAheight()) + "\n"
 		if initialStats == None:
@@ -313,7 +314,7 @@ class Simulation:
 			if type(agent) is Drone:
 				numDrones += 1
 		return numDrones
-		
+
 	# return the num of alive drones
 	def numAliveDrones(self):
 		num = 0

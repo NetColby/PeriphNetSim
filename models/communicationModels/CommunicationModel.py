@@ -11,3 +11,6 @@ class CommunicationModel:
 
     def getComRange(self):
         return self.communicationRange
+
+    def attemptCommunication(self):
+        return False

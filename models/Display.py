@@ -276,7 +276,7 @@ class DisplayApp(Simulation):
 				bcoord = self.drones[db].get_coords()
 				euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
 
-				if euclidian < self.drones[0].getComRange():
+				if self.drones[0].attemptCommunication(euclidian):
 					acoordcanvas = self.canvas.coords(self.drones[da].get_pt())
 					bcoordcanvas = self.canvas.coords(self.drones[db].get_pt())
 

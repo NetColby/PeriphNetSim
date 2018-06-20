@@ -12,5 +12,6 @@ class CommunicationModel:
     def getComRange(self):
         return self.communicationRange
 
-    def attemptCommunication(self):
+    def attemptCommunication(self,euclidianDist):
+        print("THIS SHOULD NOT POP UP")
         return False

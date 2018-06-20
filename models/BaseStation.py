@@ -5,14 +5,23 @@
 
 import math
 from .Agent import Agent
+from .communicationModels.Disk import Disk
+
 
 class BaseStation(Agent):
-    def __init__(self, x, y, algorithmProvider, pt=None, canvas=False, comRange=105):
+    def __init__(self, x, y, algorithmProvider, pt=None, canvas=False, comModel=None):
         Agent.__init__(self, x, y, canvas=canvas)
-        self.comRange = comRange
+        if comModel == None:
+            self.comModel = Disk(10)
+        else :
+            self.comModel = comModel
         self.pt = pt
         self.algorithm_provider = algorithmProvider
         self.dead = False
+
+    def getComRange(self):
+        return self.comModel.getComRange()
+
 
     def idle(self):
         pass

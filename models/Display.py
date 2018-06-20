@@ -24,6 +24,7 @@ from .BaseStation import BaseStation
 from .Agent import Agent
 from .Obstacle import Obstacle
 from .Simulation import Simulation
+from .communicationModels.Disk import Disk
 
 debug = False
 
@@ -110,17 +111,17 @@ class DisplayApp(Simulation):
 
 
 
-	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoider):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, comModel=self.comModel)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
 		return
-		
+
 	#creates the given number of random drones
 	def createRandomDrones(self):
 		numDrones = int(self.entry1.get())
@@ -275,7 +276,7 @@ class DisplayApp(Simulation):
 				bcoord = self.drones[db].get_coords()
 				euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
 
-				if euclidian < self.drones[0].comRange:
+				if euclidian < self.drones[0].getComRange():
 					acoordcanvas = self.canvas.coords(self.drones[da].get_pt())
 					bcoordcanvas = self.canvas.coords(self.drones[db].get_pt())
 

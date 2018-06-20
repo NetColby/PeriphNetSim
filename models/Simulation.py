@@ -2,17 +2,7 @@
 #06/14/18
 #Simulation.py
 
-# import getpass
-# import math
-# import os
 import random
-# import tkinter.font as tkf
-# import tkinter as tk
-# import tkinter.messagebox
-# import tkinter.simpledialog
-# import itertools
-# import time
-
 
 from .Drone import Drone
 from .algorithms.naive_algorithm import NaiveAlgorithm
@@ -21,7 +11,6 @@ from .TargetArea import targetArea
 from .BaseStation import BaseStation
 from .Agent import Agent
 from .Obstacle import Obstacle
-from .communicationModels.Disk import Disk
 
 # create a class to build and manage the display
 class Simulation:
@@ -40,7 +29,7 @@ class Simulation:
 		self.lines = [] # list of lines connecting drones
 		self.data = None # will hold the raw data someday.
 
-		# Presence or abscence of T.Area and Obstacle
+		# Presence or abscence of Target Area and Obstacle
 		self.tareab = False
 		self.obstclb = False
 
@@ -63,8 +52,7 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
-		self.comModel =  Disk(120)								################################################################################################### CHANNGE
-
+		
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
@@ -72,23 +60,35 @@ class Simulation:
 		if not gui:
 			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
 
-
 	# Set up and run the simulation from the file settings
 	def setUpSimulation(self, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList):
+		obstclboolean, obstclWidth, obstclHeight, obstclCoordsList):
 
 		self.tarea = None
 		if tareaboolean :
 			self.createTargetArea(tareaCoords[0], tareaCoords[1], tareaWidth, tareaHeight)
 
 		self.obstacles = []
+		#temporary fix for obstclHeight and obstcleWidth not being lists
+		
+		#if the given width, height and coords lists are not the same length, the shorter lists will be lengthened to 
+		#the length of the longer lists by repeating the last element in the shorter lists
+		
+		if type(obstclWidth) != list:
+			obstclWidthList = [int(obstclWidth)]
+		if type(obstclHeight) != list:
+			obstclHeightList = [int(obstclHeight)]
 		if obstclboolean:
-			if( len(obstclWidthList) == len(obstclHeightList) == len(obstclCoordsList) ):
-				for i in range(len(obstclWidthList)):
-					self.createObstacle(obstclCoordsList[i][0], obstclCoordsList[i][1], obstclWidthList[i], obstclHeightList[i])
-
-
+			if not( len(obstclWidthList) == len(obstclHeightList) == len(obstclCoordsList) ):
+				while len(obstclWidthList) < len(obstclHeightList) or len(obstclWidthList) < len(obstclCoordsList):
+					obstclWidthList.append(obstclWidthList[len(obstclWidthList)-1])
+				while len(obstclHeightList) < len(obstclWidthList) or len(obstclHeightList) < len(obstclCoordsList):
+					obstclHeightList.append(obstclHeightList[len(obstclHeightList)-1])
+				while len(obstclCoordsList) < len(obstclWidthList) or len(obstclCoordsList) < len(obstclHeightList):
+					obstclCoordsList.append(obstclCoordsList[len(obstclCoordsList)-1])
+			for i in range(len(obstclWidthList)):
+				self.createObstacle(obstclCoordsList[i][0], obstclCoordsList[i][1], obstclWidthList[i], obstclHeightList[i])
 
 		# Generate drones, both specified and random
 		for coords in dronescoordinatesList:
@@ -106,13 +106,10 @@ class Simulation:
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
 
-
-
 	#creates the given number of random drones
 	def createRandomDrones(self, numDrones=10):
 		for i in range(numDrones):
 			self.createRandomDrone()
-
 
 	#creates and places a drone in a random location
 	def createRandomDrone(self, event=None):
@@ -122,12 +119,6 @@ class Simulation:
 			if not self.tareab :
 				x = random.gauss(self.initDx/2, self.initDx/15)
 				y = random.gauss(self.initDy/2, self.initDy/15)
-
-			# Outdated : too spreadout in the T.Area
-			# else:
-			# 	x = random.randint(450-(self.tarea.getTAwidth()/2), 450+(self.tarea.getTAwidth()/2))
-			# 	y = random.randint(338-(self.tarea.getTAheight()/2), 338+(self.tarea.getTAheight()/2))
-
 
 			else:
 				x = random.gauss(self.tarea.getCoords()[0], self.initDx/15)
@@ -141,54 +132,33 @@ class Simulation:
 		self.createDrone(x, y)
 
 	#creates a drone at the given location
-	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel)
+	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones))
 		self.drones.append(drone)
 
 	#creates a base station at the given location
 	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoider, event=None):
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones))
 		self.drones.append(baseStation)
 
-	#creates a target area given x and y coordinates at the target area's center and
-
-	#at this point I begin commenting out line that I would like to remove
-
+	#creates a target area given x and y coordinates, width and height
 	def createTargetArea(self, x=450, y=338, w=None, h=None, event=None):
 		self.tareab = True
-		# if w == None and h == None:
-		# 	w = int(self.entry2.get())def clearData(self, event=None):
-		del self.drones[:]
-		#self.lines = []
-
-		# if self.tareab:
-		# 	self.canvas.delete(self.tarea.getRect())
-		# 	self.tareab = False
-
-		# self.updateStatisticPanel()
-		# self.updateDroneView()
-
-		# text = "Cleared the screen"
-		# self.status.set(text)
-		#print('Cleared the screen')
-		# return
-		# 	h = int(self.entry3.get())
-		# print("w is " + w + " type " + str(type(w)))
 		self.tarea = targetArea(x, y, w, h)
 
-	def createObstacle(self, x=450, y=338, w=None, h=None):
+	#creates an obstacle given x and y coordinates, width and height
+	def createObstacle(self, x=450, y=338, w=None, h=None, event=None):
 		self.obstclb = True
 		del self.drones[:]
 		self.obstacles.append(Obstacle(x, y, w, h))
-
+		
 	#returns True if the given coordinate falls within and obstacle
 	def inObstacles(self, x, y):
 		for obstacle in self.obstacles:
 			if obstacle.inObstacle(x, y):
 				return True
 		return False
-
-
+			
 	#resets the simulation
 	def clearData(self, event=None):
 		del self.drones[:]
@@ -206,32 +176,8 @@ class Simulation:
 
 	#updates the location of the drones based on their algorithm
 	def droneStep(self):
-		# if self.steps == None:
-		# 	steps = int(self.entry4.get())
-		# else:
-		# 	steps = self.steps
-		# frequency = self.interpretFrequency()
-		# if self.iterations == 0:
-		# 	#print(self.statsToOutputFile())
-		# 	if self.output:
-		# 		self.initialStats = self.statsToOutputFile()
-		# 	if frequency != 0:
-		# 		self.statusMessage(True)
 		for drone in self.drones:
 			drone.do_step(self.obstacles)
-			#print(drone.get_battery_level())
-		# self.updateDroneView()
-
-		# if frequency != 0:
-		# 	if self.iterations%frequency == frequency-1:
-		# 		self.statusMessage()
-		# 	if frequency == 1 and self.iterations == steps:
-		# 		self.statusMessage()
-		# if self.iterations == steps-1 and self.output:
-		# 	self.statsToOutputFile(self.initialStats)
-		# self.iterations += 1
-		# if returnStats:
-		# 	return (self.avgEnergyLevel(), self.numAliveDrones(), self.numDrones(), self.numBases())
 
 	#runs the simulation for the given number of steps and prints status messages to the terminal
 	def multiStep(self, steps, frequency, event=None):
@@ -247,16 +193,6 @@ class Simulation:
 			print(self.statusMessage(stepsForStatus))
 		self.statsToOutputFile(stringForOutputFile, stepsForStatus)
 
-
-	# return the num of alive drones
-	def numAliveDrones(self):
-		num = 0
-		if self.drones:
-			for drone in self.drones:
-				if type(drone) is Drone and not drone.isDead():
-					num += 1
-		return num
-
 	#prints the status of a simulation when in begins
 	#set numDrones to True when it becomes necessary to display the number of drones
 	def statusMessage(self, stepsForStatus):
@@ -269,7 +205,7 @@ class Simulation:
 			output += "_________Drones_________\n"
 			for agent in self.drones:
 				if type(agent) is Drone:
-					output += "Drone at (" + "%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
+					output += "Drone at (%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
 		if(self.numBases() > 0):
 			output += "\n______Base Station(s)______\n"
 			for agent in self.drones:
@@ -281,8 +217,9 @@ class Simulation:
 			output += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
 		if self.obstclb:
 			output += "\n______Obstacle______\n"
-			# output += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
-# 			output += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
+			for obstacle in self.obstacles:	
+				output += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" % obstacle.get_coords()[1] + ")\n"
+				output += "Width x Height: " + str(obstacle.getAwidth()) + " x " + str(obstacle.getAheight()) + "\n"
 		return output
 
 	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats
@@ -300,7 +237,7 @@ class Simulation:
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:
 				if type(agent) is Drone:
-					stats += "Drone at (" + "%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
+					stats += "Drone at (%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
 		if(self.numBases() > 0):
 			stats += "\n______Base Station(s)______\n"
 			for agent in self.drones:
@@ -312,8 +249,9 @@ class Simulation:
 			stats += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
 		if self.obstclb:
 			stats += "\n______Obstacle______\n"
-			# stats += "Coordinates of Center: " + str(self.obstacle.get_coords_for_print()) + "\n"
-# 			stats += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
+			for obstacle in self.obstacles:	
+				stats += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" % obstacle.get_coords()[1] + ")\n"
+				stats += "Width x Height: " + str(obstacle.getAwidth()) + " x " + str(obstacle.getAheight()) + "\n"
 		if initialStats == None:
 			return stats
 		else:
@@ -345,7 +283,6 @@ class Simulation:
 			c = "No ROI (coverage incalculable)"
 		return(c)
 
-
 	#calculates and returns the uniformity of the network
 	def uniformity(self, rng):
 		total = 0
@@ -375,6 +312,15 @@ class Simulation:
 			if type(agent) is Drone:
 				numDrones += 1
 		return numDrones
+		
+	# return the num of alive drones
+	def numAliveDrones(self):
+		num = 0
+		if self.drones:
+			for drone in self.drones:
+				if type(drone) is Drone and not drone.isDead():
+					num += 1
+		return num
 
 	#returns the number of Base Stations in the drones list
 	def numBases(self):
@@ -388,7 +334,6 @@ class Simulation:
 	def getArgs(self, args):
 		self.args = args
 		print(self.args)
-
 
 	#interprets the frequency at which to print status updates to terminal
 	def interpretFrequency(self):
@@ -420,11 +365,6 @@ class Simulation:
 				self.basestationcoordinatesList, self.tareaboolean, self.tareaWidth, self.tareaHeight,
 				self.tareaCoords, self.obstclboolean, self.obstclWidthList, self.obstclHeightList, self.obstclCoordsList)
 			self.multiStep(steps, 10)
-
-	#__________________________________Getters and setters to be used in Display.py__________________________________
-
-
-
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

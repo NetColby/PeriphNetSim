@@ -9,8 +9,8 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 		avx = 0
 		avy = 0
 		if drone.doesMove():
-			target_dist = drone.getComRange() - 20
-			min_dist = drone.getComRange() - 50
+			target_dist = drone.getComRange() -5
+			min_dist = drone.getComRange() - 20
 
 			neighbors = self.get_drones_within_com_range(drone)
 

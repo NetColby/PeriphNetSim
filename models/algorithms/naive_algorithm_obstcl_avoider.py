@@ -9,8 +9,8 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 		avx = 0
 		avy = 0
 		if drone.doesMove():
-			target_dist = drone.comRange - 20
-			min_dist = drone.comRange - 50
+			target_dist = drone.getComRange() - 20
+			min_dist = drone.getComRange() - 50
 
 			neighbors = self.get_drones_within_com_range(drone)
 
@@ -33,7 +33,9 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 				else:
 					pre_target.append(d)
 
+
 			if pre_min:
+				# print("waytooclose")
 				#Get mean of drones way too close
 				coords = [n.get_coords() for n in pre_min]
 				x = [i[0] for i in coords]
@@ -53,6 +55,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 				ydirs.append(-dy / magnitude)
 
 			elif pre_target:
+				# print("tooclose")
 				#Get mean of drones too close
 				coords = [n.get_coords() for n in pre_target]
 				x = [i[0] for i in coords]
@@ -72,6 +75,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 				ydirs.append(-dy / magnitude)
 
 			elif past_target:
+				# print("toofar")
 				#Get mean of drones too far
 				coords = [n.get_coords() for n in past_target]
 				x = [i[0] for i in coords]
@@ -82,6 +86,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 
 				origin = drone.get_coords()
 
+
 				dx = avgx - origin[0]
 				dy = avgy - origin[1]
 
@@ -89,6 +94,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 
 				xdirs.append(dx / magnitude)
 				ydirs.append(dy / magnitude)
+
 
 			avx = sum(xdirs) / len(xdirs)
 			avy = sum(ydirs) / len(ydirs)
@@ -113,7 +119,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 		c2 = d2.get_coords()
 
 		return math.hypot(c1[0] - c2[0], c1[1] - c2[1])
-		
+
 	def inObstacles(self, x, y, obstacles):
 		for obstacle in obstacles :
 			if obstacle.inObstacle(x, y):

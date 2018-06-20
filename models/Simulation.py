@@ -52,7 +52,7 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
-
+		
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
@@ -63,17 +63,30 @@ class Simulation:
 	# Set up and run the simulation from the file settings
 	def setUpSimulation(self, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList):
+		obstclboolean, obstclWidth, obstclHeight, obstclCoordsList):
 
 		self.tarea = None
 		if tareaboolean :
 			self.createTargetArea(tareaCoords[0], tareaCoords[1], tareaWidth, tareaHeight)
 
 		self.obstacles = []
+		#temporary fix for obstclHeight and obstcleWidth not being lists
+		
+		#if the given width, height and coords lists are not the same length, the shorter lists will be lengthened to 
+		#the length of the longer lists by repeating the last element in the shorter lists
+		
+		obstclWidthList = [int(obstclWidth)]
+		obstclHeightList = [int(obstclHeight)]
 		if obstclboolean:
-			if( len(obstclWidthList) == len(obstclHeightList) == len(obstclCoordsList) ):
-				for i in range(len(obstclWidthList)):
-					self.createObstacle(obstclCoordsList[i][0], obstclCoordsList[i][1], obstclWidthList[i], obstclHeightList[i])
+			if not( len(obstclWidthList) == len(obstclHeightList) == len(obstclCoordsList) ):
+				while len(obstclWidthList) < len(obstclHeightList) or len(obstclWidthList) < len(obstclCoordsList):
+					obstclWidthList.append(obstclWidthList[len(obstclWidthList)-1])
+				while len(obstclHeightList) < len(obstclWidthList) or len(obstclHeightList) < len(obstclCoordsList):
+					obstclHeightList.append(obstclHeightList[len(obstclHeightList)-1])
+				while len(obstclCoordsList) < len(obstclWidthList) or len(obstclCoordsList) < len(obstclHeightList):
+					obstclCoordsList.append(obstclCoordsList[len(obstclCoordsList)-1])
+			for i in range(len(obstclWidthList)):
+				self.createObstacle(obstclCoordsList[i][0], obstclCoordsList[i][1], obstclWidthList[i], obstclHeightList[i])
 
 		# Generate drones, both specified and random
 		for coords in dronescoordinatesList:
@@ -202,9 +215,9 @@ class Simulation:
 			output += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
 		if self.obstclb:
 			output += "\n______Obstacle______\n"
-			for obstacle in self.obstcales:	
-				output += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" + obstacle.get_coords()[1] + ")\n"
-				output += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
+			for obstacle in self.obstacles:	
+				output += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" % obstacle.get_coords()[1] + ")\n"
+				output += "Width x Height: " + str(obstacle.getAwidth()) + " x " + str(obstacle.getAheight()) + "\n"
 		return output
 
 	#stores the initial status of the simulation and the writes the starting and final statistics to an output file when given the intiial stats
@@ -222,7 +235,7 @@ class Simulation:
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:
 				if type(agent) is Drone:
-					stats += "Drone at (" + "%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
+					stats += "Drone at (%.3f" % agent.get_coords()[0] + ", %.3f" %  + agent.get_coords()[1] + ") Alive: " + str(not agent.isDead()) + "\n"
 		if(self.numBases() > 0):
 			stats += "\n______Base Station(s)______\n"
 			for agent in self.drones:
@@ -234,9 +247,9 @@ class Simulation:
 			stats += "Width x Height: " + str(self.tarea.getAwidth()) + " x " + str(self.tarea.getAheight()) + "\n"
 		if self.obstclb:
 			stats += "\n______Obstacle______\n"
-			for obstacle in self.obstcales:	
-				output += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" + obstacle.get_coords()[1] + ")\n"
-				output += "Width x Height: " + str(self.obstacle.getAwidth()) + " x " + str(self.obstacle.getAheight()) + "\n"
+			for obstacle in self.obstacles:	
+				stats += "\nCoordinates of Center: (%.3f" % obstacle.get_coords()[0] + ", %.3f" % obstacle.get_coords()[1] + ")\n"
+				stats += "Width x Height: " + str(obstacle.getAwidth()) + " x " + str(obstacle.getAheight()) + "\n"
 		if initialStats == None:
 			return stats
 		else:

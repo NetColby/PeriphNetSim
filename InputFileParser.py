@@ -115,7 +115,7 @@ class InputFileParser:
                                 basestationnumber += 1
                                 # Checks for an eventual error if num of coordinates given exceeds the number of drones initally given
                                 if basestationnumber > int(self.input["numbasestation"]) :
-                                    print("ERROR : number of base stations coordinates " + str((basestationnumber) + " cannot exceed number of base stations " + str(self.imput["numbasestation"])))
+                                    print("ERROR : number of base stations coordinates " + str(basestationnumber) + " cannot exceed number of base stations " + str(self.imput["numbasestation"]))
                                     exit()
                                 self.input["basestationCoordinatesList"].append((x,y))
                             if not tempcoordBaseStationb and (basestationnumber != int(self.input["numbasestation"])):

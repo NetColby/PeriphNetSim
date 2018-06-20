@@ -268,17 +268,15 @@ class DisplayApp(Simulation):
 
 		self.lines = []
 
-		pairs = list(itertools.combinations(list(range(0, len(self.drones))), r=2))
+		for agent in self.drones:
+			for neighbor in agent.neighbors:
+				if not agent.dead and not neighbor.dead:
+					acoord = agent.get_coords()
+					bcoord = neighbor.get_coords()
 
-		for da, db in pairs:
-			if not self.drones[da].dead and not self.drones[db].dead:
-				acoord = self.drones[da].get_coords()
-				bcoord = self.drones[db].get_coords()
-				euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
-
-				if self.drones[0].attemptCommunication(euclidian):
-					acoordcanvas = self.canvas.coords(self.drones[da].get_pt())
-					bcoordcanvas = self.canvas.coords(self.drones[db].get_pt())
+				
+					acoordcanvas = self.canvas.coords(agent.get_pt())
+					bcoordcanvas = self.canvas.coords(neighbor.get_pt())
 
 					l = self.canvas.create_line(acoordcanvas[0]+self.droneSize/2,
 												acoordcanvas[1]+self.droneSize/2,
@@ -286,6 +284,27 @@ class DisplayApp(Simulation):
 												bcoordcanvas[1]+self.droneSize/2,
 												fill="red", dash=(4, 2))
 					self.lines.append(l)
+
+
+
+		# pairs = list(itertools.combinations(list(range(0, len(self.drones))), r=2))
+
+		# for da, db in pairs:
+		# 	if not self.drones[da].dead and not self.drones[db].dead:
+		# 		acoord = self.drones[da].get_coords()
+		# 		bcoord = self.drones[db].get_coords()
+		# 		euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
+
+		# 		if self.drones[0].attemptCommunication(euclidian):
+		# 			acoordcanvas = self.canvas.coords(self.drones[da].get_pt())
+		# 			bcoordcanvas = self.canvas.coords(self.drones[db].get_pt())
+
+		# 			l = self.canvas.create_line(acoordcanvas[0]+self.droneSize/2,
+		# 										acoordcanvas[1]+self.droneSize/2,
+		# 										bcoordcanvas[0]+self.droneSize/2,
+		# 										bcoordcanvas[1]+self.droneSize/2,
+		# 										fill="red", dash=(4, 2))
+		# 			self.lines.append(l)
 
 	# update the statistic panel
 	def updateStatisticPanel(self, event=None):

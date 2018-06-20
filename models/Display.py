@@ -25,6 +25,7 @@ from .Agent import Agent
 from .Obstacle import Obstacle
 from .Simulation import Simulation
 from .communicationModels.Disk import Disk
+from .communicationModels.Probabilistic import Probabilistic
 
 debug = False
 

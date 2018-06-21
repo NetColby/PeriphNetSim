@@ -59,7 +59,7 @@ class InputFileParser:
                   "tareaboolean" : False, "tareaCoords" : (0,0),
                   "tareaWidth" : 0, "tareaHeight" : 0,
                   "obstclboolean" : False, "numobstacle" : None,  "obstclCoordinatesList" : [],
-                  "obstclWidth" : 0, "obstclHeight" : 0, 
+                  "obstclWidth" : 0, "obstclHeight" : 0,
                   "comRange" : 0, "batteryLevel" : 0, "moveConsumption" : 0.0, "idleConsumption" : 0.0
                 }
 
@@ -115,7 +115,7 @@ class InputFileParser:
                                 basestationnumber += 1
                                 # Checks for an eventual error if num of coordinates given exceeds the number of drones initally given
                                 if basestationnumber > int(self.input["numbasestation"]) :
-                                    print("ERROR : number of base stations coordinates " + str(basestationnumber) + " cannot exceed number of base stations " + str(self.imput["numbasestation"]))
+                                    print("ERROR : number of base stations coordinates " + str(basestationnumber) + " cannot exceed number of base stations " + str(self.input["numbasestation"]))
                                     exit()
                                 self.input["basestationCoordinatesList"].append((x,y))
                             if not tempcoordBaseStationb and (basestationnumber != int(self.input["numbasestation"])):
@@ -205,8 +205,8 @@ class InputFileParser:
             print("~ Dimmensions of Target Area are WxH       : " + str(self.input["tareaWidth"]) + " x " + str(self.input["tareaHeight"]) )
 
         print("~ Presence of an Obstacle                  : " + str(self.input["obstclboolean"])  )
-        print("~ Number of obstacles                      : " + str(self.input["numobstacle"]) )
         if self.input["obstclboolean"]:
+            print("~ Number of obstacles                      : " + str(self.input["numobstacle"]) )
             print("~ " + str(self.input["obstclCoordinatesList"]) )
             print("~ Dimmensions of Obstacle are WxH           : " + str(self.input["obstclWidth"]) + " x " + str(self.input["obstclHeight"]) )
 

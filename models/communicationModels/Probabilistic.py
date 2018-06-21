@@ -10,7 +10,7 @@ import random
 
 class Probabilistic(CommunicationModel):
 
-    def __init__(self, Rs=70, Ru=30, omega=0, beta=1):
+    def __init__(self, Rs=70, Ru=30, omega=.02, beta=1):
         CommunicationModel.__init__(self)
         self.Rs = Rs
         self.Ru = Ru
@@ -19,25 +19,25 @@ class Probabilistic(CommunicationModel):
         self.beta = beta
 
     def attemptCommunication(self, euclidianDist):
-        print("____proba attempt")
+        # print("____proba attempt")
         a = euclidianDist - (self.Rs - self.Ru)
-        print("a = " + str(a))
+        # print("a = " + str(a))
         if euclidianDist <= self.Rs-self.Ru:
-            print("veryclose")
+            # print("veryclose")
             return True
 
         elif euclidianDist > self.Rs + self.Ru:
-            print("toofar")
+            # print("toofar")
             return False
 
         else:
-            print("proba calculations")
+            # print("proba calculations")
             p = math.exp(1)**(-self.omega*(a**self.beta))
             attempt = random.random()
             print(p,attempt)
             if attempt <= p :
-                print("True")
+                # print("True")
                 return True
             else :
-                print("False")
+                # print("False")
                 return False

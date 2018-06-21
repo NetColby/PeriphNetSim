@@ -1,69 +1,51 @@
-____________________Before Simulation of 10 Drones____________________
+____________________Before Simulation of 9 Drones____________________
 
-Live Drones: 10
+Live Drones: 9
 Average Energy Level: 100.0
-Coverage: 0.33526875
-Uniformity: 14.681987583982675
+Coverage: 0.237275
+Uniformity: 15.991355027566037
 
 _________Drones_________
-Drone at (477.378, 467.576) Alive: True
-Drone at (409.511, 273.341) Alive: True
-Drone at (465.248, 331.617) Alive: True
-Drone at (488.359, 346.921) Alive: True
-Drone at (440.254, 291.327) Alive: True
-Drone at (521.236, 397.514) Alive: True
-Drone at (234.069, 364.121) Alive: True
-Drone at (524.664, 322.447) Alive: True
-Drone at (327.979, 371.804) Alive: True
-Drone at (490.659, 328.263) Alive: True
+Drone at (300.000, 400.000) Alive: True
+Drone at (350.000, 400.000) Alive: True
+Drone at (300.000, 450.000) Alive: True
+Drone at (350.000, 450.000) Alive: True
+Drone at (400.000, 500.000) Alive: True
+Drone at (450.000, 500.000) Alive: True
+Drone at (400.000, 450.000) Alive: True
+Drone at (450.000, 450.000) Alive: True
+Drone at (325.000, 425.000) Alive: True
 
 ______Base Station(s)______
-Base Station at (200, 550)
+Base Station at (0, 0)
 
 ______Target Area______
 Coordinates of Center: (400, 350)
 Width x Height: 400 x 400
-
-______Obstacle______
-
-Coordinates of Center: (400.000, 400.000)
-Width x Height: 130 x 130
-
-Coordinates of Center: (300.000, 300.000)
-Width x Height: 130 x 130
 
 
 ____________________After Simulation(100 steps)____________________
 
-Total Drones:  10
-Live Drones: 10
-Average Energy Level: 9.999999999999854
-Coverage: 0.45811875
-Uniformity: 0.0
+Total Drones:  9
+Live Drones: 9
+Average Energy Level: 9.999999999999853
+Coverage: 0.38556875
+Uniformity: 2.7095170976622063
 
 _________Drones_________
-Drone at (455.180, 515.910) Alive: True
-Drone at (365.215, 250.870) Alive: True
-Drone at (431.582, 334.144) Alive: True
-Drone at (465.191, 406.537) Alive: True
-Drone at (469.105, 212.874) Alive: True
-Drone at (574.502, 419.698) Alive: True
-Drone at (220.083, 363.396) Alive: True
-Drone at (622.013, 310.966) Alive: True
-Drone at (329.567, 375.026) Alive: True
-Drone at (533.834, 301.379) Alive: True
+Drone at (258.232, 384.520) Alive: True
+Drone at (394.230, 345.775) Alive: True
+Drone at (266.792, 470.006) Alive: True
+Drone at (348.579, 495.916) Alive: True
+Drone at (400.012, 562.774) Alive: True
+Drone at (469.745, 514.155) Alive: True
+Drone at (416.268, 443.739) Alive: True
+Drone at (502.469, 434.912) Alive: True
+Drone at (338.727, 410.104) Alive: True
 
 ______Base Station(s)______
-Base Station at (200, 550)
+Base Station at (0, 0)
 
 ______Target Area______
 Coordinates of Center: (400, 350)
 Width x Height: 400 x 400
-
-______Obstacle______
-
-Coordinates of Center: (400.000, 400.000)
-Width x Height: 130 x 130
-
-Coordinates of Center: (300.000, 300.000)
-Width x Height: 130 x 130

@@ -21,6 +21,6 @@ class AlgorithmProvider(ABC):
 
             if t.attemptCommunication(euclidian) and drone is not t:
                 drones_in_range.append(t)
-                t.updateNeighbors(drones_in_range)
+                drone.updateNeighbors(drones_in_range)
 
         return drones_in_range

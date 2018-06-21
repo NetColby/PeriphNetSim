@@ -55,7 +55,7 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
-		self.comModel = Attenuated(1, 1, 1)								################################################################################################### CHANNGE
+		self.comModel = Disk(100)								################################################################################################### CHANNGE
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 

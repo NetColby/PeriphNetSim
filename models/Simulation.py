@@ -64,7 +64,7 @@ class Simulation:
 
 		# self.setUpSimulation(0, [], 0, [], False, 0, 0, (0, 0), True, 0, 0, (0, 0))
 		if not gui:
-			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel, moveConsumption, idleConsumption)
+			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
 
 	# Set up and run the simulation from the file settings
 	def setUpSimulation(self, numdrones, dronescoordinatesList, numbasestation,

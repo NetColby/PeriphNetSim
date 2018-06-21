@@ -23,6 +23,12 @@ class BaseStation(Agent):
     def getComRange(self):
         return self.comModel.getComRange()
 
+    def getTargetDist(self):
+        return self.comModel.getTargetDist()
+
+    def getMinDist(self):
+        return self.comModel.getMinDist()
+
     def attemptCommunication(self, euclidianDist):
         return self.comModel.attemptCommunication(euclidianDist)
 

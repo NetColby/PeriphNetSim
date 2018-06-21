@@ -55,7 +55,7 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
-		self.comModel = Disk(100)								################################################################################################### CHANNGE
+		self.comModel = Probabilistic()								################################################################################################### CHANNGE
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 

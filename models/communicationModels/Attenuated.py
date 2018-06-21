@@ -7,17 +7,28 @@ import random
 
 class Attenuated(CommunicationModel):
 
-	def __init__(self, c=1, a=1, v=1):
+	def __init__(self, c=1, a=1, lower=55, upper=90):
 		CommunicationModel.__init__(self)
 		self.constant = c
 		self.alpha = a
-		self.valueForCompare = v
-		self.communicationRange = 100
+		self.lowerBound = lower
+		self.upperBound = upper
+		self.communicationRange = self.getRange()
 
 	def attemptCommunication(self, distance):
 		f = (self.constant/(distance**self.alpha))
-		return f < self.valueForCompare
+		return f >= random.randint(self.lowerBound, self.upperBound)
+		
+	def getRange(self):
+		range = (self.constant/self.lowerBound)**(1/self.alpha)
+		return int(range)
+		
+	def getInnerRange(self):
+		range = (self.constant/self.upperBound)**(1/self.alpha)
+		return range
 
 if __name__ == "__main__" :
-	at = Attenuated(1, 1, 1)
-	print(at.attemptConnect(1))
+	at = Attenuated(10000, 1.1)
+	print(at.attemptCommunication(100))
+	print(at.getRange())
+	print(at.getInnerRange())

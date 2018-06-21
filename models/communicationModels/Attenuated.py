@@ -2,7 +2,7 @@
 #Created by Emmett Burns
 #06/20/2018
 
-from CommunicationModel import CommunicationModel
+from .CommunicationModel import CommunicationModel
 import random
 
 class Attenuated(CommunicationModel):

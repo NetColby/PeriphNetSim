@@ -21,7 +21,7 @@ class Simulation:
 	def __init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=False):
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel, moveConsumption, idleConsumption, gui=False):
 
 		# width and height of the window (these are here because they maintain uniform spawning of the drones)
 		self.initDx = width
@@ -55,13 +55,16 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
+		self.batteryLevel = batteryLevel
+		self.moveConsumption = moveConsumption
+		self.idleConsumption = idleConsumption
 		self.comModel = Probabilistic()								################################################################################################### CHANNGE
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
 		# self.setUpSimulation(0, [], 0, [], False, 0, 0, (0, 0), True, 0, 0, (0, 0))
 		if not gui:
-			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
+			self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel, moveConsumption, idleConsumption)
 
 	# Set up and run the simulation from the file settings
 	def setUpSimulation(self, numdrones, dronescoordinatesList, numbasestation,
@@ -136,7 +139,7 @@ class Simulation:
 
 	#creates a drone at the given location
 	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption)
 		self.drones.append(drone)
 
 	#creates a base station at the given location

@@ -161,8 +161,7 @@ class InputFileParser:
         self.input["steps"] = int(self.input.get("steps"))
         self.input["tareaboolean"] = self.input.get("tareaboolean") == "True"
         self.input["obstclboolean"] = self.input.get("obstclboolean") == "True"
-        self.input["comRange"] = int(self.input.get("comRange"))
-        self.input["batteryLevel"] = int(self.input.get("batteryLevel"))
+        self.input["batteryLevel"] = float(self.input.get("batteryLevel"))
         self.input["moveConsumption"] = float(self.input.get("moveConsumption"))
         self.input["idleConsumption"] = float(self.input.get("idleConsumption"))
 
@@ -180,12 +179,11 @@ class InputFileParser:
         obstclCoordinatesList = self.input.get("obstclCoordinatesList")
         obstclWidth = self.input.get("obstclWidth")
         obstclHeight = self.input.get("obstclHeight")
-        comRange = self.input.get("comRange")
         batteryLevel = self.input.get("batteryLevel")
         moveConsumption = self.input.get("moveConsumption")
         idleConsumption = self.input.get("idleConsumption")
 
-        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, comRange, batteryLevel, moveConsumption, idleConsumption
+        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption
 
     def statusMessage(self):
         # Console messages
@@ -211,7 +209,6 @@ class InputFileParser:
             print("~ Dimmensions of Obstacle are WxH           : " + str(self.input["obstclWidth"]) + " x " + str(self.input["obstclHeight"]) )
 
         print("~ Running the simulation for a number of        : " + str(self.input["steps"]) + " steps")
-        print("~ Communication range of drones and base staions: " + str(self.input["comRange"]))
         print("~ Starting battery level of drones              : " + str(self.input["batteryLevel"]))
         print("~ Amount of energy used during a drone's move   : " + str(self.input["moveConsumption"]))
         print("~ Amount of energy used during a drone's idle   : " + str(self.input["idleConsumption"]))

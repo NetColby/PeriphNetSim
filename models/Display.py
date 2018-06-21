@@ -276,13 +276,19 @@ class DisplayApp(Simulation):
 				if not agent.dead and not neighbor.dead:
 					acoord = agent.get_coords()
 					bcoord = neighbor.get_coords()
+					
+					euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
+					
+					if euclidian <= agent.getComRange()*0.9:
+						color = "blue"
+					elif euclidian <= agent.getComRange()*0.95:
+						color = "yellow"
+					else: 
+						color = "red"
 
 
 					if agent in neighbor.neighbors:
 						neighbor.neighbors.remove(agent)
-
-
-
 
 
 					acoordcanvas = self.canvas.coords(agent.get_pt())
@@ -292,7 +298,7 @@ class DisplayApp(Simulation):
 												acoordcanvas[1]+self.droneSize/2,
 												bcoordcanvas[0]+self.droneSize/2,
 												bcoordcanvas[1]+self.droneSize/2,
-												fill="red", dash=(4, 2))
+												fill=color, dash=(4, 2))
 					self.lines.append(l)
 
 

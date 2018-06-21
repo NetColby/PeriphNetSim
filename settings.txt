@@ -1,7 +1,7 @@
 ###   Drone Simulation Settings      ###
 
 # Number of drones to spawn
-numdrones=9
+numdrones=4
 
 # x,y Coordinates of the drones (optional)
 300,400
@@ -9,12 +9,12 @@ numdrones=9
 300,450
 350,450
 
-400,500
-450,500
-400,450
-450,450
+#400,500
+#450,500
+#400,450
+#450,450
 
-325,425
+#325,425
 
 
 

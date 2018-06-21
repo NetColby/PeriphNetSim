@@ -102,7 +102,7 @@ class InputFileParser:
                                 dronenumber += 1
                                 # Checks for an eventual error if num of coordinates given exceeds the number of drones initally given
                                 if dronenumber > int(self.input["numdrones"]) :
-                                    print("ERROR : number of drone coordinates " + str(dronenumber) + " cannot exceed number of drones " + str(self.imput["numdrones"]))
+                                    print("ERROR : number of drone coordinates " + str(dronenumber) + " cannot exceed number of drones " + str(self.input["numdrones"]))
                                     exit()
                                 self.input.get("dronesCoordinatesList").append((x,y))
 

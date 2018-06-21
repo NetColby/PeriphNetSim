@@ -275,17 +275,10 @@ class DisplayApp(Simulation):
 					acoord = agent.get_coords()
 					bcoord = neighbor.get_coords()
 
-					print("_____________________")
-					print("Before")
-					print(neighbor.neighbors)
-					print(neighbor)
 
 					if agent in neighbor.neighbors:
 						neighbor.neighbors.remove(agent)
 
-					print("After")
-					print(neighbor.neighbors)
-					print("_____________________")
 
 
 

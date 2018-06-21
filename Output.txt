@@ -1,20 +1,15 @@
-____________________Before Simulation of 9 Drones____________________
+____________________Before Simulation of 4 Drones____________________
 
-Live Drones: 9
+Live Drones: 4
 Average Energy Level: 100.0
-Coverage: 0.237275
-Uniformity: 15.991355027566037
+Coverage: 0.13265625
+Uniformity: 9.76310729378175
 
 _________Drones_________
 Drone at (300.000, 400.000) Alive: True
 Drone at (350.000, 400.000) Alive: True
 Drone at (300.000, 450.000) Alive: True
 Drone at (350.000, 450.000) Alive: True
-Drone at (400.000, 500.000) Alive: True
-Drone at (450.000, 500.000) Alive: True
-Drone at (400.000, 450.000) Alive: True
-Drone at (450.000, 450.000) Alive: True
-Drone at (325.000, 425.000) Alive: True
 
 ______Base Station(s)______
 Base Station at (0, 0)
@@ -26,22 +21,17 @@ Width x Height: 400 x 400
 
 ____________________After Simulation(100 steps)____________________
 
-Total Drones:  9
-Live Drones: 9
-Average Energy Level: 9.999999999999853
-Coverage: 0.38556875
-Uniformity: 2.7095170976622063
+Total Drones:  4
+Live Drones: 4
+Average Energy Level: 12.374999999999913
+Coverage: 0.1878375
+Uniformity: 0.21730787608614222
 
 _________Drones_________
-Drone at (258.232, 384.520) Alive: True
-Drone at (394.230, 345.775) Alive: True
-Drone at (266.792, 470.006) Alive: True
-Drone at (348.579, 495.916) Alive: True
-Drone at (400.012, 562.774) Alive: True
-Drone at (469.745, 514.155) Alive: True
-Drone at (416.268, 443.739) Alive: True
-Drone at (502.469, 434.912) Alive: True
-Drone at (338.727, 410.104) Alive: True
+Drone at (293.879, 386.981) Alive: True
+Drone at (373.360, 381.341) Alive: True
+Drone at (288.648, 466.758) Alive: True
+Drone at (368.999, 461.100) Alive: True
 
 ______Base Station(s)______
 Base Station at (0, 0)

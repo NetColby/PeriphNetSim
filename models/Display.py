@@ -42,12 +42,14 @@ class DisplayApp(Simulation):
 		, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=True):
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel, 
+		moveConsumption, idleConsumption, gui=True):
 
 		Simulation.__init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, gui=True)
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, 
+		batteryLevel, moveConsumption, idleConsumption, gui=True)
 		# # width and height of the window (these are here because they are used in the construcion of the window)
 		# self.initDx = width
 		# self.initDy = height
@@ -116,7 +118,7 @@ class DisplayApp(Simulation):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, comModel=self.comModel)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))

@@ -1,7 +1,7 @@
 # Drone Simluator
 #
 #get names of creators
-# updated by Emmett Burns and Selim Hassairi
+#updated by Emmett Burns and Selim Hassairi
 #June 2018
 
 import getpass

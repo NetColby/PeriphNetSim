@@ -13,6 +13,7 @@ from .Agent import Agent
 from .Obstacle import Obstacle
 from .communicationModels.Disk import Disk
 from .communicationModels.Probabilistic import Probabilistic
+from .communicationModels.Attenuated import Attenuated
 
 # create a class to build and manage the display
 class Simulation:
@@ -54,7 +55,7 @@ class Simulation:
 		self.obstclWidthList = obstclWidthList
 		self.obstclHeightList = obstclHeightList
 		self.obstclCoordsList = obstclCoordsList
-		self.comModel =  Probabilistic()								################################################################################################### CHANNGE
+		self.comModel = Attenuated(1, 1, 1)								################################################################################################### CHANNGE
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 

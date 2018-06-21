@@ -19,8 +19,9 @@ class AlgorithmProvider(ABC):
             tcoord = t.get_coords()
             euclidian = math.hypot(dronecoord[0]-tcoord[0], dronecoord[1]-tcoord[1])
 
-            if t.attemptCommunication(euclidian) and drone is not t:
-                drones_in_range.append(t)
-                drone.updateNeighbors(drones_in_range)
+            if drone is not t:
+                if t.attemptCommunication(euclidian):
+                    drones_in_range.append(t)
+                    drone.updateNeighbors(drones_in_range)
 
         return drones_in_range

@@ -113,6 +113,8 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 			# print("another Attempts				= " + str((drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude)))
 
 			drone.move(avx/magnitude, avy/magnitude)
+		else:
+			self.get_drones_within_com_range(drone)
 
 	def get_distance(self, d1, d2):
 		c1 = d1.get_coords()

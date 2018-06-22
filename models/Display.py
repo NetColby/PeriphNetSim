@@ -180,6 +180,12 @@ class DisplayApp(Simulation):
 		if self.tareab:
 			self.canvas.delete(self.tarea.getRect())
 			self.tareab = False
+			
+		if self.obstclb:
+			for obstacle in self.obstacles:
+				self.canvas.delete(obstacle.getRect())
+			self.obstclb = False
+			self.obstacles = []
 
 		self.updateStatisticPanel()
 		self.updateDroneView()

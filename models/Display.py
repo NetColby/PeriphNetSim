@@ -180,13 +180,14 @@ class DisplayApp(Simulation):
 		if self.tareab:
 			self.canvas.delete(self.tarea.getRect())
 			self.tareab = False
+			self.tarea = None
 			
 		if self.obstclb:
 			for obstacle in self.obstacles:
 				self.canvas.delete(obstacle.getRect())
 			self.obstclb = False
 			self.obstacles = []
-
+			
 		self.updateStatisticPanel()
 		self.updateDroneView()
 
@@ -276,6 +277,10 @@ class DisplayApp(Simulation):
 			self.canvas.delete(line)
 
 		self.lines = []
+		
+		#bounds for color choice
+		lowerBound = self.comModel.getTargetDist() + 5
+		upperBound = self.comModel.getComRange() - 5
 
 		for agent in self.drones:
 			for neighbor in agent.neighbors:
@@ -285,9 +290,9 @@ class DisplayApp(Simulation):
 					
 					euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
 					
-					if euclidian <= agent.getComRange()*0.9:
+					if euclidian <= lowerBound:
 						color = "blue"
-					elif euclidian <= agent.getComRange()*0.95:
+					elif euclidian <= upperBound:
 						color = "yellow"
 					else: 
 						color = "red"

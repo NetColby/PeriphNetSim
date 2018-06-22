@@ -4,6 +4,7 @@
 
 from .CommunicationModel import CommunicationModel
 import random
+import math
 
 class Attenuated(CommunicationModel):
 
@@ -13,19 +14,26 @@ class Attenuated(CommunicationModel):
 		self.alpha = a
 		self.lowerBound = lower
 		self.upperBound = upper
-		self.communicationRange = self.getRange()
+		self.communicationRange = self.getComRange()
 
 	def attemptCommunication(self, distance):
 		f = (self.constant/(distance**self.alpha))
 		return f >= random.randint(self.lowerBound, self.upperBound)
-		
-	def getRange(self):
+
+	def getComRange(self):
 		range = (self.constant/self.lowerBound)**(1/self.alpha)
-		return int(range)
+		return math.floor(range)
+
+	def getMinDist(self):
+		return self.getInnerRange()
+
+	def getTargetDist(self):
+		target = (self.getComRange() + self.getMinDist()) / 2
+		return target
 		
 	def getInnerRange(self):
 		range = (self.constant/self.upperBound)**(1/self.alpha)
-		return range
+		return math.floor(range)
 
 if __name__ == "__main__" :
 	at = Attenuated(10000, 1.1)

@@ -10,6 +10,7 @@ class CommunicationModel:
         self.communicationRange = None
         self.targetDist = None
         self.minDist = None
+        self.materials = {"concrete": .01, "wood" : .4, 'tree' : .8}
 
     def getComRange(self):
         return self.communicationRange
@@ -20,6 +21,6 @@ class CommunicationModel:
     def getMinDist(self):
         return self.minDist
 
-    def attemptCommunication(self,euclidianDist):
+    def attemptCommunication(self,euclidianDist, middlePoint, obstacles):
         print("THIS SHOULD NOT POP UP")
         return False

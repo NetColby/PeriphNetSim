@@ -5,7 +5,7 @@
 # June 2018
 
 from .CommunicationModel import *
-
+import random
 
 class Disk(CommunicationModel):
 
@@ -14,10 +14,23 @@ class Disk(CommunicationModel):
         self.communicationRange = comRange
         self.targetDist = comRange - comRange/5
         self.minDist = comRange - comRange/2
+        self.material = self.materials.get("concrete")
 
 
-    def attemptCommunication(self, euclidianDist):
+    def attemptCommunication(self, euclidianDist, middlePoint, obstacles):
+        # Checking if acros an obstacle or not
+        inObstcl = False
+        penalty = 1
+        for o in obstacles:
+            if o.inObstacle(middlePoint[0],middlePoint[1]):
+                inObstcl = True
+
+        if inObstcl:
+            penalty = self.material
+
+        # Returning the communication state
         if euclidianDist <= self.communicationRange:
-            return True
+            if random.random() < penalty :
+                return True
         else :
             return False

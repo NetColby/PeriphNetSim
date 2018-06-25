@@ -29,8 +29,8 @@ class BaseStation(Agent):
     def getMinDist(self):
         return self.comModel.getMinDist()
 
-    def attemptCommunication(self, euclidianDist):
-        return self.comModel.attemptCommunication(euclidianDist)
+    def attemptCommunication(self, euclidianDist, middlePoint, obstacles):
+        return self.comModel.attemptCommunication(euclidianDist, middlePoint, obstacles)
 
     def idle(self):
         pass

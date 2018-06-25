@@ -12,7 +12,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 			target_dist = drone.getTargetDist()
 			min_dist = drone.getMinDist()
 
-			neighbors = self.get_drones_within_com_range(drone)
+			neighbors = self.get_drones_within_com_range(drone, obstacles)
 
 			if not neighbors:
 				drone.idle()
@@ -114,7 +114,7 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 
 			drone.move(avx/magnitude, avy/magnitude)
 		else:
-			self.get_drones_within_com_range(drone)
+			self.get_drones_within_com_range(drone,obstacles)
 
 	def get_distance(self, d1, d2):
 		c1 = d1.get_coords()

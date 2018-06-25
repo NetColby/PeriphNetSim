@@ -15,8 +15,8 @@ class Probabilistic(CommunicationModel):
         self.Rs = Rs
         self.Ru = Ru
         self.communicationRange = Rs + Ru
-        self.targetDist = self.communicationRange - self.communicationRange/12
-        self.minDist = self.communicationRange - self.communicationRange/8
+        self.targetDist = self.communicationRange - self.communicationRange/6
+        self.minDist = self.communicationRange - self.communicationRange/4
         self.communicationRange = Rs
         self.omega = omega
         self.beta = beta

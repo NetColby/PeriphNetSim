@@ -2,7 +2,7 @@
 #Created by Emmett Burns
 #06/20/2018
 
-from CommunicationModel import CommunicationModel
+from .CommunicationModel import CommunicationModel
 import random
 import math
 
@@ -30,7 +30,7 @@ class Attenuated(CommunicationModel):
 	def getTargetDist(self):
 		target = (self.getComRange() + self.getMinDist()) / 2
 		return target
-		
+
 	def getInnerRange(self):
 		range = (self.constant/self.upperBound)**(1/self.alpha)
 		return math.floor(range)

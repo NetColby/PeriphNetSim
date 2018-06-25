@@ -42,13 +42,13 @@ class DisplayApp(Simulation):
 		, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel, 
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel,
 		moveConsumption, idleConsumption, gui=True):
 
 		Simulation.__init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, 
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList,
 		batteryLevel, moveConsumption, idleConsumption, gui=True)
 		# # width and height of the window (these are here because they are used in the construcion of the window)
 		# self.initDx = width
@@ -181,13 +181,13 @@ class DisplayApp(Simulation):
 			self.canvas.delete(self.tarea.getRect())
 			self.tareab = False
 			self.tarea = None
-			
+
 		if self.obstclb:
 			for obstacle in self.obstacles:
 				self.canvas.delete(obstacle.getRect())
 			self.obstclb = False
 			self.obstacles = []
-			
+
 		self.updateStatisticPanel()
 		self.updateDroneView()
 
@@ -277,7 +277,7 @@ class DisplayApp(Simulation):
 			self.canvas.delete(line)
 
 		self.lines = []
-		
+
 		#bounds for color choice
 		lowerBound = self.comModel.getTargetDist() + 5
 		upperBound = self.comModel.getComRange() - 5
@@ -287,14 +287,14 @@ class DisplayApp(Simulation):
 				if not agent.dead and not neighbor.dead:
 					acoord = agent.get_coords()
 					bcoord = neighbor.get_coords()
-					
+
 					euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
-					
+
 					if euclidian <= lowerBound:
-						color = "blue"
-					elif euclidian <= upperBound:
-						color = "yellow"
-					else: 
+						color = "orange"
+					elif euclidian <= upperBound and euclidian > lowerBound:
+						color = "yelow"
+					else:
 						color = "red"
 
 

@@ -235,10 +235,10 @@ class Simulation:
 		else:
 			stats = initialStats
 			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
-		stats += "Live Drones: " + str(self.numAliveDrones()) + " \n "
-		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + " \n "
-		stats += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + " \n "
-		stats += "Uniformity: " + str(self.uniformity(self.comModel.getComRange())) + " \n "
+		stats += "Live Drones: " + str(self.numAliveDrones()) + " \n"
+		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + " \n"
+		stats += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + " \n"
+		stats += "Uniformity: " + str(self.uniformity(self.comModel.getComRange())) + " \n"
 		if(self.numDrones() > 0):
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:

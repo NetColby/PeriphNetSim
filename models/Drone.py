@@ -50,13 +50,13 @@ class Drone(BaseStation):
         comRange = set({})
         droneX = int(self.x)
         droneY = int(self.y)
-        startingX = int(self.x-(rng/2))
-        startingY = int(self.y-(rng/2))
+        startingX = int(self.x-(rng))
+        startingY = int(self.y-(rng))
         currentX = startingX
         currentY = startingY
         for i in range(rng):
             for j in range(rng):
-                if math.hypot(droneX-currentX, droneY-currentY) < rng/2:
+                if math.hypot(droneX-currentX, droneY-currentY) < rng:
                     comRange.add((currentX, currentY))
                 currentY += 1
             currentX += 1

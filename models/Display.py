@@ -43,13 +43,13 @@ class DisplayApp(Simulation):
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
 		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel,
-		moveConsumption, idleConsumption, gui=True):
+		moveConsumption, idleConsumption, comList, gui=True):
 
 		Simulation.__init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
 		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList,
-		batteryLevel, moveConsumption, idleConsumption, gui=True)
+		batteryLevel, moveConsumption, idleConsumption, comList, gui=True)
 		# # width and height of the window (these are here because they are used in the construcion of the window)
 		# self.initDx = width
 		# self.initDy = height
@@ -293,7 +293,7 @@ class DisplayApp(Simulation):
 					if euclidian <= lowerBound:
 						color = "orange"
 					elif euclidian <= upperBound and euclidian > lowerBound:
-						color = "yelow"
+						color = "yellow"
 					else:
 						color = "red"
 

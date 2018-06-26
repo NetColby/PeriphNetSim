@@ -21,7 +21,7 @@ class Simulation:
 	def __init__(self, width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
-		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel, moveConsumption, idleConsumption, gui=False):
+		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel, moveConsumption, idleConsumption, comList, gui=False):
 
 		# width and height of the window (these are here because they maintain uniform spawning of the drones)
 		self.initDx = width
@@ -58,7 +58,14 @@ class Simulation:
 		self.batteryLevel = batteryLevel
 		self.moveConsumption = moveConsumption
 		self.idleConsumption = idleConsumption
-		self.comModel = Probabilistic()								################################################################################################### CHANNGE
+		if comList[0] == "Disk":
+			self.comModel = Disk(int(comList[1]))
+		elif comList[0] == "Probabilistic":
+			self.comModel = Probabilistic()
+		elif comList[0] == "Attenuated":
+			self.comModel = Attenuated(comList[1], comList[2], comList[3], comList[4])
+		else:
+			self.comModel = Disk(105)							
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
@@ -191,12 +198,14 @@ class Simulation:
 		stepsForStatus = 0
 		stringForOutputFile = self.statsToOutputFile()
 		for i in range(steps):
-			if (stepsForStatus % frequency) == 0:
-				print(self.statusMessage(stepsForStatus))
+			if frequency != 0:			
+				if (stepsForStatus % frequency) == 0:
+					print(self.statusMessage(stepsForStatus))
 			self.droneStep()
 			stepsForStatus += 1
-		if (stepsForStatus-1 % frequency) != 0:
-			print(self.statusMessage(stepsForStatus))
+		if frequency != 0:
+			if (stepsForStatus-1 % frequency) != 0:
+				print(self.statusMessage(stepsForStatus))
 		self.statsToOutputFile(stringForOutputFile, stepsForStatus)
 
 	#prints the status of a simulation when in begins
@@ -370,11 +379,11 @@ class Simulation:
 			self.setUpSimulation(self.numdrones, self.dronescoordinatesList, self.numbasestation,
 				self.basestationcoordinatesList, self.tareaboolean, self.tareaWidth, self.tareaHeight,
 				self.tareaCoords, self.obstclboolean, self.obstclWidthList, self.obstclHeightList, self.obstclCoordsList)
-			self.multiStep(steps, 10)
+			self.multiStep(steps, 0)
 
 			# Write the Coverage as an output
-			with open("CoverageOutput.txt","a") as f:
-				f.write("%s" % (self.numdrones, str(self.coverage(self.drones[0],getComRange())) ))
+			# with open("CoverageOutput.txt","a") as f:
+# 				f.write("%s" % (self.numdrones, str(self.coverage(self.drones[0],getComRange())) ))
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

@@ -373,9 +373,8 @@ class Simulation:
 			self.multiStep(steps, 10)
 
 			# Write the Coverage as an output
-			text_file = open("CoverageOutput.txt", "w")
-			text_file.write(str(self.coverage(self.drones[0].getComRange())))
-			text_file.close()
+			with open("CoverageOutput.txt","a") as f:
+				f.write("%s" % (self.numdrones, str(self.coverage(self.drones[0],getComRange())) ))
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

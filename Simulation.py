@@ -374,11 +374,6 @@ class Simulation:
 				self.tareaCoords, self.obstclboolean, self.obstclWidthList, self.obstclHeightList, self.obstclCoordsList)
 			self.multiStep(steps, 25)
 
-			# Write the Coverage as an output
-			text_file = open("CoverageOutput.txt", "w")
-			text_file.write(str(self.coverage(self.drones[0].getComRange())))
-			text_file.close()
-
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)
 	dapp.main()

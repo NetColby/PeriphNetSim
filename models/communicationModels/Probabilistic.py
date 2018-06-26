@@ -17,7 +17,7 @@ class Probabilistic(CommunicationModel):
         self.communicationRange = Rs + Ru
         self.targetDist = self.communicationRange - self.communicationRange/6
         self.minDist = self.communicationRange - self.communicationRange/4
-        self.communicationRange = Rs
+        #self.communicationRange = int(self.targetDist)
         self.omega = omega
         self.beta = beta
         self.materials = {"concrete":2, "wood" : 1.5, 'tree' : 1.1 }

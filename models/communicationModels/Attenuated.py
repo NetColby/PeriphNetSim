@@ -8,7 +8,7 @@ import math
 
 class Attenuated(CommunicationModel):
 
-	def __init__(self, c=1, a=1, lower=55, upper=90):
+	def __init__(self, c=1, a=1, lower=0.1, upper=1.0):
 		CommunicationModel.__init__(self)
 		self.constant = c
 		self.alpha = a
@@ -16,9 +16,9 @@ class Attenuated(CommunicationModel):
 		self.upperBound = upper
 		#self.communicationRange = self.getComRange()
 
-	def attemptCommunication(self, distance):
+	def attemptCommunication(self, distance, middlePoint, obstcles):
 		f = (self.constant/(distance**self.alpha))
-		return f #>= random.randint(self.lowerBound, self.upperBound)
+		return f >= random.triangular(self.lowerBound, self.upperBound)
 
 	def getComRange(self):
 		range = (self.constant/self.lowerBound)**(1/self.alpha)

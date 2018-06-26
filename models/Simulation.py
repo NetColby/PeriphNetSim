@@ -205,8 +205,8 @@ class Simulation:
 		output = "________________________Statistics after " + str(stepsForStatus) + " steps:________________________\n"
 		output += str(self.numAliveDrones()) + " drones alive.\n"
 		output += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
-# 		output += "Coverage: " + str(self.coverage(105)) + "\n"
-		output += "Uniformity: " + str(self.uniformity(105)) + "\n\n"
+# 		output += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + "\n"
+		output += "Uniformity: " + str(self.uniformity(self.comModel.getComRange())) + "\n\n"
 		if(self.numDrones() > 0):
 			output += "_________Drones_________\n"
 			for agent in self.drones:
@@ -235,10 +235,10 @@ class Simulation:
 		else:
 			stats = initialStats
 			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
-		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n"
-		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n"
-		stats += "Coverage: " + str(self.coverage(105)) + "\n"
-		stats += "Uniformity: " + str(self.uniformity(105)) + "\n"
+		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n "
+		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n "
+		stats += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + "\n "
+		stats += "Uniformity: " + str(self.uniformity(self.comModel.getComRange())) + "\n "
 		if(self.numDrones() > 0):
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:

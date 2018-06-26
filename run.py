@@ -6,45 +6,34 @@
 # Updated by Emmett Burns and Selim Hassairi
 #June 2018
 
-
-
-
 from models import Display
 from models import Simulation
 from InputFileParser import InputFileParser
 import sys
 
-print(str(sys.argv))
-
-
-
 filename = "settings.txt"
 parser = InputFileParser(filename)
 parser.parse()
-numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption = parser.getInput()
+numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption,comModel = parser.getInput()
 parser.statusMessage()
 
+#parses and makes comModel into a list
+comList = comModel.split(",")
 
 #determines whether or not the GUI should run
 gui = True
 #interpretes whether or not to run the GUI
 if "-W" in sys.argv:
     gui = False
-
-#print(batteryLevel)
-#print(moveConsumption)
-#print(idleConsumption)
-
+    
 # If want to control from command line, uncomment the following line
 #numdrones = sys.argv[1]
-
-# dapp = Display.DisplayApp(1000, 1000, 2, [(100, 100), (200, 200)], 1, [(150, 150)], True, 125, 125, (150, 150), True, 2, 2, (125, 125))
-# sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, False)
-# sim.main(1, 100)
+sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
+sim.main(1, 100)
 print("####################################################################################")
 print("####################################################################################")
 print("Simulation Done. Now proceeding to Display")
 print("####################################################################################")
 print("####################################################################################")
-dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, True)
+dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, True)
 dapp.main()

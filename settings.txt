@@ -66,7 +66,8 @@ moveConsumption=0.9
 #Amount of battery consumed with each idle step of a drone
 idleConsumption=0.8
 
-
+#List of type and arguments to specify comModel
+comModel=Disk,10
 
 # End of the file
 end.

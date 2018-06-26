@@ -60,7 +60,8 @@ class InputFileParser:
                   "tareaWidth" : 0, "tareaHeight" : 0,
                   "obstclboolean" : False, "numobstacle" : None,  "obstclCoordinatesList" : [],
                   "obstclWidth" : 0, "obstclHeight" : 0,
-                  "comRange" : 0, "batteryLevel" : 0, "moveConsumption" : 0.0, "idleConsumption" : 0.0
+                  "comRange" : 0, "batteryLevel" : 0, "moveConsumption" : 0.0, "idleConsumption" : 0.0,
+                  "comModel" : []
                 }
 
         # Reading lines form file
@@ -182,8 +183,9 @@ class InputFileParser:
         batteryLevel = self.input.get("batteryLevel")
         moveConsumption = self.input.get("moveConsumption")
         idleConsumption = self.input.get("idleConsumption")
+        comModel = self.input.get("comModel")
 
-        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption
+        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption, comModel
 
     def statusMessage(self):
         # Console messages
@@ -212,6 +214,7 @@ class InputFileParser:
         print("~ Starting battery level of drones              : " + str(self.input["batteryLevel"]))
         print("~ Amount of energy used during a drone's move   : " + str(self.input["moveConsumption"]))
         print("~ Amount of energy used during a drone's idle   : " + str(self.input["idleConsumption"]))
+        print("~ List including comModel and its arguments     : " + str(self.input["comModel"]))
         print('______________________________________')
 
 

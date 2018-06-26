@@ -191,12 +191,14 @@ class Simulation:
 		stepsForStatus = 0
 		stringForOutputFile = self.statsToOutputFile()
 		for i in range(steps):
-			if (stepsForStatus % frequency) == 0:
-				print(self.statusMessage(stepsForStatus))
+			if frequency != 0:			
+				if (stepsForStatus % frequency) == 0:
+					print(self.statusMessage(stepsForStatus))
 			self.droneStep()
 			stepsForStatus += 1
-		if (stepsForStatus-1 % frequency) != 0:
-			print(self.statusMessage(stepsForStatus))
+		if frequency != 0:
+			if (stepsForStatus-1 % frequency) != 0:
+				print(self.statusMessage(stepsForStatus))
 		self.statsToOutputFile(stringForOutputFile, stepsForStatus)
 
 	#prints the status of a simulation when in begins
@@ -370,7 +372,7 @@ class Simulation:
 			self.setUpSimulation(self.numdrones, self.dronescoordinatesList, self.numbasestation,
 				self.basestationcoordinatesList, self.tareaboolean, self.tareaWidth, self.tareaHeight,
 				self.tareaCoords, self.obstclboolean, self.obstclWidthList, self.obstclHeightList, self.obstclCoordsList)
-			self.multiStep(steps, 10)
+			self.multiStep(steps, 25)
 
 			# Write the Coverage as an output
 			text_file = open("CoverageOutput.txt", "w")

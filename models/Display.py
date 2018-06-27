@@ -19,6 +19,7 @@ import time
 from .Drone import Drone
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
+from .algorithms.naive_algorithm_obstcl_avoider_targetArea import NaiveAlgorithmObstclAvoiderTargetArea
 from .TargetArea import targetArea
 from .BaseStation import BaseStation
 from .Agent import Agent
@@ -114,7 +115,7 @@ class DisplayApp(Simulation):
 
 
 
-	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoider):
+	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoiderTargetArea):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
@@ -148,7 +149,7 @@ class DisplayApp(Simulation):
 
 	def droneStep(self):
 		for drone in self.drones:
-			drone.do_step(self.obstacles)
+			drone.do_step(self.obstacles, self.tarea)
 		self.updateDroneView()
 
 

@@ -41,9 +41,9 @@ class Drone(BaseStation):
     def isDead(self):
         return self.dead
 
-    def do_step(self, obstacles):
+    def do_step(self, obstacles, tarea):
         if not self.dead:
-            self.algorithm_provider.run(self, obstacles)
+            self.algorithm_provider.run(self, obstacles, tarea)
 
     #returns a list of all the pixels in the com range
     def getCoverage(self, rng):

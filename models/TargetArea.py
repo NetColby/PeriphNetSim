@@ -27,3 +27,9 @@ class targetArea(Area):
 
     def getCoords(self):
         return (self.x,self.y)
+
+    def notInTargetArea(self,x, y):
+        if (x>self.x-(self.w/2) and x<self.x+(self.w/2)) and (y>self.y-(self.h/2) and y<self.y+(self.h/2)):
+            return False
+        else :
+            return True

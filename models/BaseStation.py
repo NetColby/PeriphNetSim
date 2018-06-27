@@ -35,8 +35,8 @@ class BaseStation(Agent):
     def idle(self):
         pass
 
-    def do_step(self, obstacle):
-        self.algorithm_provider.run(self, obstacle)
+    def do_step(self, obstacle, tarea):
+        self.algorithm_provider.run(self, obstacle, tarea)
 
     def move(self, x, y):
         # move drone object by unit vector in direction x/y

@@ -7,6 +7,7 @@ import random
 from .Drone import Drone
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
+from .algorithms.naive_algorithm_obstcl_avoider_targetArea import NaiveAlgorithmObstclAvoiderTargetArea
 from .TargetArea import targetArea
 from .BaseStation import BaseStation
 from .Agent import Agent
@@ -65,7 +66,7 @@ class Simulation:
 		elif comList[0] == "Attenuated":
 			self.comModel = Attenuated(comList[1], comList[2], comList[3], comList[4])
 		else:
-			self.comModel = Disk(105)							
+			self.comModel = Disk(105)
 		#field that holds whether or not to run the simulation without the GUI
 		self.gui = gui
 
@@ -145,12 +146,12 @@ class Simulation:
 		self.createDrone(x, y)
 
 	#creates a drone at the given location
-	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoider):
+	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoiderTargetArea):
 		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption)
 		self.drones.append(drone)
 
 	#creates a base station at the given location
-	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoiderTargetArea, event=None):
 		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel)
 		self.drones.append(baseStation)
 
@@ -190,7 +191,7 @@ class Simulation:
 	#updates the location of the drones based on their algorithm
 	def droneStep(self):
 		for drone in self.drones:
-			drone.do_step(self.obstacles)
+			drone.do_step(self.obstacles, self.tarea)
 
 	#runs the simulation for the given number of steps and prints status messages to the terminal
 	def multiStep(self, steps, frequency, event=None):
@@ -198,7 +199,7 @@ class Simulation:
 		stepsForStatus = 0
 		stringForOutputFile = self.statsToOutputFile()
 		for i in range(steps):
-			if frequency != 0:			
+			if frequency != 0:
 				if (stepsForStatus % frequency) == 0:
 					print(self.statusMessage(stepsForStatus))
 			self.droneStep()

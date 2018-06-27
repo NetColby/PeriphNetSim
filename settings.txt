@@ -58,7 +58,7 @@ obstclWidth=60
 obstclHeight=60
 
 #Starting battery level of drones
-batteryLevel=100.0
+batteryLevel=400.0
 
 #Amount of battery consumed with each movement step of a drone
 moveConsumption=0.9
@@ -67,7 +67,7 @@ moveConsumption=0.9
 idleConsumption=0.8
 
 #List of type and arguments to specify comModel
-comModel=Disk,10
+comModel=Probabilistic
 
 # End of the file
 end.

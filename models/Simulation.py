@@ -384,7 +384,7 @@ class Simulation:
 
 			# Write the Coverage as an output
 			with open("CoverageOutput.txt","a") as f:
-				f.write("%s, %s" % (self.numdrones, str(self.coverage(self.drones[0].getComRange())) ))
+				f.write("%s, %s \n" % (self.numdrones, str(self.coverage(self.drones[0].getComRange())) ))
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

@@ -20,6 +20,14 @@ parser.statusMessage()
 #parses and makes comModel into a list
 comList = comModel.split(",")
 
+#will not print status message when given this argument
+if "-O" not in sys.argv:
+	parser.statusMessage()
+	
+#only prins the status of the current simulation
+if "-Q" in sys.argv:
+	quit()
+	
 #determines whether or not the GUI should run
 gui = True
 #interpretes whether or not to run the GUI
@@ -35,5 +43,5 @@ print("#########################################################################
 print("Simulation Done. Now proceeding to Display")
 print("####################################################################################")
 print("####################################################################################")
-# dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, True)
-# dapp.main()
+dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, True)
+dapp.main()

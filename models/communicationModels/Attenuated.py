@@ -12,13 +12,13 @@ class Attenuated(CommunicationModel):
 		CommunicationModel.__init__(self)
 		self.constant = c
 		self.alpha = a
-		self.lowerBound = self.getBoundBasedOnDistance(self.constant)
+		self.lowerBound = lower
 		self.upperBound = upper
 		#self.communicationRange = self.getComRange()
 
 	def attemptCommunication(self, distance, middlePoint=None, obstcles=None):
 		f = (self.constant/(distance**self.alpha))
-		return f >= random.uniform(self.lowerBound, self.upperBound)
+		return f >= random.uniform(self.getBoundBasedOnDistance(self.constant), self.upperBound)
 		
 	#returns a lower so that models with varying alphas may have the same communication range
 	def getBoundBasedOnDistance(self, distance):
@@ -28,12 +28,17 @@ class Attenuated(CommunicationModel):
 	def getComRange(self):
 		range = (self.constant/self.lowerBound)**(1/self.alpha)
 		return math.floor(range)
+	
+	# get dist based on the given f value
+	def getDist(self, f):
+		dist = (self.constant/f)**(1/self.alpha)
+		return dist
 
 	def getMinDist(self):
-		return self.getInnerRange()
+		return self.getDist(self.upperBound)
 
 	def getTargetDist(self):
-		target = (self.getComRange() + self.getMinDist()) / 2
+		target = self.getDist(self.lowerBound)
 		return target
 
 	def getInnerRange(self):

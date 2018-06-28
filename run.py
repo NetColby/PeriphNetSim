@@ -15,7 +15,6 @@ filename = "settings.txt"
 parser = InputFileParser(filename)
 parser.parse()
 numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption,comModel = parser.getInput()
-parser.statusMessage()
 
 #parses and makes comModel into a list
 comList = comModel.split(",")
@@ -37,7 +36,7 @@ if "-W" in sys.argv:
 # If want to control from command line, uncomment the following line
 #numdrones = sys.argv[1]
 sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
-sim.main(1, 500)
+sim.main(1, 200)
 print("####################################################################################")
 print("####################################################################################")
 print("Simulation Done. Now proceeding to Display")

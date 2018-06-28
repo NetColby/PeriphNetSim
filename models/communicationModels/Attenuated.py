@@ -12,8 +12,8 @@ class Attenuated(CommunicationModel):
 		CommunicationModel.__init__(self)
 		self.constant = c
 		self.alpha = a
-		self.lowerBound = lower
-		self.upperBound = upper
+		self.lowerBound = lower # the value is picked from the plot for f vs distance at diff alpha value
+		self.upperBound = upper # we decide to use alpha = 1.4 and the lower as 0.25 and upper as 0.42
 		#self.communicationRange = self.getComRange()
 
 	def attemptCommunication(self, distance, middlePoint=None, obstcles=None):
@@ -46,7 +46,7 @@ class Attenuated(CommunicationModel):
 		return math.floor(range)
 
 if __name__ == "__main__" :
-	at = Attenuated(100, 1.4)
+	at = Attenuated(100, 1.4, 0.25, 0.42)
 	print(at.getBoundBasedOnDistance(100))
 	print(at.attemptCommunication(1))
 	print(at.attemptCommunication(10))

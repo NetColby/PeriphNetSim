@@ -12,8 +12,8 @@ class Disk(CommunicationModel):
     def __init__(self, comRange):
         CommunicationModel.__init__(self)
         self.communicationRange = comRange
-        self.targetDist = comRange - comRange/5
-        self.minDist = comRange - comRange/2
+        self.targetDist = comRange*1
+        self.minDist = comRange*.5
         self.material = self.materials.get("concrete")
 
 

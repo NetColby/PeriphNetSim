@@ -10,13 +10,14 @@ import random
 
 class Probabilistic(CommunicationModel):
 
-    def __init__(self, Rs=70, Ru=30, omega=.02, beta=1):
+    def __init__(self, Rs=65, Ru=35, omega=.02, beta=1):
         CommunicationModel.__init__(self)
         self.Rs = Rs
         self.Ru = Ru
         self.communicationRange = Rs + Ru
-        self.targetDist = self.communicationRange - self.communicationRange/12
-        self.minDist = self.communicationRange - self.communicationRange/2
+        # Values calculated using wolfram alpha :   solve for x : ((Rs-Ru)+(x-(Rs-Ru))*e^(-.02*(x-(Rs-Ru)) ))/x <= p
+        self.targetDist = 68        # p =.7
+        self.minDist    = 46        # p =.9
         #self.communicationRange = int(self.targetDist)
         self.omega = omega
         self.beta = beta

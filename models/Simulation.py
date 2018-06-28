@@ -64,7 +64,7 @@ class Simulation:
 		elif comList[0] == "Probabilistic":
 			self.comModel = Probabilistic()
 		elif comList[0] == "Attenuated":
-			self.comModel = Attenuated(comList[1], comList[2], comList[3], comList[4])
+			self.comModel = Attenuated(int(comList[1]), float(comList[2]), float(comList[3]), float(comList[4]))
 		else:
 			self.comModel = Disk(105)
 		#field that holds whether or not to run the simulation without the GUI
@@ -383,8 +383,8 @@ class Simulation:
 			self.multiStep(steps, 0)
 
 			# Write the Coverage as an output
-			# with open("CoverageOutput.txt","a") as f:
-# 				f.write("%s" % (self.numdrones, str(self.coverage(self.drones[0],getComRange())) ))
+			with open("CoverageOutput.txt","a") as f:
+				f.write("%s, %s" % (self.numdrones, str(self.coverage(self.drones[0].getComRange())) ))
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

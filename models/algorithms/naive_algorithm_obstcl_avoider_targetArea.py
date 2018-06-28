@@ -71,8 +71,8 @@ class NaiveAlgorithmObstclAvoiderTargetArea(AlgorithmProvider):
 
 				magnitude = math.hypot(dx, dy)
 
-				xdirs.append(-dx / magnitude)
-				ydirs.append(-dy / magnitude)
+				xdirs.append(0)
+				ydirs.append(0)
 
 			elif past_target:
 				# print("toofar")
@@ -99,8 +99,10 @@ class NaiveAlgorithmObstclAvoiderTargetArea(AlgorithmProvider):
 			avx = sum(xdirs) / len(xdirs)
 			avy = sum(ydirs) / len(ydirs)
 
-
 			magnitude = math.hypot(avx, avy)
+
+			if avx == 0 and avy == 0 :
+				magnitude = 1
 
 			cte = 2
 			while ( (False if obstacles==None else True) and (self.inObstacles(drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude, obstacles)) or ( (False if tarea==None else True) and tarea.notInTargetArea(drone.get_coords()[0] + avx/magnitude, drone.get_coords()[1] + avy/magnitude) )  ) :

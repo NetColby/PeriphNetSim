@@ -280,8 +280,8 @@ class DisplayApp(Simulation):
 		self.lines = []
 
 		#bounds for color choice
-		lowerBound = self.comModel.getTargetDist() + 5
-		upperBound = self.comModel.getComRange() - 5
+		lowerBound = self.comModel.getMinDist()
+		upperBound = self.comModel.getTargetDist()
 
 		for agent in self.drones:
 			for neighbor in agent.neighbors:
@@ -292,9 +292,9 @@ class DisplayApp(Simulation):
 					euclidian = math.hypot(acoord[0]-bcoord[0], acoord[1]-bcoord[1])
 
 					if euclidian <= lowerBound:
-						color = "orange"
-					elif euclidian <= upperBound and euclidian > lowerBound:
 						color = "yellow"
+					elif euclidian <= upperBound and euclidian > lowerBound:
+						color = "orange"
 					else:
 						color = "red"
 

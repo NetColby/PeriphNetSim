@@ -25,15 +25,15 @@ gui = True
 #interpretes whether or not to run the GUI
 if "-W" in sys.argv:
     gui = False
-    
+
 # If want to control from command line, uncomment the following line
 #numdrones = sys.argv[1]
 sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
-sim.main(1, 100)
+sim.main(1, 500)
 print("####################################################################################")
 print("####################################################################################")
 print("Simulation Done. Now proceeding to Display")
 print("####################################################################################")
 print("####################################################################################")
-dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, True)
-dapp.main()
+# dapp = Display.DisplayApp(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, True)
+# dapp.main()

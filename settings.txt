@@ -2,20 +2,20 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=9
+numdrones=40
 
 # x,y Coordinates of the drones (optional)
-300,400
-350,400
-300,450
-350,450
+#300,400
+#350,400
+#300,450
+#350,450
 
-400,500
-450,500
-350,499
+#400,500
+#450,500
+#350,499
 
-300,350
-350,350
+#300,350
+#350,350
 
 # Number of base stations to spawn
 numbasestation=1
@@ -39,7 +39,7 @@ tareaWidth=400
 tareaHeight=400
 
 # Obstacle
-obstclboolean=True
+obstclboolean=False
 
 # Obstacle number
 numobstacle=5

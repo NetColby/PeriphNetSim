@@ -71,8 +71,8 @@ class NaiveAlgorithmObstclAvoider(AlgorithmProvider):
 
 				magnitude = math.hypot(dx, dy)
 
-				xdirs.append(-dx / magnitude)
-				ydirs.append(-dy / magnitude)
+				xdirs.append(0)
+				ydirs.append(0)
 
 			elif past_target:
 				# print("toofar")

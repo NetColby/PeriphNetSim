@@ -5,7 +5,7 @@ import random
 class NaiveAlgorithmObstclAvoiderTargetArea(AlgorithmProvider):
 	# Attempts to move the given drone to a target distance
 	# away from the average coordinates of its neighbors (very naive)
-	def run(self, drone, obstacles, tarea):
+	def individualRun(self, drone, obstacles, tarea):
 		avx = 0
 		avy = 0
 		if drone.doesMove():

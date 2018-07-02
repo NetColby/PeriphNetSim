@@ -2,7 +2,7 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=40
+numdrones=5
 
 # x,y Coordinates of the drones (optional)
 #300,400
@@ -21,8 +21,7 @@ numdrones=40
 numbasestation=1
 
 # x,y Coordinates of the base stations (required)
-0,0
-#300,420
+250,400
 
 
 # Number of steps (increments in time)
@@ -32,11 +31,11 @@ steps=100
 tareaboolean=True
 
 # Target Area coordinates
-400,400
+300,400
 
 # Target Area settings (Ignore if tareaboolean=False )
-tareaWidth=400
-tareaHeight=400
+tareaWidth=300
+tareaHeight=300
 
 # Obstacle
 obstclboolean=False
@@ -58,16 +57,16 @@ obstclWidth=60
 obstclHeight=60
 
 #Starting battery level of drones
-batteryLevel=400.0
+batteryLevel=300.0
 
 #Amount of battery consumed with each movement step of a drone
 moveConsumption=0.9
 
 #Amount of battery consumed with each idle step of a drone
-idleConsumption=0.8
+idleConsumption=0.7
 
 #List of type and arguments to specify comModel
-comModel=Probabilistic
+comModel=Disk,100
 
 # End of the file
 end.

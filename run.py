@@ -22,11 +22,11 @@ comList = comModel.split(",")
 #will not print status message when given this argument
 if "-O" not in sys.argv:
 	parser.statusMessage()
-	
+
 #only prins the status of the current simulation
 if "-Q" in sys.argv:
 	quit()
-	
+
 #determines whether or not the GUI should run
 gui = True
 #interpretes whether or not to run the GUI
@@ -35,8 +35,8 @@ if "-W" in sys.argv:
 
 # If want to control from command line, uncomment the following line
 #numdrones = sys.argv[1]
-sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
-sim.main(1, 200)
+# sim = Simulation.Simulation(1200, 675, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
+# sim.main(1, 200)
 print("####################################################################################")
 print("####################################################################################")
 print("Simulation Done. Now proceeding to Display")

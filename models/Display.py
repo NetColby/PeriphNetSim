@@ -298,6 +298,8 @@ class DisplayApp(Simulation):
 					else:
 						color = "red"
 
+					if agent.getHeading() != "Free" or neighbor.getHeading() != "Free" :
+						color = "blue"
 
 					if agent in neighbor.neighbors:
 						neighbor.neighbors.remove(agent)

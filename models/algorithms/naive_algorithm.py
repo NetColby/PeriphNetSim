@@ -4,7 +4,7 @@ import math
 class NaiveAlgorithm(AlgorithmProvider):
     # Attempts to move the given drone to a target distance
     # away from the average coordinates of its neighbors (very naive)
-    def run(self, drone):
+    def individualRun(self, drone):
     	if drone.doesMove():
 	        target_dist = self.config.com_range - 20
 	        min_dist = self.config.com_range - 50
@@ -35,10 +35,10 @@ class NaiveAlgorithm(AlgorithmProvider):
 	            coords = [n.get_coords() for n in pre_min]
 	            x = [i[0] for i in coords]
 	            y = [i[1] for i in coords]
-	            
+
 	            avgx = sum(x)/len(x)
 	            avgy = sum(y)/len(y)
-	            
+
 	            origin = drone.get_coords()
 
 	            dx = avgx - origin[0]
@@ -54,10 +54,10 @@ class NaiveAlgorithm(AlgorithmProvider):
 	            coords = [n.get_coords() for n in pre_target]
 	            x = [i[0] for i in coords]
 	            y = [i[1] for i in coords]
-	            
+
 	            avgx = sum(x)/len(x)
 	            avgy = sum(y)/len(y)
-	            
+
 	            origin = drone.get_coords()
 
 	            dx = avgx - origin[0]
@@ -73,11 +73,11 @@ class NaiveAlgorithm(AlgorithmProvider):
 	            coords = [n.get_coords() for n in past_target]
 	            x = [i[0] for i in coords]
 	            y = [i[1] for i in coords]
-	            
+
 	            avgx = sum(x)/len(x)
 	            avgy = sum(y)/len(y)
 
-	            origin = drone.get_coords()            
+	            origin = drone.get_coords()
 
 	            dx = avgx - origin[0]
 	            dy = avgy - origin[1]
@@ -86,7 +86,7 @@ class NaiveAlgorithm(AlgorithmProvider):
 
 	            xdirs.append(dx / magnitude)
 	            ydirs.append(dy / magnitude)
-	        
+
 	        avx = sum(xdirs) / len(xdirs)
 	        avy = sum(ydirs) / len(ydirs)
 

@@ -19,6 +19,16 @@ class BaseStation(Agent):
         self.algorithm_provider = algorithmProvider
         self.neighbors = []
         self.dead = False
+        self.heading = "Free"
+
+
+    # Heading
+    def setHeading(self, h):
+        self.heading = h
+
+    def getHeading(self):
+        return self.heading
+
 
     def getComRange(self):
         return self.comModel.getComRange()
@@ -28,6 +38,9 @@ class BaseStation(Agent):
 
     def getMinDist(self):
         return self.comModel.getMinDist()
+
+    def getCoords(self):
+        return (self.x, self.y)
 
     def attemptCommunication(self, euclidianDist, middlePoint, obstacles):
         return self.comModel.attemptCommunication(euclidianDist, middlePoint, obstacles)
@@ -48,7 +61,7 @@ class BaseStation(Agent):
         # returns a list of drones within communications range
         dronecoord = self.get_coords()
         drones_in_range = []
-        for t in [i for i in drones if not i.dead and type(i) is Drone]:
+        for t in [i for i in drones if not i.dead]:
             tcoord = t.get_coords()
             euclidian = math.hypot(dronecoord[0]-tcoord[0], dronecoord[1]-tcoord[1])
 

@@ -11,29 +11,56 @@ from .BaseStation import BaseStation
 class Drone(BaseStation):
     def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9, idleConsumption=0.8):
         BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel)
-        self.battery_level = batteryLevel
+        self.batteryLevel = batteryLevel
         self.moves = True
         self.moveConsumption = moveConsumption
         self.idleConsumption = idleConsumption
+        self.heading = "Free"
+        self.anchor = None
+
+    # Battery
+    def setBatteryLevel(self,bl):
+        self.batteryLevel = bl
 
     def get_battery_level(self):
         # return the current battery level of the drone
-        return self.battery_level
+        return self.batteryLevel
+
+    #Anchor
+    def setAnchor(self, coords):
+        self.anchor = coords
+
+    def getAnchor(self):
+        return self.anchor
+
+    # Move Conusmption
+    def getMoveConsumption(self):
+        return self.moveConsumption
+
+    def getDistClosestBaseStation(self, drones):
+        # For now just first baseStation #####CHANGEEE
+        for drone in drones:
+            if type(drone) is BaseStation:
+                closestBaseStation = drone
+        distClosestBaseStation   = ((self.x - closestBaseStation.getCoords()[0])**2 + (self.y - closestBaseStation.getCoords()[1])**2   )**.5
+        # print("x,y,dist",self.x, self.y, distClosestBaseStation)
+        coordsClosestBaseStation = closestBaseStation.getCoords()
+        return distClosestBaseStation, coordsClosestBaseStation
 
     def move(self, x, y):
         # move drone object by unit vector in direction x/y
         if self.canvas is not None:
             self.canvas.move(self.get_pt(), x, y)
         self.set_coords(self.x + x, self.y + y)
-        self.battery_level -= self.moveConsumption
+        self.batteryLevel -= self.moveConsumption
         self.update_life_state()
 
     def idle(self):
-        self.battery_level -= self.idleConsumption
+        self.batteryLevel -= self.idleConsumption
         self.update_life_state()
 
     def update_life_state(self):
-        if self.battery_level < 0.5:
+        if self.batteryLevel < 0.5:
             self.dead = True
             if self.canvas is not None:
                 self.canvas.itemconfig(self.pt, fill="red")
@@ -68,7 +95,7 @@ class Drone(BaseStation):
         # returns a list of drones within communications range
         dronecoord = self.get_coords()
         drones_in_range = []
-        for t in [i for i in drones if not i.dead and type(i) is Drone]:
+        for t in [i for i in drones if not i.dead]:
             tcoord = t.get_coords()
             euclidian = math.hypot(dronecoord[0]-tcoord[0], dronecoord[1]-tcoord[1])
 

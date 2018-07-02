@@ -41,3 +41,8 @@ class Package:
 		
 	def __repr__(self):
 		return str(self.message)
+		
+	def clone(self):
+		clone = Package(self.message, self.ID, self.time)
+		clone.hops = self.hops
+		return clone

@@ -9,12 +9,14 @@ import math
 from .BaseStation import BaseStation
 
 class Drone(BaseStation):
-    def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9, idleConsumption=0.8):
+    def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9, idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1):
         BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel)
         self.batteryLevel = batteryLevel
         self.moves = True
         self.moveConsumption = moveConsumption
         self.idleConsumption = idleConsumption
+        self.sendConsumption = sendConsumption
+        self.recieveConsumption = recieveConsumption
         self.heading = "Free"
         self.anchor = None
 
@@ -71,6 +73,7 @@ class Drone(BaseStation):
     def do_step(self, obstacles, tarea):
         if not self.dead:
             self.algorithm_provider.run(self, obstacles, tarea)
+            self.sendPackages()
 
     #returns a list of all the pixels in the com range
     def getCoverage(self, rng):

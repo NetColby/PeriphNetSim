@@ -111,11 +111,11 @@ class Simulation:
 		if numdrones != len(dronescoordinatesList) :
 			for i in range(numdrones - len(dronescoordinatesList)):
 				self.createRandomDrone()
-
+	
 		# Generate Base Stations, both specified and random
 		for coords in basestationcoordinatesList:
 			self.createBaseStation(coords[0], coords[1])
-
+			
 		if numbasestation != len(basestationcoordinatesList):
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass

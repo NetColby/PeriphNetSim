@@ -104,7 +104,6 @@ class DisplayApp(Simulation):
 		# Set up the simulation
 		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
 
-
 	def multiStep(self, event=None):
 		steps = int(self.entry4.get())
 		frequency = self.interpretFrequency()
@@ -119,7 +118,7 @@ class DisplayApp(Simulation):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
@@ -133,14 +132,14 @@ class DisplayApp(Simulation):
 			self.createRandomDrone()
 
 
-	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoider, event=None):
+	def createBaseStation(self, x=None, y = None, dx=None, algorithm=NaiveAlgorithmObstclAvoiderTargetArea, event=None):
 		if dx is None:
 			dx = self.droneSize/2
 		if x == None and y == None:
 			x = int(self.entry5.get())
 			y = int(self.entry6.get())
 		pt = self.canvas.create_oval(x-1.5*dx, y-1.5*dx, x+1.5*dx, y+1.5*dx, fill=BASESTATIONCLR, outline='')
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel)
 		self.drones.append(baseStation)
 		self.updateDroneView()
 		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
@@ -399,13 +398,19 @@ class DisplayApp(Simulation):
 
 		self.areaWidth = tk.IntVar(None)
 		self.entry5 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
-		self.entry5.insert(10, self.basestationcoordinatesList[0][0])
+		if self.basestationcoordinatesList:
+			self.entry5.insert(10, self.basestationcoordinatesList[0][0])
+		else: 
+			self.entry5.insert(10, 0)
 		self.entry5.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry5.pack(side = tk.TOP) # draw the entry form for area width
 
 		self.areaHeight = tk.IntVar(None)
 		self.entry6 = tk.Entry(rightcntlframe, textvariable = self.areaHeight, width=10, fg=FONTCOLOR)
-		self.entry6.insert(10, self.basestationcoordinatesList[0][1])
+		if self.basestationcoordinatesList:
+			self.entry6.insert(10, self.basestationcoordinatesList[0][1])
+		else:
+			self.entry6.insert(10, 0)
 		self.entry6.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry6.pack(side = tk.TOP) # draw the entry form for area height
 

@@ -38,3 +38,6 @@ class Package:
 	#decrements time by a factor of 1
 	def timeStep(self):
 		self.time -= 1	
+		
+	def __repr__(self):
+		return str(self.message)

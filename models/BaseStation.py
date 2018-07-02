@@ -22,6 +22,10 @@ class BaseStation(Agent):
 		self.heading = "Free"
 		self.recievedBuffer = []
 		self.sentBuffer = []
+		
+	def get_battery_level(self):
+		# return the current battery level of the drone
+		return "N/A"
 
 	# Heading
 	def setHeading(self, h):
@@ -77,7 +81,7 @@ class BaseStation(Agent):
 		
 	#receives the given message
 	def recievePackage(self, package):
-		if type(self) is Drone:
+		if type(self) is not BaseStation:
 			self.batteryLevel -= self.recieveConsumption
 		if package not in self.recievedBuffer:
 			self.recievedBuffer.append(package)
@@ -85,14 +89,14 @@ class BaseStation(Agent):
 	#sends the given message to the current neighbors
 	def sendPackages(self):
 		if len(self.sentBuffer) != len(self.recievedBuffer):
-			if type(self) is Drone:
+			if type(self) is not BaseStation:
 				self.batteryLevel -= self.sendConsumption
 			for package in self.recievedBuffer:
 				if package not in self.sentBuffer:
 					for neighbor in self.neighbors:
 						neighbor.recievePackage(package)
 	
-	#creates and appends a package to self.recievedBufer
+	#creates and appends a package to self.recievedBuffer
 	def createPackage(self, message):
 		pckg = Package(message)
 		self.recievedBuffer.append(pckg)

@@ -15,6 +15,7 @@ class Package:
 			self.ID = ID
 		self.hops = []
 		self.time = time
+		self.fresh = True
 		
 	#returns the message
 	def getMessage(self):
@@ -42,7 +43,16 @@ class Package:
 	
 	#decrements time by a factor of 1
 	def timeStep(self):
-		self.time -= 1	
+		self.time -= 1
+			
+	#returns the fresh status
+	def isFresh(self):
+		return self.fresh	
+		
+	#changes the self.fresh value to False
+	def unfreshen(self):
+		if self.fresh == True: 
+			self.fresh = False
 		
 	def __repr__(self):
 		return str(self.message)

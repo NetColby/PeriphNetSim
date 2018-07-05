@@ -90,21 +90,28 @@ class BaseStation(Agent):
 
 	#sends the given message to the current neighbors
 	def sendPackages(self):
-		print("Drone ID #" , self.droneID, " :  ", self.sentBuffer)
-		for package in self.sentBuffer:
-			print(package.time)
+# 		print("Drone ID #" , self.droneID, " :  ", self.sentBuffer, self.recievedBuffer)
+		# for package in self.sentBuffer:
+# 			print(package.time)
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.sendConsumption
 		for package in self.recievedBuffer:
 			for neighbor in self.neighbors:
 				if neighbor.hasntRecieved(package):
-					neighbor.recievePackage(package)
-			self.recievedBuffer.remove(package)
-			self.sentBuffer.append(package)
+					if not package.isFresh():
+						neighbor.recievePackage(package)
+			if not package.isFresh():
+				self.recievedBuffer.remove(package)
+				self.sentBuffer.append(package)
+			package.unfreshen()
 		for package in self.sentBuffer:
 			package.timeStep()
 			if package.isExpired():
 				self.sentBuffer.remove(package)
+		if self.sentBuffer:
+			print("Drone ID #" , self.droneID, " :  ", self.sentBuffer[0].time, self.recievedBuffer)
+		else:
+			print("Drone ID #" , self.droneID, " :  ", self.sentBuffer, self.recievedBuffer)
 
 	#creates and appends a package to self.recievedBuffer
 	def createPackage(self, message):

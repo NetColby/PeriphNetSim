@@ -118,11 +118,15 @@ class DisplayApp(Simulation):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, droneID=self.droneIDs)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
+
+		# Keep track of how many drones are created
+		self.droneIDs += 1
+
 		return
 
 	#creates the given number of random drones
@@ -139,11 +143,15 @@ class DisplayApp(Simulation):
 			x = int(self.entry5.get())
 			y = int(self.entry6.get())
 		pt = self.canvas.create_oval(x-1.5*dx, y-1.5*dx, x+1.5*dx, y+1.5*dx, fill=BASESTATIONCLR, outline='')
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, droneID=self.droneIDs)
 		self.drones.append(baseStation)
 		self.updateDroneView()
 		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
+
+		# Keep track of how many drones are created
+		self.droneIDs += 1
+
 		return
 
 	def droneStep(self):
@@ -400,7 +408,7 @@ class DisplayApp(Simulation):
 		self.entry5 = tk.Entry(rightcntlframe, textvariable = self.areaWidth, width=10, fg=FONTCOLOR)
 		if self.basestationcoordinatesList:
 			self.entry5.insert(10, self.basestationcoordinatesList[0][0])
-		else: 
+		else:
 			self.entry5.insert(10, 0)
 		self.entry5.configure(highlightbackground=FRAMECOLOR, background=TXTBOXCOLOR)
 		self.entry5.pack(side = tk.TOP) # draw the entry form for area width

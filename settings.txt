@@ -2,10 +2,15 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=5
+numdrones=4
 
 # x,y Coordinates of the drones (optional)
-#300,400
+300,400
+350,400
+400,400
+250,400
+
+
 #350,400
 #300,450
 #350,450
@@ -21,7 +26,7 @@ numdrones=5
 numbasestation=1
 
 # x,y Coordinates of the base stations (required)
-250,400
+200,400
 
 
 # Number of steps (increments in time)

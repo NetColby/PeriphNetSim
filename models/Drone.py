@@ -9,8 +9,9 @@ import math
 from .BaseStation import BaseStation
 
 class Drone(BaseStation):
-    def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9, idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1):
-        BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel)
+    def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9,
+    idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1, droneID=9999):
+        BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel, droneID)
         self.batteryLevel = batteryLevel
         self.moves = True
         self.moveConsumption = moveConsumption

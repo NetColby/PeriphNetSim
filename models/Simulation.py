@@ -59,6 +59,11 @@ class Simulation:
 		self.batteryLevel = batteryLevel
 		self.moveConsumption = moveConsumption
 		self.idleConsumption = idleConsumption
+
+		# Drone ID Counter
+		self.droneIDs = 0
+
+
 		if comList[0] == "Disk":
 			self.comModel = Disk(int(comList[1]))
 		elif comList[0] == "Probabilistic":
@@ -111,15 +116,15 @@ class Simulation:
 		if numdrones != len(dronescoordinatesList) :
 			for i in range(numdrones - len(dronescoordinatesList)):
 				self.createRandomDrone()
-	
+
 		# Generate Base Stations, both specified and random
 		for coords in basestationcoordinatesList:
 			self.createBaseStation(coords[0], coords[1])
-			
+
 		if numbasestation != len(basestationcoordinatesList):
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
-				
+
 		self.drones[0].createPackage("hellp")
 
 	#creates the given number of random drones
@@ -149,13 +154,18 @@ class Simulation:
 
 	#creates a drone at the given location
 	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoiderTargetArea):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, droneID=self.droneIDs)
 		self.drones.append(drone)
+		# Keep track of how many drones are created
+		self.droneIDs += 1
+
 
 	#creates a base station at the given location
 	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoiderTargetArea, event=None):
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, droneID=self.droneIDs)
 		self.drones.append(baseStation)
+		# Keep track of how many drones are created
+		self.droneIDs += 1
 
 	#creates a target area given x and y coordinates, width and height
 	def createTargetArea(self, x=450, y=338, w=None, h=None, event=None):
@@ -194,7 +204,7 @@ class Simulation:
 	def droneStep(self):
 		for drone in self.drones:
 			drone.do_step(self.obstacles, self.tarea)
-			
+
 	#runs the simulation for the given number of steps and prints status messages to the terminal
 	def multiStep(self, steps, frequency, event=None):
 		#variable keeps track of the number of steps in the current simulation for printing status messages
@@ -210,6 +220,8 @@ class Simulation:
 			if (stepsForStatus-1 % frequency) != 0:
 				print(self.statusMessage(stepsForStatus))
 		self.statsToOutputFile(stringForOutputFile, stepsForStatus)
+		print("___New Step___")
+
 
 	#prints the status of a simulation when in begins
 	#set numDrones to True when it becomes necessary to display the number of drones

@@ -53,9 +53,10 @@ class BaseStation(Agent):
 	def idle(self):
 		pass
 
-	def do_step(self, obstacle, tarea):
+	def do_step(self, obstacles, tarea):
+		self.algorithm_provider.updateNeighbors(self, obstacles)
 		self.sendPackages()
-
+		
 	def move(self, x, y):
 		# move drone object by unit vector in direction x/y
 		self.canvas.move(self.get_pt(), x, y)
@@ -83,23 +84,42 @@ class BaseStation(Agent):
 	def recievePackage(self, package):
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.recieveConsumption
-		if package not in self.recievedBuffer:
-			self.recievedBuffer.append(package)
-		
+		tempPackage = package.clone()
+		self.recievedBuffer.append(tempPackage)
+			
 	#sends the given message to the current neighbors
 	def sendPackages(self):
-		if len(self.sentBuffer) != len(self.recievedBuffer):
-			if type(self) is not BaseStation:
-				self.batteryLevel -= self.sendConsumption
-			for package in self.recievedBuffer:
-				if package not in self.sentBuffer:
-					for neighbor in self.neighbors:
-						neighbor.recievePackage(package)
+		# print(self.doesMove(), self.sentBuffer)
+# 		for package in self.sentBuffer:
+# 			print(package.time)
+		if type(self) is not BaseStation:
+			self.batteryLevel -= self.sendConsumption
+		for package in self.recievedBuffer:
+			for neighbor in self.neighbors:
+				if neighbor.hasntRecieved(package):
+					neighbor.recievePackage(package)
+			self.recievedBuffer.remove(package)
+			self.sentBuffer.append(package)
+		for package in self.sentBuffer:
+			package.timeStep()
+			if package.isExpired():
+				self.sentBuffer.remove(package)
 	
 	#creates and appends a package to self.recievedBuffer
 	def createPackage(self, message):
 		pckg = Package(message)
 		self.recievedBuffer.append(pckg)
+	
+	#tells whether the given package has been received or not
+	def hasntRecieved(self, package):
+		for packageInBuffer in self.recievedBuffer:
+			if packageInBuffer.getID() == package.getID():
+				return False
+		for package in self.sentBuffer:
+			for packageInBuffer in self.sentBuffer:
+				if packageInBuffer.getID() == package.getID():
+					return False
+		return True 
 			
 	def doesMove(self):
 		return self.moves

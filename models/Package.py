@@ -3,11 +3,16 @@
 #Package.py
 #format for the messages to be sent between drones and base station
 
+import random
+
 class Package:
 	
 	def __init__(self, message, ID=None, time=64):
 		self.message = message
-		self.ID = ID
+		if ID is None:
+			self.ID = random.random()
+		else:
+			self.ID = ID
 		self.hops = []
 		self.time = time
 		

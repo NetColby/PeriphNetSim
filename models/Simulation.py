@@ -119,6 +119,8 @@ class Simulation:
 		if numbasestation != len(basestationcoordinatesList):
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
+				
+		self.drones[0].createPackage("hellp")
 
 	#creates the given number of random drones
 	def createRandomDrones(self, numDrones=10):
@@ -192,7 +194,7 @@ class Simulation:
 	def droneStep(self):
 		for drone in self.drones:
 			drone.do_step(self.obstacles, self.tarea)
-
+			
 	#runs the simulation for the given number of steps and prints status messages to the terminal
 	def multiStep(self, steps, frequency, event=None):
 		#variable keeps track of the number of steps in the current simulation for printing status messages

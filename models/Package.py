@@ -6,58 +6,68 @@
 import random
 
 class Package:
-	
-	def __init__(self, message, ID=None, time=64):
+
+	def __init__(self, message, ID=None, destinationAgentID=9999, time=64):
 		self.message = message
+
 		if ID is None:
 			self.ID = random.random()
 		else:
 			self.ID = ID
+
+		if destinationAgentID==None:
+			self.destinationAgentID=9999
+		else:
+			self.destinationAgentID = destinationAgentID
+
 		self.hops = []
 		self.time = time
 		self.fresh = True
-		
+
+	def getDestinationAgentID(self):
+		# print( "destinationAgentID",  self.destinationAgentID)
+		return self.destinationAgentID
+
 	#returns the message
 	def getMessage(self):
 		return self.message
-		
+
 	#returns the ID
 	def getID(self):
 		return self.ID
-		
+
 	#adds the given ID to the hops list
 	def updateHops(self, droneID):
 		self.hops.append(droneID)
-		
+
 	#returns the hops list
 	def getHops(self):
 		return self.hops
-		
+
 	#returns True if the droneID is in self.hops
 	def inHops(self, droneID):
 		return droneID in self.hops
-	
+
 	#returns state of the message
 	def isExpired(self):
-		return self.time == 0	
-	
+		return self.time == 0
+
 	#decrements time by a factor of 1
 	def timeStep(self):
 		self.time -= 1
-			
+
 	#returns the fresh status
 	def isFresh(self):
-		return self.fresh	
-		
+		return self.fresh
+
 	#changes the self.fresh value to False
 	def unfreshen(self):
-		if self.fresh == True: 
-			self.fresh = False
-		
+		self.fresh = False
+
 	def __repr__(self):
 		return str(self.message)
-		
+
 	def clone(self):
-		clone = Package(self.message, self.ID, self.time)
+		clone = Package(self.message, self.ID, destinationAgentID= self.destinationAgentID, time=self.time)
 		clone.hops = self.hops
 		return clone

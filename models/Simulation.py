@@ -61,7 +61,7 @@ class Simulation:
 		self.idleConsumption = idleConsumption
 
 		# Drone ID Counter
-		self.droneIDs = 0
+		self.agentIDs = 0
 
 
 		if comList[0] == "Disk":
@@ -125,7 +125,8 @@ class Simulation:
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
 
-		self.drones[0].createPackage("hellp")
+		# self.drones[2].createPackage("Hello", 4)
+		self.drones[2].dying(self.drones)
 
 	#creates the given number of random drones
 	def createRandomDrones(self, numDrones=10):
@@ -154,19 +155,21 @@ class Simulation:
 
 	#creates a drone at the given location
 	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoiderTargetArea):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, droneID=self.droneIDs)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, agentID=self.agentIDs)
 		self.drones.append(drone)
 		# Keep track of how many drones are created
-		self.droneIDs += 1
+		self.agentIDs += 1
+		return drone
 
 
 	#creates a base station at the given location
 	def createBaseStation(self, x=100, y = 100, algorithm=NaiveAlgorithmObstclAvoiderTargetArea, event=None):
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, droneID=self.droneIDs)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, agentID=self.agentIDs)
 		self.drones.append(baseStation)
 		# Keep track of how many drones are created
-		self.droneIDs += 1
+		self.agentIDs += 1
 
+		return baseStation
 	#creates a target area given x and y coordinates, width and height
 	def createTargetArea(self, x=450, y=338, w=None, h=None, event=None):
 		self.tareab = True
@@ -204,6 +207,21 @@ class Simulation:
 	def droneStep(self):
 		for drone in self.drones:
 			drone.do_step(self.obstacles, self.tarea)
+			concerned = drone.checkIfConcerned()
+			if concerned:
+				self.respond(drone)
+		for drone in self.drones:
+			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+
+
+	# Takes measures to answer the message (create a new drone, head back to B.S., etc..)
+	def respond(self, drone):
+		mainMessage = drone.action[0]
+		if mainMessage == "Dyingg":
+			newDrone = self.createDrone(drone.getCoords()[0]+1,drone.getCoords()[1])
+			coords = drone.action[1][1:-1].split(",")
+			newDrone.setAnchor((int(coords[0]), int(coords[1])))
+			newDrone.setHeading("Anchor")
 
 	#runs the simulation for the given number of steps and prints status messages to the terminal
 	def multiStep(self, steps, frequency, event=None):

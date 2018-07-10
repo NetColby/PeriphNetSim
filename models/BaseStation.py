@@ -9,7 +9,7 @@ from .Agent import Agent
 from .communicationModels.Disk import Disk
 
 class BaseStation(Agent):
-	def __init__(self, x, y, algorithmProvider, pt=None, canvas=False, comModel=None, droneID=8888):
+	def __init__(self, x, y, algorithmProvider, pt=None, canvas=False, comModel=None, agentID=8888):
 		Agent.__init__(self, x, y, canvas=canvas)
 		if comModel == None:
 			self.comModel = Disk(10)
@@ -18,11 +18,15 @@ class BaseStation(Agent):
 		self.pt = pt
 		self.algorithm_provider = algorithmProvider
 		self.neighbors = []
+		self.comNeighbors = []
 		self.dead = False
-		self.heading = "Free"
-		self.recievedBuffer = []
-		self.sentBuffer = []
-		self.droneID = droneID
+		self.heading = "Free"		#Heading of the drone, free is standard and uses algorithms
+		self.communicating = True   #Boolean to check if should communicate or not
+		self.recievedBuffer = []	#Temporary buffer that receives the packages and adds them or not to the sent buffer
+		self.sentBuffer = []		#Buffer that keeps the history of all sent packages
+		self.agentID = agentID      #Unique agent ID
+		self.action = []			#Contains the action information that is recieved from packages if this agent is the destination
+
 
 	def get_battery_level(self):
 		# return the current battery level of the drone
@@ -30,10 +34,20 @@ class BaseStation(Agent):
 
 	# Heading
 	def setHeading(self, h):
+		# if h == "Anchor":
+		# 	self.communicating = False
 		self.heading = h
 
 	def getHeading(self):
 		return self.heading
+
+	# communicating
+	def setCommunicating(self, c):
+		self.communicating = c
+
+	def isCommunicating(self):
+		return self.communicating
+
 
 
 	def getComRange(self):
@@ -56,6 +70,7 @@ class BaseStation(Agent):
 
 	def do_step(self, obstacles, tarea):
 		self.algorithm_provider.updateNeighbors(self, obstacles)
+		self.algorithm_provider.updateComNeighbors(self, obstacles)
 		self.sendPackages()
 
 	def move(self, x, y):
@@ -77,46 +92,111 @@ class BaseStation(Agent):
 
 		return drones_in_range
 
-	#updates the neighbors field to hold the drones currently being communicating with
+	#updates the neighbors field to hold the drones currently being taken into consideration while moving
 	def updateNeighbors(self, neighbors):
 		self.neighbors = neighbors
 
+	#updates the neighbors field to hold the drones currently being communicating with
+	def updateComNeighbors(self, neighbors):
+		self.comNeighbors = neighbors
+
+
 	#receives the given message
 	def recievePackage(self, package):
+		# Take away battery for receiving a package
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.recieveConsumption
+
+		# Cloning and sending a package
 		tempPackage = package.clone()
 		self.recievedBuffer.append(tempPackage)
 
+
+		# If the package received concerns this agent, then process the demand
+		if package.getDestinationAgentID() == self.agentID :
+			self.action = self.analyzePackage(package)
+
+# 	#sends the given message to the current neighbors
+# 	def sendPackages(self):
+# # 		print("Drone ID #" , self.agentID, " :  ", self.sentBuffer, self.recievedBuffer)
+# 		# for package in self.sentBuffer:
+# # 			print(package.time)
+# 		if type(self) is not BaseStation:
+# 			self.batteryLevel -= self.sendConsumption
+# 		for package in self.recievedBuffer:
+# 			# print("Neigh",self.neighbors)
+# 			# print("comNeig",self.comNeighbors)
+# 			for neighbor in self.comNeighbors:
+# 				if neighbor.hasntRecieved(package):
+# 					if not package.isFresh():
+# 						neighbor.recievePackage(package)
+# 				if not package.isFresh():
+# 					self.recievedBuffer.remove(package)
+# 					self.sentBuffer.append(package)
+# 			package.unfreshen()
+# 		for package in self.sentBuffer:
+# 			package.timeStep()
+# 			if package.isExpired():
+# 				self.sentBuffer.remove(package)
+# 		if self.sentBuffer:
+# 			print("Drone ID #" , self.agentID, " :  ", self.sentBuffer, self.recievedBuffer, self.heading)
+# 		else:
+# 			print("Drone ID #" , self.agentID, " :  ", self.sentBuffer, self.recievedBuffer, self.heading)
+
+
 	#sends the given message to the current neighbors
 	def sendPackages(self):
-# 		print("Drone ID #" , self.droneID, " :  ", self.sentBuffer, self.recievedBuffer)
-		# for package in self.sentBuffer:
-# 			print(package.time)
+		# Derement the battery
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.sendConsumption
+
+		# Send packages
 		for package in self.recievedBuffer:
-			for neighbor in self.neighbors:
-				if neighbor.hasntRecieved(package):
-					if not package.isFresh():
+			for neighbor in self.comNeighbors:
+				if not package.isFresh():
+					if neighbor.hasntRecieved(package):
 						neighbor.recievePackage(package)
+
 			if not package.isFresh():
 				self.recievedBuffer.remove(package)
 				self.sentBuffer.append(package)
-			package.unfreshen()
+
+			if package.isFresh():
+				package.unfreshen()
+
+
+
+		# Delete expired packages
 		for package in self.sentBuffer:
 			package.timeStep()
 			if package.isExpired():
 				self.sentBuffer.remove(package)
-		if self.sentBuffer:
-			print("Drone ID #" , self.droneID, " :  ", self.sentBuffer[0].time, self.recievedBuffer)
-		else:
-			print("Drone ID #" , self.droneID, " :  ", self.sentBuffer, self.recievedBuffer)
+
+		# Print
+		# print("Drone ID #" , self.agentID, " :  sent ", self.sentBuffer, " recieved ",self.recievedBuffer, self.heading)
+
+
+
 
 	#creates and appends a package to self.recievedBuffer
-	def createPackage(self, message):
-		pckg = Package(message)
+	def createPackage(self, message, destinationAgentID=None):
+		pckg = Package(message, destinationAgentID=destinationAgentID)
 		self.recievedBuffer.append(pckg)
+
+	# Parses the message and gets the information out
+	def analyzePackage(self,package):
+		list = package.getMessage().split("&")
+		return list
+
+	def checkIfConcerned(self):
+		temp = False
+		for pckg in self.recievedBuffer:
+			# print("IDs", pckg.getDestinationAgentID(),  self.agentID )
+			if pckg.getDestinationAgentID() == self.agentID:
+				print("concerned!!")
+				self.action = self.analyzePackage(pckg)
+				temp = True
+		return temp
 
 	#tells whether the given package has been received or not
 	def hasntRecieved(self, package):

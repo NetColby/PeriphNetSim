@@ -10,8 +10,8 @@ from .BaseStation import BaseStation
 
 class Drone(BaseStation):
     def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9,
-    idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1, droneID=9999):
-        BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel, droneID)
+    idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1, agentID=9999):
+        BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel, agentID)
         self.batteryLevel = batteryLevel
         self.moves = True
         self.moveConsumption = moveConsumption
@@ -20,6 +20,14 @@ class Drone(BaseStation):
         self.recieveConsumption = recieveConsumption
         self.heading = "Free"
         self.anchor = None
+
+    ##### MESSAGES ######
+    def dying(self, drones):
+        # print("coords", self.getCoords())
+        self.createPackage("Dyingg&" + str(self.getCoords()), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID)
+        self.heading = "Base"
+	#####################
+
 
     # Battery
     def setBatteryLevel(self,bl):
@@ -48,7 +56,7 @@ class Drone(BaseStation):
         distClosestBaseStation   = ((self.x - closestBaseStation.getCoords()[0])**2 + (self.y - closestBaseStation.getCoords()[1])**2   )**.5
         # print("x,y,dist",self.x, self.y, distClosestBaseStation)
         coordsClosestBaseStation = closestBaseStation.getCoords()
-        return distClosestBaseStation, coordsClosestBaseStation
+        return distClosestBaseStation, coordsClosestBaseStation, closestBaseStation
 
     def move(self, x, y):
         # move drone object by unit vector in direction x/y
@@ -74,6 +82,7 @@ class Drone(BaseStation):
     def do_step(self, obstacles, tarea):
         if not self.dead:
             self.algorithm_provider.run(self, obstacles, tarea)
+            self.algorithm_provider.updateComNeighbors(self, obstacles)
             self.sendPackages()
 
     #returns a list of all the pixels in the com range

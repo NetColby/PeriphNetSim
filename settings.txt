@@ -5,10 +5,10 @@
 numdrones=4
 
 # x,y Coordinates of the drones (optional)
-300,400
+270,400
 350,400
-400,400
-250,400
+430,400
+430,320
 
 
 #350,400

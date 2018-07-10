@@ -118,16 +118,16 @@ class DisplayApp(Simulation):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, droneID=self.droneIDs)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, agentID=self.agentIDs)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
 
 		# Keep track of how many drones are created
-		self.droneIDs += 1
+		self.agentIDs += 1
 
-		return
+		return drone
 
 	#creates the given number of random drones
 	def createRandomDrones(self):
@@ -143,21 +143,28 @@ class DisplayApp(Simulation):
 			x = int(self.entry5.get())
 			y = int(self.entry6.get())
 		pt = self.canvas.create_oval(x-1.5*dx, y-1.5*dx, x+1.5*dx, y+1.5*dx, fill=BASESTATIONCLR, outline='')
-		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, droneID=self.droneIDs)
+		baseStation = BaseStation(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, agentID=self.agentIDs)
 		self.drones.append(baseStation)
 		self.updateDroneView()
 		text = "Created a Base Station at %s x %s!" % (int(x), int(y))
 		self.status.set(text)
 
 		# Keep track of how many drones are created
-		self.droneIDs += 1
+		self.agentIDs += 1
 
-		return
+		return baseStation
 
 	def droneStep(self):
 		for drone in self.drones:
 			drone.do_step(self.obstacles, self.tarea)
+			concerned = drone.checkIfConcerned()
+			if concerned:
+				self.respond(drone)
+
+		for drone in self.drones:
+			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 		self.updateDroneView()
+		print("_____________________________")
 
 
 
@@ -291,8 +298,8 @@ class DisplayApp(Simulation):
 		upperBound = self.comModel.getTargetDist()
 
 		for agent in self.drones:
-			for neighbor in agent.neighbors:
-				if not agent.dead and not neighbor.dead:
+			for neighbor in agent.comNeighbors:
+				if not agent.dead and not neighbor.dead and agent.isCommunicating() and neighbor.isCommunicating():
 					acoord = agent.get_coords()
 					bcoord = neighbor.get_coords()
 

@@ -23,7 +23,6 @@ class Drone(BaseStation):
 
     ##### MESSAGES ######
     def dying(self, drones):
-        # print("coords", self.getCoords())
         self.createPackage("Dyingg&" + str(self.getCoords()), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID)
         self.heading = "Base"
 	#####################

@@ -150,20 +150,44 @@ class BaseStation(Agent):
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.sendConsumption
 
+
+		# print("ID 		", self.agentID)
+		# print("received buff  			", self.recievedBuffer)
+		# print("received buff .fresh  	", [x.fresh for x in self.recievedBuffer])
+
+		tempRecievedBuffer = self.recievedBuffer.copy()
+
 		# Send packages
-		for package in self.recievedBuffer:
+		for package in tempRecievedBuffer:
+			# print("##################")
+			# print("current mess  			", package.message)
+			# print("current fresh 			", package.fresh)
+			# print("comNeighbors  			", [x.agentID for x in self.comNeighbors])
+
+			# Send the not fresh
 			for neighbor in self.comNeighbors:
 				if not package.isFresh():
 					if neighbor.hasntRecieved(package):
+						# print("pckg sent to ", neighbor.agentID)
 						neighbor.recievePackage(package)
+					# else :
+					# 	print("already receive package")
 
+			# Update so that the not fresh are in the fresh
 			if not package.isFresh():
 				self.recievedBuffer.remove(package)
+				# print("adding to sent")
 				self.sentBuffer.append(package)
 
+			# unfreshen the packages for the following step
 			if package.isFresh():
+				# print("attempt to unfreshen")
 				package.unfreshen()
+				print(package.isFresh())
+			# print("##################")
 
+		# print("received buff  			", self.recievedBuffer)
+		# print("received buff .fresh  	", [x.fresh for x in self.recievedBuffer])
 
 
 		# Delete expired packages
@@ -200,13 +224,9 @@ class BaseStation(Agent):
 
 	#tells whether the given package has been received or not
 	def hasntRecieved(self, package):
-		for packageInBuffer in self.recievedBuffer:
-			if packageInBuffer.getID() == package.getID():
+		for pckg in self.sentBuffer:
+			if pckg.getID() == package.getID():
 				return False
-		for package in self.sentBuffer:
-			for packageInBuffer in self.sentBuffer:
-				if packageInBuffer.getID() == package.getID():
-					return False
 		return True
 
 	def doesMove(self):

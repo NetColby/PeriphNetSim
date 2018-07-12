@@ -125,8 +125,11 @@ class Simulation:
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
 
-		# self.drones[2].createPackage("Hello", 4)
-		self.drones[2].dying(self.drones)
+		self.drones[1].createPackage("Hello")
+		self.drones[3].createPackage("Bye")
+		self.drones[2].createPackage("Selim")
+		self.drones[4].createPackage("Emmett")
+		# self.drones[2].dying(self.drones)
 
 	#creates the given number of random drones
 	def createRandomDrones(self, numDrones=10):

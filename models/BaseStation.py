@@ -71,7 +71,7 @@ class BaseStation(Agent):
 	def do_step(self, obstacles, tarea):
 		self.algorithm_provider.updateNeighbors(self, obstacles)
 		self.algorithm_provider.updateComNeighbors(self, obstacles)
-		self.sendPackages()
+		# self.sendPackages()
 
 	def move(self, x, y):
 		# move drone object by unit vector in direction x/y

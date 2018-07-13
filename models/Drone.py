@@ -82,7 +82,7 @@ class Drone(BaseStation):
         if not self.dead:
             self.algorithm_provider.run(self, obstacles, tarea)
             self.algorithm_provider.updateComNeighbors(self, obstacles)
-            self.sendPackages()
+            # self.sendPackages()
 
     #returns a list of all the pixels in the com range
     def getCoverage(self, rng):

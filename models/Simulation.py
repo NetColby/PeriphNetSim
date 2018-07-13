@@ -125,11 +125,11 @@ class Simulation:
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
 
-		self.drones[1].createPackage("Hello")
-		self.drones[3].createPackage("Bye")
-		self.drones[2].createPackage("Selim")
-		self.drones[4].createPackage("Emmett")
-		self.drones[3].dying(self.drones)
+		# self.drones[1].createPackage("Hello")
+		# self.drones[3].createPackage("Bye")
+		# self.drones[2].createPackage("Selim")
+		# self.drones[4].createPackage("Emmett")
+		# self.drones[3].dying(self.drones)
 
 	#creates the given number of random drones
 	def createRandomDrones(self, numDrones=10):
@@ -213,8 +213,9 @@ class Simulation:
 			concerned = drone.checkIfConcerned()
 			if concerned:
 				self.respond(drone)
-		for drone in self.drones:
-			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+		# for drone in self.drones:
+		# 	print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+		print("___New Step___")
 
 
 	# Takes measures to answer the message (create a new drone, head back to B.S., etc..)
@@ -225,6 +226,7 @@ class Simulation:
 			coords = drone.action[1][1:-1].split(",")
 			newDrone.setAnchor((int(coords[0]), int(coords[1])))
 			newDrone.setHeading("Anchor")
+
 
 	#runs the simulation for the given number of steps and prints status messages to the terminal
 	def multiStep(self, steps, frequency, event=None):
@@ -241,7 +243,6 @@ class Simulation:
 			if (stepsForStatus-1 % frequency) != 0:
 				print(self.statusMessage(stepsForStatus))
 		self.statsToOutputFile(stringForOutputFile, stepsForStatus)
-		print("___New Step___")
 
 
 	#prints the status of a simulation when in begins

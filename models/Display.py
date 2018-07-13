@@ -326,7 +326,7 @@ class DisplayApp(Simulation):
 												acoordcanvas[1]+self.droneSize/2,
 												bcoordcanvas[0]+self.droneSize/2,
 												bcoordcanvas[1]+self.droneSize/2,
-												fill=color, dash=(4, 2))
+												fill=color)
 					self.lines.append(l)
 
 

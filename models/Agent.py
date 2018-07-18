@@ -13,7 +13,7 @@ class Agent:
 
     def get_coords(self):
         # return a tuple with x y coordinates
-        return (self.x, self.y)
+        return (self.x,self.y)
 
     def get_coords_for_print(self):
         # return a tuple with x y coordinates converted to int

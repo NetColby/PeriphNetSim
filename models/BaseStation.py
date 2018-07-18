@@ -21,7 +21,7 @@ class BaseStation(Agent):
 		self.comNeighbors = []
 		self.dead = False
 		self.heading = "Free"		#Heading of the drone, free is standard and uses algorithms
-		self.communicating = True   #Boolean to check if should communicate or not
+		self.communicating = True   #Boolean to check if should communicate PACKAGES or not
 		self.recievedBuffer = []	#Temporary buffer that receives the packages and adds them or not to the sent buffer
 		self.sentBuffer = []		#Buffer that keeps the history of all sent packages
 		self.agentID = agentID      #Unique agent ID
@@ -227,6 +227,11 @@ class BaseStation(Agent):
 		for pckg in self.sentBuffer:
 			if pckg.getID() == package.getID():
 				return False
+
+		for pckg in self.recievedBuffer:
+			if pckg.getID() == package.getID():
+				return False
+
 		return True
 
 	def doesMove(self):

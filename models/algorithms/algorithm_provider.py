@@ -18,21 +18,20 @@ class AlgorithmProvider(ABC):
 
 			# ##### Undestand the situation
 			# # If drone is about to run out of battery, make it go back to recharge
-			# if moveConsumption * distClosestBaseStation > batteryLevel and moveConsumption * distClosestBaseStation < batteryLevel + 5 and drone.getHeading() == "Free":
-			#	  drone.setHeading("Base")
-			#	  drone.setAnchor(drone.getCoords())
-			#
+			if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
+			 	drone.dying(self.drones)
+
 			# If close to Base Station, give battery back and set headed to Anchor
 			if distClosestBaseStation < 20 and drone.getHeading() == "Base":
 				  drone.setBatteryLevel(300)
 				  drone.setHeading("Idle")
+				  drone.setCommunicating(False)
 
 			# If back to anchor point, then quit Anchor mode
 			if drone.getHeading() == "Anchor" :
 				  if self.inNeighborhood(drone.getCoords(), drone.getAnchor()):
 					  drone.setHeading("Free")
 					  drone.setAnchor(None)
-					  drone.setCommunicating(True)
 			##### Action
 			if drone.getHeading() == "Free":
 				  self.individualRun(drone, obstacles, tarea)
@@ -68,7 +67,7 @@ class AlgorithmProvider(ABC):
 
 		magnitude = ( dx**2 + dy**2)**0.5
 
-		if magnitude < 2 :
+		if magnitude < 1 :
 			return True
 		else :
 			return False

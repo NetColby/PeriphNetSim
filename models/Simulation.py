@@ -125,11 +125,8 @@ class Simulation:
 			for i in range(numbasestation - len(basestationcoordinatesList)) :
 				pass
 
-		self.drones[1].createPackage("Hello")
-		self.drones[3].createPackage("Bye")
-		self.drones[2].createPackage("Selim")
-		self.drones[4].createPackage("Emmett")
-		self.drones[3].dying(self.drones)
+
+		# self.drones[1].dying(self.drones)
 
 	#creates the given number of random drones
 	def createRandomDrones(self, numDrones=10):
@@ -184,7 +181,7 @@ class Simulation:
 		del self.drones[:]
 		self.obstacles.append(Obstacle(x, y, w, h))
 
-	#returns True if the given coordinate falls within and obstacle
+	#returns True if the given coordinate falls within an obstacle
 	def inObstacles(self, x, y):
 		for obstacle in self.obstacles:
 			if obstacle.inObstacle(x, y):
@@ -210,11 +207,11 @@ class Simulation:
 	def droneStep(self):
 		for drone in self.drones:
 			drone.do_step(self.obstacles, self.tarea)
-			concerned = drone.checkIfConcerned()
-			if concerned:
-				self.respond(drone)
-		for drone in self.drones:
-			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+			# concerned = drone.checkIfConcerned()
+			# if concerned:
+			# 	self.respond(drone)
+		# for drone in self.drones:
+# 			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 
 
 	# Takes measures to answer the message (create a new drone, head back to B.S., etc..)
@@ -222,9 +219,10 @@ class Simulation:
 		mainMessage = drone.action[0]
 		if mainMessage == "Dyingg":
 			newDrone = self.createDrone(drone.getCoords()[0]+1,drone.getCoords()[1])
-			coords = drone.action[1][1:-1].split(",")
-			newDrone.setAnchor((int(coords[0]), int(coords[1])))
+			coords = drone.action[1][1:-1].split(", ")
+			newDrone.setAnchor((float(coords[0]), float(coords[1])))
 			newDrone.setHeading("Anchor")
+			newDrone.setCommunicating(True)
 
 	#runs the simulation for the given number of steps and prints status messages to the terminal
 	def multiStep(self, steps, frequency, event=None):
@@ -241,7 +239,7 @@ class Simulation:
 			if (stepsForStatus-1 % frequency) != 0:
 				print(self.statusMessage(stepsForStatus))
 		self.statsToOutputFile(stringForOutputFile, stepsForStatus)
-		print("___New Step___")
+		# print("___New Step___")
 
 
 	#prints the status of a simulation when in begins
@@ -279,9 +277,9 @@ class Simulation:
 			stats = "____________________Before Simulation of " + str(self.numDrones()) + " Drones____________________\n\n"
 		else:
 			stats = initialStats
-			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
+			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n "
 		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n "
-		stats += "Average Energy Level: " + str(self.avgEnergyLevel()) + "\n "
+		stats += "Average Energy Level: %.3f" % self.avgEnergyLevel() + "\n "
 		stats += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + "\n "
 		stats += "Uniformity: " + str(self.uniformity(self.comModel.getComRange())) + "\n "
 		if(self.numDrones() > 0):
@@ -314,10 +312,24 @@ class Simulation:
 	def time():
 		pass
 
+	#returns True when the given coordinate is covered
+	def coveredInObstacles(self, xCoord, yCoord):
+		if not self.inObstacles(xCoord, yCoord):
+			return True
+		for obstacle in self.obstacles:
+			if obstacle.inObstacle(xCoord, yCoord):
+				if random.random() < self.comModel.material:
+					return True
+		return False
+
+
+
 	#calculates and returns the coverage of the network
 	def coverage(self, rng):
 		prelimCoverage = set({})
 		coverage = set({})
+		coverageWithObstacles = set({})
+		totalPixelsInRange = 0
 		for agent in self.drones:
 			if type(agent) is Drone:
 				droneCoverage = agent.getCoverage(rng)
@@ -327,7 +339,13 @@ class Simulation:
 			for point in prelimCoverage:
 				if self.tarea.inArea(point):
 					coverage.add(point)
-			totalPixelsInRange = len(coverage)
+			if self.obstclboolean:
+				for point in coverage:
+					if self.coveredInObstacles(point[0], point[1]):
+						coverageWithObstacles.add(point)
+				totalPixelsInRange = len(coverageWithObstacles)
+			else:
+				totalPixelsInRange = len(coverage)
 			targetAreasArea = self.tarea.getArea()
 			c = (totalPixelsInRange) / targetAreasArea
 		else:

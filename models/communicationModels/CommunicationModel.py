@@ -1,4 +1,4 @@
-# Communication Model Abstrat Class
+# Communication Model Abstract Class
 
 # Created by Selim Hassairi
 
@@ -11,6 +11,7 @@ class CommunicationModel:
         self.targetDist = None
         self.minDist = None
         self.materials = {"concrete": .01, "wood" : .4, 'tree' : .8}
+        self.material = self.materials.get("wood")
 
     def getComRange(self):
         return self.communicationRange

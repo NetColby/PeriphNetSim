@@ -2,13 +2,13 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=4
+numdrones=2
 
 # x,y Coordinates of the drones (optional)
-270,400
-350,400
-430,400
-430,320
+400,350
+500,350
+#450,400
+#430,320
 
 
 #350,400
@@ -26,7 +26,7 @@ numdrones=4
 numbasestation=1
 
 # x,y Coordinates of the base stations (required)
-200,400
+400,400
 
 
 # Number of steps (increments in time)
@@ -36,25 +36,30 @@ steps=100
 tareaboolean=True
 
 # Target Area coordinates
-300,400
+400,400
 
 # Target Area settings (Ignore if tareaboolean=False )
-tareaWidth=300
-tareaHeight=300
+tareaWidth=400
+tareaHeight=400
 
 # Obstacle
 obstclboolean=False
 
 # Obstacle number
-numobstacle=5
+numobstacle=9
 
 # Obstacle coordinates
-400,350
-500,300
-300,300
-500,400
-400,450
+275,400
+400,400
+525,400
 
+275,275
+400,275
+525,275
+
+275,525
+400,525
+525,525
 
 
 # Obstacle settings (Ignore if obstclboolean=False )
@@ -62,7 +67,7 @@ obstclWidth=60
 obstclHeight=60
 
 #Starting battery level of drones
-batteryLevel=300.0
+batteryLevel=300
 
 #Amount of battery consumed with each movement step of a drone
 moveConsumption=0.9

@@ -14,7 +14,7 @@ class Disk(CommunicationModel):
         self.communicationRange = comRange
         self.targetDist = comRange*1
         self.minDist = comRange*.5
-        self.material = self.materials.get("concrete")
+        self.material = self.materials.get("tree")
 
 
     def attemptCommunication(self, euclidianDist, middlePoint, obstacles):

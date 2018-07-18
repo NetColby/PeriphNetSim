@@ -1,0 +1,35 @@
+____________________Before Simulation of 1 Drones____________________
+
+Live Drones: 1
+ Average Energy Level: 100.000
+ Coverage: 0.0484375
+ Uniformity: 0.0
+ 
+_________Drones_________
+Drone at (400.000, 350.000) Alive: True
+
+______Base Station(s)______
+Base Station at (400, 400)
+
+______Target Area______
+Coordinates of Center: (400, 400)
+Width x Height: 400 x 400
+
+
+____________________After Simulation(200 steps)____________________
+
+Total Drones:  1
+ Live Drones: 1
+ Average Energy Level: 276.200
+ Coverage: 0.0484375
+ Uniformity: 0.0
+ 
+_________Drones_________
+Drone at (400.000, 381.000) Alive: True
+
+______Base Station(s)______
+Base Station at (400, 400)
+
+______Target Area______
+Coordinates of Center: (400, 400)
+Width x Height: 400 x 400

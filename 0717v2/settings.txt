@@ -1,0 +1,82 @@
+###   Drone Simulation Settings      ###
+
+# Number of drones to spawn
+# Number of drones to spawn
+numdrones=1
+
+# x,y Coordinates of the drones (optional)
+400,350
+#350,400
+#430,400
+#430,320
+
+
+#350,400
+#300,450
+#350,450
+
+#400,500
+#450,500
+#350,499
+
+#300,350
+#350,350
+
+# Number of base stations to spawn
+numbasestation=1
+
+# x,y Coordinates of the base stations (required)
+400,400
+
+
+# Number of steps (increments in time)
+steps=100
+
+# Target Area or not
+tareaboolean=True
+
+# Target Area coordinates
+400,400
+
+# Target Area settings (Ignore if tareaboolean=False )
+tareaWidth=400
+tareaHeight=400
+
+# Obstacle
+obstclboolean=False
+
+# Obstacle number
+numobstacle=9
+
+# Obstacle coordinates
+275,400
+400,400
+525,400
+
+275,275
+400,275
+525,275
+
+275,525
+400,525
+525,525
+
+
+# Obstacle settings (Ignore if obstclboolean=False )
+obstclWidth=60
+obstclHeight=60
+
+#Starting battery level of drones
+batteryLevel=100
+
+#Amount of battery consumed with each movement step of a drone
+moveConsumption=0.9
+
+#Amount of battery consumed with each idle step of a drone
+idleConsumption=0.7
+
+#List of type and arguments to specify comModel
+comModel=Disk,100
+
+# End of the file
+end.

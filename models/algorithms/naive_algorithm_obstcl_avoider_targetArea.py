@@ -3,6 +3,7 @@ import math
 import random
 
 class NaiveAlgorithmObstclAvoiderTargetArea(AlgorithmProvider):
+	
 	# Attempts to move the given drone to a target distance
 	# away from the average coordinates of its neighbors (very naive)
 	def individualRun(self, drone, obstacles, tarea):

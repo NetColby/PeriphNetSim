@@ -8,6 +8,7 @@ class AlgorithmProvider(ABC):
 	def __init__(self, drones):
 		self.drones = drones
 		super().__init__()
+		self.numReplaces = 3
 
 	def run(self, drone, obstacles, tarea):
 		if type(drone) is Drone:
@@ -23,11 +24,28 @@ class AlgorithmProvider(ABC):
 				# If drone is about to run out of battery, make it go back to recharge
 				# if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
 				#  	drone.dying(self.drones)
-
+				
 				if moveConsumption * distClosestBaseStation * 2 > batteryLevel and drone.getHeading() == "Free" and not drone.sentDying:
-				 	drone.dying(self.drones)
+				 	if drone.rescued.get(drone.getAbsID()) == None or self.numReplaces == 0:
+				 		drone.dying(self.drones)
+# 				 		print("one is none: rescuedAbsID", drone.rescued.get(drone.getAbsID()), "numReplaces", self.numReplaces)
+				 	elif self.drones[2].rescued.get(drone.getAbsID()) < self.numReplaces :
+				 		drone.dying(self.drones)
+# 				 		print("replace")
+				 	else:
+# 				 		print("pass")
+				 		pass
+				 	
+# 				 	print("hey this is what I have just done with drone ID",drone.getAgentID(), self.drones[2].rescued.get(drone.getAgentID()), "COMP TO ", self.numReplaces)
 
-				if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
+# 				 	print("______________")
+# 				 	print("droneID, timesReplaced, numReplaces")
+# 				 	for i in range(len(self.drones)-1):
+# 				 		print(self.drones[i].getAbsID(), self.drones[2].rescued.get(self.drones[i].getAgentID()), self.numReplaces )
+# 				 	print("____________________")
+				 	
+
+				if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 20 and drone.getHeading() == "Free":
 					drone.setHeading("Base")
 
 				# If close to Base Station, give battery back and set headed to Anchor

@@ -35,6 +35,9 @@ class BaseStation(Agent):
 	def get_battery_level(self):
 		# return the current battery level of the drone
 		return "N/A"
+		
+	def getAgentID(self):
+		return self.agentID
 
 	# Heading
 	def setHeading(self, h):

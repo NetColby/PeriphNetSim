@@ -110,7 +110,7 @@ class DisplayApp(Simulation):
 		# Simulation.multiStep(self, steps,frequency)
 
 		for i in range(steps):
-			self.root.after(125*i, self.droneStep)
+			self.root.after(50*i, self.droneStep)
 
 
 
@@ -161,12 +161,12 @@ class DisplayApp(Simulation):
 			if concerned:
 				self.respond(drone)
 
-			if type(drone) is BaseStation:
-				print(drone.rescued)
+# 			if type(drone) is BaseStation:
+# 			print(drone.agentID, drone.rescued)
 		# for drone in self.drones:
 			# print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 		self.updateDroneView()
-		print("_____________________________")
+		# print("_____________________________")
 
 
 

@@ -16,34 +16,53 @@ class AlgorithmProvider(ABC):
 			distClosestBaseStation,coordsClosestBaseStation,bs = drone.getDistClosestBaseStation(self.drones)
 
 
-			# ##### Undestand the situation
-			# # If drone is about to run out of battery, make it go back to recharge
-			if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
-			 	drone.dying(self.drones)
+			###### Undestand the situation
+			replacementInSimulation = True
 
-			# If close to Base Station, give battery back and set headed to Anchor
-			if distClosestBaseStation < 20 and drone.getHeading() == "Base":
-				  drone.setBatteryLevel(300)
-				  drone.setHeading("Idle")
-				  drone.setCommunicating(False)
+			if replacementInSimulation:
+				# If drone is about to run out of battery, make it go back to recharge
+				# if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
+				#  	drone.dying(self.drones)
 
-			# If back to anchor point, then quit Anchor mode
-			if drone.getHeading() == "Anchor" :
-				  if self.inNeighborhood(drone.getCoords(), drone.getAnchor()):
-					  drone.setHeading("Free")
-					  drone.setAnchor(None)
-			##### Action
-			if drone.getHeading() == "Free":
-				  self.individualRun(drone, obstacles, tarea)
+				if moveConsumption * distClosestBaseStation * 2 > batteryLevel and drone.getHeading() == "Free" and not drone.sentDying:
+				 	drone.dying(self.drones)
 
-			elif drone.getHeading() == "Base":
-				self.moveToCoords(drone, coordsClosestBaseStation)
+				if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
+					drone.setHeading("Base")
 
-			elif drone.getHeading() == "Anchor":
-				  # print("Coming back to Anchor")
-				  self.moveToCoords(drone, drone.getAnchor())
+				# If close to Base Station, give battery back and set headed to Anchor
+				if distClosestBaseStation < 20 and drone.getHeading() == "Base":
+					  drone.setBatteryLevel(300)
+					  drone.setHeading("Idle")
+					  drone.setCommunicating(False)
+					  drone.setSentDying(False)
 
-			# self.individualRun(drone, obstacles, tarea)
+				# Keep the drones in the vicinity of the basestation charged
+				if distClosestBaseStation < 20 and drone.getHeading() == "Idle":
+					drone.setBatteryLevel(300)
+					if drone not in bs.getGarage():
+						print("added to garage")
+						bs.getGarage().append(drone)
+
+
+				# If back to anchor point, then quit Anchor mode
+				if drone.getHeading() == "Anchor" :
+					  if self.inNeighborhood(drone.getCoords(), drone.getAnchor()):
+						  drone.setHeading("Free")
+						  drone.setAnchor(None)
+				##### Action
+				if drone.getHeading() == "Free":
+					  self.individualRun(drone, obstacles, tarea)
+
+				elif drone.getHeading() == "Base":
+					self.moveToCoords(drone, coordsClosestBaseStation)
+
+				elif drone.getHeading() == "Anchor":
+					  # print("Coming back to Anchor")
+					  self.moveToCoords(drone, drone.getAnchor())
+
+			else :
+				self.individualRun(drone, obstacles, tarea)
 
 
 

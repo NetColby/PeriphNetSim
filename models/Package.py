@@ -23,6 +23,8 @@ class Package:
 		self.hops = []
 		self.time = time
 		self.fresh = True
+		self.origin = None
+		self.used = False
 
 	def getDestinationAgentID(self):
 		# print( "destinationAgentID",  self.destinationAgentID)
@@ -64,10 +66,22 @@ class Package:
 	def unfreshen(self):
 		self.fresh = False
 
+	#sets the origin to the given into¶
+	def setOrigin(self, origin):
+		self.origin = origin
+
+	#returns origin
+	def getOrigin(self):
+		return self.origin
+
+	def setUsed(self, used):
+		self.used = used
+
 	def __repr__(self):
 		return str(self.message)
 
 	def clone(self):
 		clone = Package(self.message, self.ID, destinationAgentID= self.destinationAgentID, time=self.time)
 		clone.hops = self.hops
+		clone.origin = self.origin
 		return clone

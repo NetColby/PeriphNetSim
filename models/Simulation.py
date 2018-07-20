@@ -154,8 +154,8 @@ class Simulation:
 		self.createDrone(x, y)
 
 	#creates a drone at the given location
-	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoiderTargetArea):
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, agentID=self.agentIDs)
+	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoiderTargetArea, absoluteID=None):
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, agentID=self.agentIDs, absoluteID=absoluteID)
 		self.drones.append(drone)
 		# Keep track of how many drones are created
 		self.agentIDs += 1
@@ -218,7 +218,10 @@ class Simulation:
 	def respond(self, drone):
 		mainMessage = drone.action[0]
 		if mainMessage == "Dyingg":
-			newDrone = self.createDrone(drone.getCoords()[0]+1,drone.getCoords()[1])
+			if len(drone.getGarage()) == 0:
+				newDrone = self.createDrone(drone.getCoords()[0]+1,drone.getCoords()[1], absoluteID=int(drone.action[2]))
+			else :
+				newDrone = drone.getGarage().pop()
 			coords = drone.action[1][1:-1].split(", ")
 			newDrone.setAnchor((float(coords[0]), float(coords[1])))
 			newDrone.setHeading("Anchor")

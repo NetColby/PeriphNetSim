@@ -10,7 +10,7 @@ from .BaseStation import BaseStation
 
 class Drone(BaseStation):
     def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9,
-    idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1, agentID=9999):
+    idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1, agentID=9999, absoluteID=None):
         BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel, agentID)
         self.batteryLevel = batteryLevel
         self.moves = True
@@ -20,11 +20,16 @@ class Drone(BaseStation):
         self.recieveConsumption = recieveConsumption
         self.heading = "Free"
         self.anchor = None
+        self.sentDying = False
+        if absoluteID == None:
+            self.absoluteID = self.agentID
+        else:
+            self.absoluteID = absoluteID
 
     ##### MESSAGES ######
     def dying(self, drones):
-        self.createPackage("Dyingg&" + str(self.getCoords()), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID)
-        self.heading = "Base"
+        self.createPackage("Dyingg&" + str(self.getCoords()) + "&" + str(self.absoluteID), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, origin=self.absoluteID)
+        self.sentDying = True
 	#####################
 
 
@@ -47,6 +52,10 @@ class Drone(BaseStation):
     def getMoveConsumption(self):
         return self.moveConsumption
 
+    def setSentDying(self, b):
+        self.sentDying = b
+
+
     def getDistClosestBaseStation(self, drones):
         # For now just first baseStation #####CHANGEEE
         for drone in drones:
@@ -62,7 +71,11 @@ class Drone(BaseStation):
         if self.canvas is not None:
             self.canvas.move(self.get_pt(), x, y)
         self.set_coords(self.x + x, self.y + y)
-        self.batteryLevel -= self.moveConsumption
+        if x == 0.0 and y == 0.0:
+            print(self.idleConsumption)
+            self.batteryLevel -= self.idleConsumption
+        else:
+            self.batteryLevel -= self.moveConsumption
         self.update_life_state()
 
     def idle(self):

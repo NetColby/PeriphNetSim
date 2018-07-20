@@ -114,11 +114,11 @@ class DisplayApp(Simulation):
 
 
 
-	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoiderTargetArea):
+	def createDrone(self, x, y, dx=None, algorithm=NaiveAlgorithmObstclAvoiderTargetArea, absoluteID=None):
 		if dx is None:
 			dx = self.droneSize/2
 		pt = self.canvas.create_oval(x-dx, y-dx, x+dx, y+dx, fill=self.colorOption, outline='')
-		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, agentID=self.agentIDs)
+		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), pt, self.canvas, self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, agentID=self.agentIDs, absoluteID=absoluteID)
 		self.drones.append(drone)
 		self.updateDroneView()
 		text = "Created a drone at %s x %s!" % (int(x), int(y))
@@ -161,8 +161,10 @@ class DisplayApp(Simulation):
 			if concerned:
 				self.respond(drone)
 
-		for drone in self.drones:
-			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+			if type(drone) is BaseStation:
+				print(drone.rescued)
+		# for drone in self.drones:
+			# print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 		self.updateDroneView()
 		print("_____________________________")
 

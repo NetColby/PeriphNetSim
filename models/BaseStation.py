@@ -26,7 +26,11 @@ class BaseStation(Agent):
 		self.sentBuffer = []		#Buffer that keeps the history of all sent packages
 		self.agentID = agentID      #Unique agent ID
 		self.action = []			#Contains the action information that is recieved from packages if this agent is the destination
+		self.rescued = {}			#List of the drones that have been rescued and the amount of times they have been rescued
+		self.garage = []			#List of drones back to the base station, idling
 
+	def getGarage(self):
+		return self.garage
 
 	def get_battery_level(self):
 		# return the current battery level of the drone
@@ -116,33 +120,6 @@ class BaseStation(Agent):
 		if package.getDestinationAgentID() == self.agentID :
 			self.action = self.analyzePackage(package)
 
-# 	#sends the given message to the current neighbors
-# 	def sendPackages(self):
-# # 		print("Drone ID #" , self.agentID, " :  ", self.sentBuffer, self.recievedBuffer)
-# 		# for package in self.sentBuffer:
-# # 			print(package.time)
-# 		if type(self) is not BaseStation:
-# 			self.batteryLevel -= self.sendConsumption
-# 		for package in self.recievedBuffer:
-# 			# print("Neigh",self.neighbors)
-# 			# print("comNeig",self.comNeighbors)
-# 			for neighbor in self.comNeighbors:
-# 				if neighbor.hasntRecieved(package):
-# 					if not package.isFresh():
-# 						neighbor.recievePackage(package)
-# 				if not package.isFresh():
-# 					self.recievedBuffer.remove(package)
-# 					self.sentBuffer.append(package)
-# 			package.unfreshen()
-# 		for package in self.sentBuffer:
-# 			package.timeStep()
-# 			if package.isExpired():
-# 				self.sentBuffer.remove(package)
-# 		if self.sentBuffer:
-# 			print("Drone ID #" , self.agentID, " :  ", self.sentBuffer, self.recievedBuffer, self.heading)
-# 		else:
-# 			print("Drone ID #" , self.agentID, " :  ", self.sentBuffer, self.recievedBuffer, self.heading)
-
 
 	#sends the given message to the current neighbors
 	def sendPackages(self):
@@ -150,19 +127,20 @@ class BaseStation(Agent):
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.sendConsumption
 
-
-		# print("ID 		", self.agentID)
-		# print("received buff  			", self.recievedBuffer)
-		# print("received buff .fresh  	", [x.fresh for x in self.recievedBuffer])
-
 		tempRecievedBuffer = self.recievedBuffer.copy()
 
 		# Send packages
 		for package in tempRecievedBuffer:
-			# print("##################")
-			# print("current mess  			", package.message)
-			# print("current fresh 			", package.fresh)
-			# print("comNeighbors  			", [x.agentID for x in self.comNeighbors])
+			#updates rescued
+			if package.message[0:6] == "Dyingg" and package.used == False:
+				if self.rescued.get(package.getOrigin()) == None:
+					self.rescued[package.getOrigin()] = 1
+					package.setUsed(True)
+				else:
+					self.rescued[package.getOrigin()] += 1
+					package.setUsed(True)
+
+
 
 			# Send the not fresh
 			for neighbor in self.comNeighbors:
@@ -181,13 +159,7 @@ class BaseStation(Agent):
 
 			# unfreshen the packages for the following step
 			if package.isFresh():
-				# print("attempt to unfreshen")
 				package.unfreshen()
-				print(package.isFresh())
-			# print("##################")
-
-		# print("received buff  			", self.recievedBuffer)
-		# print("received buff .fresh  	", [x.fresh for x in self.recievedBuffer])
 
 
 		# Delete expired packages
@@ -203,8 +175,9 @@ class BaseStation(Agent):
 
 
 	#creates and appends a package to self.recievedBuffer
-	def createPackage(self, message, destinationAgentID=None):
+	def createPackage(self, message, destinationAgentID=None, origin=None):
 		pckg = Package(message, destinationAgentID=destinationAgentID)
+		pckg.setOrigin(origin)
 		self.recievedBuffer.append(pckg)
 
 	# Parses the message and gets the information out
@@ -217,7 +190,7 @@ class BaseStation(Agent):
 		for pckg in self.recievedBuffer:
 			# print("IDs", pckg.getDestinationAgentID(),  self.agentID )
 			if pckg.getDestinationAgentID() == self.agentID:
-				print("concerned!!")
+				# print("concerned!!")
 				self.action = self.analyzePackage(pckg)
 				temp = True
 		return temp

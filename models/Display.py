@@ -110,7 +110,7 @@ class DisplayApp(Simulation):
 		# Simulation.multiStep(self, steps,frequency)
 
 		for i in range(steps):
-			self.root.after(50*i, self.droneStep)
+			self.root.after(75*i, self.droneStep)
 
 
 

@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import math
 from ..Drone import Drone
+from .baseToRechargeAlgorithm import BaseToRechargeAlgorithm
+from .rescueMessageForReplacementAlgorithm import RescueMessageForReplacementAlgorithm
 
 
 class AlgorithmProvider(ABC):
@@ -8,76 +10,46 @@ class AlgorithmProvider(ABC):
 	def __init__(self, drones):
 		self.drones = drones
 		super().__init__()
-		self.numReplaces = 3
+		# self.numReplaces = 3
+		# self.replacementAlgorithm = RescueMessageForReplacementAlgorithm(self.drones, numReplaces=3)
+		self.replacementAlgorithm = None
 
 	def run(self, drone, obstacles, tarea):
 		if type(drone) is Drone:
-			moveConsumption = drone.getMoveConsumption()
-			batteryLevel = drone.get_battery_level()
-			distClosestBaseStation,coordsClosestBaseStation,bs = drone.getDistClosestBaseStation(self.drones)
-
 
 			###### Undestand the situation
-			replacementInSimulation = True
-
-			if replacementInSimulation:
-				# If drone is about to run out of battery, make it go back to recharge
-				# if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
-				#  	drone.dying(self.drones)
-				
-				if moveConsumption * distClosestBaseStation * 2 > batteryLevel and drone.getHeading() == "Free" and not drone.sentDying:
-				 	if drone.rescued.get(drone.getAbsID()) == None or self.numReplaces == 0:
-				 		drone.dying(self.drones)
-# 				 		print("one is none: rescuedAbsID", drone.rescued.get(drone.getAbsID()), "numReplaces", self.numReplaces)
-				 	elif self.drones[2].rescued.get(drone.getAbsID()) < self.numReplaces :
-				 		drone.dying(self.drones)
-# 				 		print("replace")
-				 	else:
-# 				 		print("pass")
-				 		pass
-				 	
-# 				 	print("hey this is what I have just done with drone ID",drone.getAgentID(), self.drones[2].rescued.get(drone.getAgentID()), "COMP TO ", self.numReplaces)
-
-# 				 	print("______________")
-# 				 	print("droneID, timesReplaced, numReplaces")
-# 				 	for i in range(len(self.drones)-1):
-# 				 		print(self.drones[i].getAbsID(), self.drones[2].rescued.get(self.drones[i].getAgentID()), self.numReplaces )
-# 				 	print("____________________")
-				 	
-
-				if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 20 and drone.getHeading() == "Free":
-					drone.setHeading("Base")
-
-				# If close to Base Station, give battery back and set headed to Anchor
-				if distClosestBaseStation < 20 and drone.getHeading() == "Base":
-					  drone.setBatteryLevel(300)
-					  drone.setHeading("Idle")
-					  drone.setCommunicating(False)
-					  drone.setSentDying(False)
-
-				# Keep the drones in the vicinity of the basestation charged
-				if distClosestBaseStation < 20 and drone.getHeading() == "Idle":
-					drone.setBatteryLevel(300)
-					if drone not in bs.getGarage():
-						print("added to garage")
-						bs.getGarage().append(drone)
+			if self.replacementAlgorithm != None:
+				# Determine initial settings and environement
+				moveConsumption = drone.getMoveConsumption()
+				batteryLevel = drone.get_battery_level()
+				distClosestBaseStation,coordsClosestBaseStation,bs = drone.getDistClosestBaseStation(self.drones)
+				baseStationInfoList = [distClosestBaseStation,coordsClosestBaseStation,bs]
 
 
+				###### Make All Decisions depending on the replacementAlgorithm chosen
+				self.replacementAlgorithm.makeDecisions(drone, obstacles, tarea, baseStationInfoList)
+
+
+
+
+				##### Action
 				# If back to anchor point, then quit Anchor mode
 				if drone.getHeading() == "Anchor" :
-					  if self.inNeighborhood(drone.getCoords(), drone.getAnchor()):
-						  drone.setHeading("Free")
-						  drone.setAnchor(None)
-				##### Action
-				if drone.getHeading() == "Free":
-					  self.individualRun(drone, obstacles, tarea)
+					if self.inNeighborhood(drone.getCoords(), drone.getAnchor()):
+						drone.setHeading("Free")
+						drone.setAnchor(None)
 
+				# Move according to algorithm
+				if drone.getHeading() == "Free":
+					self.individualRun(drone, obstacles, tarea)
+
+				# Move back to the base station
 				elif drone.getHeading() == "Base":
 					self.moveToCoords(drone, coordsClosestBaseStation)
 
+				# Move to the anchor point
 				elif drone.getHeading() == "Anchor":
-					  # print("Coming back to Anchor")
-					  self.moveToCoords(drone, drone.getAnchor())
+					self.moveToCoords(drone, drone.getAnchor())
 
 			else :
 				self.individualRun(drone, obstacles, tarea)
@@ -94,7 +66,10 @@ class AlgorithmProvider(ABC):
 		dy = coords[1] - drone.getCoords()[1]
 
 		magnitude = ( dx**2 + dy**2)**0.5
-		# print("moving", dx, dy )
+
+		#Avoid collisions:
+
+
 		drone.move(dx/magnitude, dy/magnitude)
 
 	# retrun True if a given obj is in the Neighborhood of a dest object

@@ -1,13 +1,13 @@
 ____________________Before Simulation of 2 Drones____________________
 
 Live Drones: 2
- Average Energy Level: 300.000
- Coverage: 0.096875
- Uniformity: 0.0
+ Average Energy Level: 1300.000
+ Coverage: 0.07811875
+ Uniformity: 12.5
  
 _________Drones_________
-Drone at (400.000, 350.000) Alive: True
-Drone at (500.000, 350.000) Alive: True
+Drone at (400.000, 375.000) Alive: True
+Drone at (400.000, 425.000) Alive: True
 
 ______Base Station(s)______
 Base Station at (400, 400)
@@ -21,13 +21,13 @@ ____________________After Simulation(200 steps)____________________
 
 Total Drones:  2
  Live Drones: 2
- Average Energy Level: 99.200
- Coverage: 0.09455625
- Uniformity: 11.72746833015957
+ Average Energy Level: 1097.500
+ Coverage: 0.096875
+ Uniformity: 0.0
  
 _________Drones_________
 Drone at (400.000, 350.000) Alive: True
-Drone at (486.503, 356.311) Alive: True
+Drone at (400.000, 450.000) Alive: True
 
 ______Base Station(s)______
 Base Station at (400, 400)

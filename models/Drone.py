@@ -75,12 +75,15 @@ class Drone(BaseStation):
 		self.set_coords(self.x + x, self.y + y)
 		if x == 0.0 and y == 0.0:
 			self.batteryLevel -= self.idleConsumption
+			self.idleUsage += self.idleConsumption
 		else:
 			self.batteryLevel -= self.moveConsumption
+			self.moveUsage += self.moveConsumption
 		self.update_life_state()
 
 	def idle(self):
 		self.batteryLevel -= self.idleConsumption
+		self.idleUsage += self.idleConsumption
 		self.update_life_state()
 
 	def update_life_state(self):

@@ -28,6 +28,11 @@ class BaseStation(Agent):
 		self.action = []			#Contains the action information that is recieved from packages if this agent is the destination
 		self.rescued = {}			#List of the drones that have been rescued and the amount of times they have been rescued
 		self.garage = []			#List of drones back to the base station, idling
+		#fields for keeping track of battery usage
+		self.moveUsage = 0
+		self.idleUsage = 0
+		self.sendUsage = 0
+		self.recieveUsage = 0
 
 	def getGarage(self):
 		return self.garage
@@ -113,6 +118,8 @@ class BaseStation(Agent):
 		# Take away battery for receiving a package
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.recieveConsumption
+			self.recieveUsage += self.recieveConsumption
+
 
 		# Cloning and sending a package
 		tempPackage = package.clone()
@@ -128,6 +135,7 @@ class BaseStation(Agent):
 		# Derement the battery
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.sendConsumption
+			self.sendUsage += self.sendConsumption
 
 		tempRecievedBuffer = self.recievedBuffer.copy()
 
@@ -178,6 +186,7 @@ class BaseStation(Agent):
 		# Derement the battery
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.sendConsumption
+			self.sendUsage += self.sendConsumption
 
 		tempRecievedBuffer = self.recievedBuffer.copy()
 
@@ -194,7 +203,7 @@ class BaseStation(Agent):
 
 			###
 			# Find drones closest to target and store them in a List
-			tempDroneList =  self.comNeighbors.copy()
+			tempDroneList = self.comNeighbors.copy()
 			neighbor = self.sendPackageToClosestToTarget(tempDroneList, package)
 
 
@@ -230,6 +239,11 @@ class BaseStation(Agent):
 		# print("Drone ID #" , self.agentID, " :  sent ", self.sentBuffer, " recieved ",self.recievedBuffer, self.heading)
 
 	def sendPackageToClosestToTarget(self, tempDroneList, package):
+		# Derement the battery
+		if type(self) is not BaseStation:
+			self.batteryLevel -= self.sendConsumption
+			self.sendUsage += self.sendConsumption
+
 		closestDrone = tempDroneList[0]
 		tempDroneList.pop(0)
 

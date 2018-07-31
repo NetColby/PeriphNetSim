@@ -289,6 +289,11 @@ class Simulation:
 		stats += "Average Energy Level: %.3f" % self.avgEnergyLevel() + "\n "
 		stats += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + "\n "
 		stats += "Uniformity: " + str(self.uniformity(self.comModel.getComRange())) + "\n "
+		stats += "Total Battery Consumed: " + str(self.netBatteryUsage()) + "\n"
+		stats += "Total Battery Consumed by Movement: " + str(self.netMovementUsage()) + "\n"
+		stats += "Total Battery Consumed by Idling: " + str(self.netIdleUsage()) + "\n"
+		stats += "Total Battery Consumed by Sending Messages: " + str(self.netSendUsage()) + "\n"
+		stats += "Total Battery Consumed by Recieving Messages: " + str(self.netRecieveUsage()) + "\n"
 		if(self.numDrones() > 0):
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:
@@ -405,6 +410,44 @@ class Simulation:
 			if type(agent) is BaseStation:
 				numBases += 1
 		return numBases
+
+	#returns the net battery consumption
+	def netBatteryUsage(self):
+		netBatteryUsage = 0
+		for agent in self.drones:
+			netBatteryUsage += agent.moveUsage
+			netBatteryUsage += agent.idleUsage
+			netBatteryUsage += agent.sendUsage
+			netBatteryUsage += agent.recieveUsage
+		return netBatteryUsage
+
+	#returns the net move consumption
+	def netMovementUsage(self):
+		netMovementUsage = 0
+		for agent in self.drones:
+			netMovementUsage += agent.moveUsage
+		return netMovementUsage
+
+	#returns the net idle consumption
+	def netIdleUsage(self):
+		netIdleUsage = 0
+		for agent in self.drones:
+			netIdleUsage += agent.idleUsage
+		return netIdleUsage
+
+	#returns the net send consuption
+	def netSendUsage(self):
+		netSendUsage = 0
+		for agent in self.drones:
+			netSendUsage += agent.sendUsage
+		return netSendUsage
+
+	#returns the net recieve consumption
+	def netRecieveUsage(self):
+		netRecieveUsage = 0
+		for agent in self.drones:
+			netRecieveUsage += agent.recieveUsage
+		return netRecieveUsage
 
 	#gets arguements from run.py which run.py gets from the command line
 	def getArgs(self, args):

@@ -28,13 +28,13 @@ class Drone(BaseStation):
 
 	##### MESSAGES ######
 	def dying(self, drones):
-		self.createPackage("Dyingg&" + str(self.getCoords()) + "&" + str(self.absoluteID), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, origin=self.absoluteID)
+		self.createPackage("Dyingg&" + str(self.getCoords()) + "&" + str(self.absoluteID), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, origin=self.absoluteID, destinationCoords=self.getDistClosestBaseStation(drones)[1])
 		self.sentDying = True
 	#####################
 
 	def getAbsID(self):
 		return self.absoluteID
-		
+
 	# Battery
 	def setBatteryLevel(self,bl):
 		self.batteryLevel = bl
@@ -96,7 +96,7 @@ class Drone(BaseStation):
 		if not self.dead:
 			self.algorithm_provider.run(self, obstacles, tarea)
 			self.algorithm_provider.updateComNeighbors(self, obstacles)
-			self.sendPackages()
+			self.sendPackagesTargeted()
 
 	#returns a list of all the pixels in the com range
 	def getCoverage(self, rng):

@@ -39,8 +39,8 @@ BASESTATIONCLR = "#004C99"
 # create a class to build and manage the display
 class DisplayApp(Simulation):
 
-	def __init__(self
-		, width, height, numdrones, dronescoordinatesList, numbasestation,
+	def __init__(self,
+	    width, height, numdrones, dronescoordinatesList, numbasestation,
 		basestationcoordinatesList,
 		tareaboolean, tareaWidth, tareaHeight, tareaCoords,
 		obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList, batteryLevel,
@@ -103,6 +103,9 @@ class DisplayApp(Simulation):
 
 		# Set up the simulation
 		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
+		# drone = self.drones[1]
+		# drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
+
 
 	def multiStep(self, event=None):
 		steps = int(self.entry4.get())
@@ -163,10 +166,10 @@ class DisplayApp(Simulation):
 
 # 			if type(drone) is BaseStation:
 # 			print(drone.agentID, drone.rescued)
-		# for drone in self.drones:
-			# print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+		for drone in self.drones:
+			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 		self.updateDroneView()
-		# print("_____________________________")
+		print("_____________________________")
 
 
 

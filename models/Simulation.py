@@ -4,6 +4,7 @@
 
 import random
 
+import math
 from .Drone import Drone
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
@@ -205,13 +206,16 @@ class Simulation:
 
 	#updates the location of the drones based on their algorithm
 	def droneStep(self):
+		temp = random.random()
 		for drone in self.drones:
+			if temp < .3 and type(drone) is not BaseStation:
+				drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
 			drone.do_step(self.obstacles, self.tarea)
 			# concerned = drone.checkIfConcerned()
 			# if concerned:
 			# 	self.respond(drone)
 		# for drone in self.drones:
-# 			print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+		# 	print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 
 
 	# Takes measures to answer the message (create a new drone, head back to B.S., etc..)
@@ -429,6 +433,13 @@ class Simulation:
 			index = self.args.index("-W")
 			self.gui = False
 
+	def euclidianDist(self, x, y):
+		dx = x[0] - y[0]
+		dy = x[1] - y[1]
+
+		return math.hypot(dx, dy)
+
+
 	#runs simulation
 	def main(self, iterations, steps):
 		for i in range(iterations):
@@ -440,7 +451,13 @@ class Simulation:
 
 			# Write the Coverage as an output
 			with open("CoverageOutput.txt","a") as f:
-				f.write("%s, %s \n" % (self.numdrones, str(self.coverage(self.drones[0].getComRange())) ))
+				# For numdrones and coverage file
+				# f.write("%s, %s \n" % (self.numdrones, str(self.coverage(self.drones[0].getComRange())) ))
+
+				# For distance, energylevel
+				for drone in self.drones:
+					if type(drone) is not BaseStation:
+						f.write("%s, %s \n" % (self.euclidianDist(drone.getCoords(), drone.getDistClosestBaseStation(self.drones)[1] ), drone.batteryLevel ))
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

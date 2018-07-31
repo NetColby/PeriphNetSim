@@ -35,7 +35,7 @@ class BaseStation(Agent):
 	def get_battery_level(self):
 		# return the current battery level of the drone
 		return "N/A"
-		
+
 	def getAgentID(self):
 		return self.agentID
 
@@ -78,7 +78,7 @@ class BaseStation(Agent):
 	def do_step(self, obstacles, tarea):
 		self.algorithm_provider.updateNeighbors(self, obstacles)
 		self.algorithm_provider.updateComNeighbors(self, obstacles)
-		self.sendPackages()
+		self.sendPackagesTargeted()
 
 	def move(self, x, y):
 		# move drone object by unit vector in direction x/y
@@ -123,9 +123,8 @@ class BaseStation(Agent):
 		if package.getDestinationAgentID() == self.agentID :
 			self.action = self.analyzePackage(package)
 
-
 	#sends the given message to the current neighbors
-	def sendPackages(self):
+	def sendPackagesToAll(self):
 		# Derement the battery
 		if type(self) is not BaseStation:
 			self.batteryLevel -= self.sendConsumption
@@ -174,12 +173,91 @@ class BaseStation(Agent):
 		# Print
 		# print("Drone ID #" , self.agentID, " :  sent ", self.sentBuffer, " recieved ",self.recievedBuffer, self.heading)
 
+	#sends the given message to the current neighbors
+	def sendPackagesTargeted(self):
+		# Derement the battery
+		if type(self) is not BaseStation:
+			self.batteryLevel -= self.sendConsumption
+
+		tempRecievedBuffer = self.recievedBuffer.copy()
+
+		# Send packages
+		for package in tempRecievedBuffer:
+			#updates rescued
+			if package.message[0:6] == "Dyingg" and package.used == False:
+				if self.rescued.get(package.getOrigin()) == None:
+					self.rescued[package.getOrigin()] = 1
+					package.setUsed(True)
+				else:
+					self.rescued[package.getOrigin()] += 1
+					package.setUsed(True)
+
+			###
+			# Find drones closest to target and store them in a List
+			tempDroneList =  self.comNeighbors.copy()
+			neighbor = self.sendPackageToClosestToTarget(tempDroneList, package)
+
+
+			###
+
+
+			# Send the not fresh
+			if not package.isFresh():
+				if neighbor.hasntRecieved(package):
+					# print("pckg sent to ", neighbor.agentID)
+					neighbor.recievePackage(package)
+				# else :
+				# 	print("already receive package")
+
+			# Update so that the not fresh are in the fresh
+			if not package.isFresh():
+				self.recievedBuffer.remove(package)
+				# print("adding to sent")
+				self.sentBuffer.append(package)
+
+			# unfreshen the packages for the following step
+			if package.isFresh():
+				package.unfreshen()
+
+
+		# Delete expired packages
+		for package in self.sentBuffer:
+			package.timeStep()
+			if package.isExpired():
+				self.sentBuffer.remove(package)
+
+		# Print
+		# print("Drone ID #" , self.agentID, " :  sent ", self.sentBuffer, " recieved ",self.recievedBuffer, self.heading)
+
+	def sendPackageToClosestToTarget(self, tempDroneList, package):
+		closestDrone = tempDroneList[0]
+		tempDroneList.pop(0)
+
+		# For loop to find drone closest to target
+		for drone in tempDroneList:
+			droneAndTargetDist 			= self.euclidianDist(drone.getCoords(), package.destinationCoords)
+			closestDroneAndTargetDist 	= self.euclidianDist(closestDrone.getCoords(), package.destinationCoords)
+			if (droneAndTargetDist,closestDroneAndTargetDist) != (None,None) :
+				if droneAndTargetDist < closestDroneAndTargetDist:
+					closestDrone = drone
+
+		# Take care of if drone is in hops
+		if closestDrone not in package.hops:
+			return closestDrone
+
+		else:
+			if not tempDroneList:
+				print("RECURSION ERRORRRRRRRRR")
+				exit()
+			tempDroneList.remove(closestDrone)
+			sendPackageToClosestToTarget(tempDroneList)
+		###
 
 
 
 	#creates and appends a package to self.recievedBuffer
-	def createPackage(self, message, destinationAgentID=None, origin=None):
-		pckg = Package(message, destinationAgentID=destinationAgentID)
+	def createPackage(self, message, destinationAgentID=None, origin=None, destinationCoords=(999,999)):
+		pckg = Package(message, destinationAgentID=destinationAgentID, destinationCoords=destinationCoords)
 		pckg.setOrigin(origin)
 		self.recievedBuffer.append(pckg)
 
@@ -191,9 +269,7 @@ class BaseStation(Agent):
 	def checkIfConcerned(self):
 		temp = False
 		for pckg in self.recievedBuffer:
-			# print("IDs", pckg.getDestinationAgentID(),  self.agentID )
 			if pckg.getDestinationAgentID() == self.agentID:
-				# print("concerned!!")
 				self.action = self.analyzePackage(pckg)
 				temp = True
 		return temp
@@ -212,3 +288,9 @@ class BaseStation(Agent):
 
 	def doesMove(self):
 		return self.moves
+
+	def euclidianDist(self, x, y):
+		dx = x[0] - y[0]
+		dy = x[1] - y[1]
+
+		return math.hypot(dx, dy)

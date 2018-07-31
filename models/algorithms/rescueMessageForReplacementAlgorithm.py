@@ -27,12 +27,13 @@ class RescueMessageForReplacementAlgorithm(ReplacementAlgorithm) :
 
         # MAIN DIFFERENCE : sending a rescue-me message when have twice enough battery to come back to Base Station
         if moveConsumption * distClosestBaseStation * 2 > batteryLevel and drone.getHeading() == "Free" and not drone.sentDying:
-            if drone.rescued.get(drone.getAbsID()) == None or self.numReplaces == 0:
+
+            if drone.getDistClosestBaseStation(self.drones)[2].rescued.get(drone.getAbsID()) == None or self.numReplaces < 0:
                 drone.dying(self.drones)
                 # 				 		print("one is none: rescuedAbsID", drone.rescued.get(drone.getAbsID()), "numReplaces", self.numReplaces)
-            elif self.drones[2].rescued.get(drone.getAbsID()) < self.numReplaces :
+            elif drone.getDistClosestBaseStation(self.drones)[2].rescued.get(drone.getAbsID()) < self.numReplaces :
                 drone.dying(self.drones)
-                # 				 		print("replace")
-            else:
-                # 				 		print("pass")
-                pass
+            #     # 				 		print("replace")
+            # else:
+            #     # 				 		print("pass")
+            #     pass

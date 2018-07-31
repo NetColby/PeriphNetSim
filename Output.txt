@@ -1,37 +1,41 @@
-____________________Before Simulation of 2 Drones____________________
+____________________Before Simulation of 4 Drones____________________
 
-Live Drones: 2
- Average Energy Level: 1300.000
- Coverage: 0.07811875
- Uniformity: 12.5
+Live Drones: 4
+ Average Energy Level: 400.000
+ Coverage: 0.21468571428571429
+ Uniformity: 1.0386898685566255
  
 _________Drones_________
-Drone at (400.000, 375.000) Alive: True
-Drone at (400.000, 425.000) Alive: True
+Drone at (400.000, 400.000) Alive: True
+Drone at (450.000, 430.000) Alive: True
+Drone at (500.000, 460.000) Alive: True
+Drone at (550.000, 490.000) Alive: True
 
 ______Base Station(s)______
-Base Station at (400, 400)
+Base Station at (350, 400)
 
 ______Target Area______
 Coordinates of Center: (400, 400)
-Width x Height: 400 x 400
+Width x Height: 350 x 350
 
 
 ____________________After Simulation(200 steps)____________________
 
-Total Drones:  2
- Live Drones: 2
- Average Energy Level: 1097.500
- Coverage: 0.096875
- Uniformity: 0.0
+Total Drones:  4
+ Live Drones: 4
+ Average Energy Level: 189.675
+ Coverage: 0.21468571428571429
+ Uniformity: 1.0386898685566255
  
 _________Drones_________
-Drone at (400.000, 350.000) Alive: True
-Drone at (400.000, 450.000) Alive: True
+Drone at (400.000, 400.000) Alive: True
+Drone at (450.000, 430.000) Alive: True
+Drone at (500.000, 460.000) Alive: True
+Drone at (550.000, 490.000) Alive: True
 
 ______Base Station(s)______
-Base Station at (400, 400)
+Base Station at (350, 400)
 
 ______Target Area______
 Coordinates of Center: (400, 400)
-Width x Height: 400 x 400
+Width x Height: 350 x 350

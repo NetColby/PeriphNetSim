@@ -7,7 +7,7 @@ import random
 
 class Package:
 
-	def __init__(self, message, ID=None, destinationAgentID=9999, time=64):
+	def __init__(self, message, ID=None, destinationAgentID=9999, time=64, destinationCoords=None):
 		self.message = message
 
 		if ID is None:
@@ -20,11 +20,12 @@ class Package:
 		else:
 			self.destinationAgentID = destinationAgentID
 
-		self.hops = []
-		self.time = time
-		self.fresh = True
-		self.origin = None
-		self.used = False
+		self.hops 			= []
+		self.time 			= time
+		self.fresh 			= True
+		self.origin 		= None
+		self.used 			= False
+		self.destinationCoords 	= destinationCoords
 
 	def getDestinationAgentID(self):
 		# print( "destinationAgentID",  self.destinationAgentID)
@@ -81,7 +82,7 @@ class Package:
 		return str(self.message)
 
 	def clone(self):
-		clone = Package(self.message, self.ID, destinationAgentID= self.destinationAgentID, time=self.time)
+		clone = Package(self.message, self.ID, destinationAgentID= self.destinationAgentID, time=self.time, destinationCoords=self.destinationCoords)
 		clone.hops = self.hops
 		clone.origin = self.origin
 		return clone

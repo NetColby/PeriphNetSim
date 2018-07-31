@@ -2,14 +2,14 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=20
+numdrones=4
 
 # x,y Coordinates of the drones (optional)
-400,425
-460,420
-460,450
-350,375
-450,350
+400,400
+450,430
+500,460
+550,490
+
 
 #350,400
 #300,450
@@ -26,7 +26,7 @@ numdrones=20
 numbasestation=1
 
 # x,y Coordinates of the base stations (required)
-400,400
+350,400
 
 
 # Number of steps (increments in time)
@@ -68,7 +68,7 @@ moveConsumption=0.9
 idleConsumption=0.8
 
 #List of type and arguments to specify comModel
-comModel=Probabilistic
+comModel=Disk,100
 
 # End of the file
 end.

@@ -2,13 +2,13 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=4
+numdrones=60
 
 # x,y Coordinates of the drones (optional)
 400,400
-450,430
-500,460
-550,490
+480,440
+425,500
+375,500
 
 
 #350,400

@@ -25,6 +25,7 @@ class BaseStation(Agent):
 		self.recievedBuffer = []	#Temporary buffer that receives the packages and adds them or not to the sent buffer
 		self.sentBuffer = []		#Buffer that keeps the history of all sent packages
 		self.agentID = agentID      #Unique agent ID
+		self.absoluteID = agentID   #ID of the drone that it is supposed to be (BS do not have "clones")
 		self.action = []			#Contains the action information that is recieved from packages if this agent is the destination
 		self.rescued = {}			#List of the drones that have been rescued and the amount of times they have been rescued
 		self.garage = []			#List of drones back to the base station, idling
@@ -120,6 +121,8 @@ class BaseStation(Agent):
 			self.batteryLevel -= self.recieveConsumption
 			self.recieveUsage += self.recieveConsumption
 
+		# Add self to hops
+		package.hops.append(self.absoluteID)
 
 		# Cloning and sending a package
 		tempPackage = package.clone()
@@ -273,6 +276,7 @@ class BaseStation(Agent):
 	def createPackage(self, message, destinationAgentID=None, origin=None, destinationCoords=(999,999)):
 		pckg = Package(message, destinationAgentID=destinationAgentID, destinationCoords=destinationCoords)
 		pckg.setOrigin(origin)
+		pckg.hops.append(self.agentID)
 		self.recievedBuffer.append(pckg)
 
 	# Parses the message and gets the information out

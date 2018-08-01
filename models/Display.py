@@ -103,8 +103,8 @@ class DisplayApp(Simulation):
 
 		# Set up the simulation
 		self.setUpSimulation( numdrones, dronescoordinatesList, numbasestation, basestationcoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidthList, obstclHeightList, obstclCoordsList)
-		# drone = self.drones[1]
-		# drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
+		drone = self.drones[2]
+		drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
 
 
 	def multiStep(self, event=None):
@@ -158,7 +158,10 @@ class DisplayApp(Simulation):
 		return baseStation
 
 	def droneStep(self):
+		temp = random.random()
 		for drone in self.drones:
+			# if temp < .3 and type(drone) is not BaseStation:
+				# drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
 			drone.do_step(self.obstacles, self.tarea)
 			concerned = drone.checkIfConcerned()
 			if concerned:

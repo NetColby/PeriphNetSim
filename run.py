@@ -10,6 +10,36 @@ from models import Display
 from models import Simulation
 from InputFileParser import InputFileParser
 import sys
+import networkx as nx
+
+# # Calculates the connectivity of a graph and return both the k value (k-edge-connected) and whether or not the graph is fully connected
+# def connectivityTEST():
+# 	# Translate our simulation to a graph
+# 	network = nx.Graph()
+# 	network.add_nodes_from([1,2,3,4,5])
+# 	network.add_edges_from([(1,2),(1,3),(2,3),(3,4),(3,5),(4,5),(1,4),(5,2)])
+#
+# 	print(network.nodes)
+# 	print(network.edges)
+#
+# 	# Find the k value
+# 	kconnected = True
+# 	k = 0
+# 	while kconnected:
+# 		k += 1
+# 		kconnected = nx.is_k_edge_connected(network,k)
+# 	k-=1
+# 	# Find if it is fully connected or not
+# 	if k == 0:
+# 		print("This Graph is not fully connected")
+# 	else:
+# 		print("This Graph is k-connected, k = " + str(k))
+#
+#
+# connectivity()
+
+
+
 
 filename = "settings.txt"
 parser = InputFileParser(filename)

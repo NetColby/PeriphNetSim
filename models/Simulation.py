@@ -3,8 +3,9 @@
 #Simulation.py
 
 import random
-
 import math
+import networkx as nx
+
 from .Drone import Drone
 from .algorithms.naive_algorithm import NaiveAlgorithm
 from .algorithms.naive_algorithm_obstcl_avoider import NaiveAlgorithmObstclAvoider
@@ -16,6 +17,7 @@ from .Obstacle import Obstacle
 from .communicationModels.Disk import Disk
 from .communicationModels.Probabilistic import Probabilistic
 from .communicationModels.Attenuated import Attenuated
+
 
 # create a class to build and manage the display
 class Simulation:
@@ -208,8 +210,8 @@ class Simulation:
 	def droneStep(self):
 		temp = random.random()
 		for drone in self.drones:
-			if temp < .3 and type(drone) is not BaseStation:
-				drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
+			# if temp < .3 and type(drone) is not BaseStation:
+			# 	drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
 			drone.do_step(self.obstacles, self.tarea)
 			# concerned = drone.checkIfConcerned()
 			# if concerned:
@@ -288,7 +290,9 @@ class Simulation:
 		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n "
 		stats += "Average Energy Level: %.3f" % self.avgEnergyLevel() + "\n "
 		stats += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + "\n "
-		stats += "Uniformity: " + str(self.uniformity(self.comModel.getComRange())) + "\n "
+		stats += "Uniformity	  : " + str(self.uniformity(self.comModel.getComRange())) + "\n "
+		stats += "Connectivty	  : " + str(self.connectivity()[0] ) + "\n"
+		stats += "Fully Connected : " + str(self.connectivity()[1] ) + "\n"
 		stats += "Total Battery Consumed: " + str(self.netBatteryUsage()) + "\n"
 		stats += "Total Battery Consumed by Movement: " + str(self.netMovementUsage()) + "\n"
 		stats += "Total Battery Consumed by Idling: " + str(self.netIdleUsage()) + "\n"
@@ -372,6 +376,36 @@ class Simulation:
 				total += agent.droneUniformity(self.drones, rng)
 		output = total/self.numDrones()
 		return output
+
+	# Calculates the connectivity of a graph and return both the k value (k-edge-connected) and whether or not the graph is fully connected
+	def connectivity(self):
+		# Translate our simulation to a graph
+		network = nx.Graph()
+		for drone in self.drones:
+			network.add_node(drone)
+			for neighbor in drone.neighbors:
+				network.add_edge(drone,neighbor)
+
+		# print(network.nodes)
+		# print(network.edges)
+
+		# Find the k value
+		kconnected = True
+		k = 0
+		while kconnected:
+			k += 1
+			kconnected = nx.is_k_edge_connected(network,k)
+		k-=1
+
+		# Find if it is fully connected or not
+		if k == 0:
+			print("This Graph is not fully connected")
+		else:
+			print("This Graph is k-connected, k = " + str(k))
+
+		return (k, k>0)
+
+
 
 	# return the average energy level of the drones
 	def avgEnergyLevel(self):

@@ -248,8 +248,6 @@ class Simulation:
 			if (stepsForStatus-1 % frequency) != 0:
 				print(self.statusMessage(stepsForStatus))
 		self.statsToOutputFile(stringForOutputFile, stepsForStatus)
-		# print("___New Step___")
-
 
 	#prints the status of a simulation when in begins
 	#set numDrones to True when it becomes necessary to display the number of drones
@@ -286,18 +284,24 @@ class Simulation:
 			stats = "____________________Before Simulation of " + str(self.numDrones()) + " Drones____________________\n\n"
 		else:
 			stats = initialStats
-			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n "
-		stats += "Live Drones: " + str(self.numAliveDrones()) + "\n "
-		stats += "Average Energy Level: %.3f" % self.avgEnergyLevel() + "\n "
-		stats += "Coverage: " + str(self.coverage(self.comModel.getComRange())) + "\n "
-		stats += "Uniformity	  : " + str(self.uniformity(self.comModel.getComRange())) + "\n "
-		stats += "Connectivty	  : " + str(self.connectivity()[0] ) + "\n"
-		stats += "Fully Connected : " + str(self.connectivity()[1] ) + "\n"
-		stats += "Total Battery Consumed: " + str(self.netBatteryUsage()) + "\n"
-		stats += "Total Battery Consumed by Movement: " + str(self.netMovementUsage()) + "\n"
-		stats += "Total Battery Consumed by Idling: " + str(self.netIdleUsage()) + "\n"
-		stats += "Total Battery Consumed by Sending Messages: " + str(self.netSendUsage()) + "\n"
-		stats += "Total Battery Consumed by Recieving Messages: " + str(self.netRecieveUsage()) + "\n"
+			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
+		stats += "Live Drones                                          : " + str(self.numAliveDrones()) + "\n"
+		stats += "Average Energy Level                                 : %.3f" % self.avgEnergyLevel() + "\n"
+		stats += "Coverage                                             : %.5f" % self.coverage(self.comModel.getComRange()) + "\n"
+		stats += "Uniformity	                                     : %.5f" % self.uniformity(self.comModel.getComRange()) + "\n"
+		stats += "Connectivty	                                       : " + str(self.connectivity()[0] ) + "\n "
+		stats += "Fully Connected                                      : " + str(self.connectivity()[1] ) + "\n "
+		stats += "Net Percentage of Used                               : %.5f" % self.netBatteryPercentageUsed() + "\n"
+		stats += "Net Percentage of Battery Remaining                  : %.5f" % self.netBatteryPercentageRemaining() + "\n"
+		stats += "Net Percentage of Battery Used for Movement          : %.5f" % self.netMovementPercentage() + "\n"
+		stats += "Net Percentage of Battery Used for Idling            : %.5f" % self.netIdlePercentage() + "\n"
+		stats += "Net Percentage of Battery Used for Sending Packages  : %.5f" % self.netSendPercentage() + "\n"
+		stats += "Net Percentage of Battery Used for Recieving Packages: %.5f" % self.netRecievePercentage() + "\n"
+		# stats += "Total Battery Consumed                               : %.5f" % self.netBatteryUsage() + "\n"
+		# stats += "Total Battery Consumed by Movement                   : %.5f" % self.netMovementUsage() + "\n"
+		# stats += "Total Battery Consumed by Idling                     : %.5f" % self.netIdleUsage() + "\n"
+		# stats += "Total Battery Consumed by Sending Messages           : %.5f" % self.netSendUsage() + "\n"
+		# stats += "Total Battery Consumed by Recieving Messages         : %.5f" % self.netRecieveUsage() + "\n"
 		if(self.numDrones() > 0):
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:
@@ -377,7 +381,7 @@ class Simulation:
 		output = total/self.numDrones()
 		return output
 
-	# Calculates the connectivity of a graph and return both the k value (k-edge-connected) and whether or not the graph is fully connected
+	Calculates the connectivity of a graph and return both the k value (k-edge-connected) and whether or not the graph is fully connected
 	def connectivity(self):
 		# Translate our simulation to a graph
 		network = nx.Graph()
@@ -445,6 +449,15 @@ class Simulation:
 				numBases += 1
 		return numBases
 
+	#returns the sum of the battery levels of all drones at the beginning of the simulation
+	def netStartingBattery(self):
+		totalDrones = 0
+		for agent in self.drones:
+			if type(agent) == Drone:
+				totalDrones += 1
+		netStartingBatteryLevel = totalDrones*self.batteryLevel
+		return netStartingBatteryLevel
+
 	#returns the net battery consumption
 	def netBatteryUsage(self):
 		netBatteryUsage = 0
@@ -455,12 +468,38 @@ class Simulation:
 			netBatteryUsage += agent.recieveUsage
 		return netBatteryUsage
 
+	#returns the net percentage of battery used
+	def netBatteryPercentageUsed(self):
+		netStartingBattery = self.netStartingBattery()
+		netBatteryUsage = self.netBatteryUsage()
+		netBatteryPercentageUsed = (netBatteryUsage/netStartingBattery)*100
+		return netBatteryPercentageUsed
+
+	def netBatteryPercentageRemaining(self):
+		netBatteryRemaining = 0
+		for agent in self.drones:
+			if type(agent) == Drone:
+				netBatteryRemaining += agent.batteryLevel
+		netStartingBattery = self.netStartingBattery()
+		netBatteryPercentageRemaining = (netBatteryRemaining/netStartingBattery)*100
+		return netBatteryPercentageRemaining
+
 	#returns the net move consumption
 	def netMovementUsage(self):
 		netMovementUsage = 0
 		for agent in self.drones:
 			netMovementUsage += agent.moveUsage
 		return netMovementUsage
+
+	#returns the net percentage of battery used for movement
+	def netMovementPercentage(self):
+		netMovementUsage = self.netMovementUsage()
+		netBatteryUsage = self.netBatteryUsage()
+		if netBatteryUsage == 0.0:
+			netMovementPercentage = 0.0
+		else:
+			netMovementPercentage = (netMovementUsage/netBatteryUsage)*100
+		return netMovementPercentage
 
 	#returns the net idle consumption
 	def netIdleUsage(self):
@@ -469,6 +508,16 @@ class Simulation:
 			netIdleUsage += agent.idleUsage
 		return netIdleUsage
 
+	#returns the net percentage of battery used for idling
+	def netIdlePercentage(self):	
+		netIdleUsage = self.netIdleUsage()
+		netBatteryUsage = self.netBatteryUsage()
+		if netBatteryUsage == 0.0:
+			netIdlePercentage = 0.0
+		else:
+			netIdlePercentage = (netIdleUsage/netBatteryUsage)*100
+		return netIdlePercentage
+
 	#returns the net send consuption
 	def netSendUsage(self):
 		netSendUsage = 0
@@ -476,12 +525,32 @@ class Simulation:
 			netSendUsage += agent.sendUsage
 		return netSendUsage
 
+	#returns the net percentage of battery used for sending messages
+	def netSendPercentage(self):
+		netSendUsage = self.netSendUsage()
+		netBatteryUsage = self.netBatteryUsage()
+		if netBatteryUsage == 0.0:
+			netSendPercentage = 0.0
+		else:
+			netSendPercentage = (netSendUsage/netBatteryUsage)*100
+		return netSendPercentage
+
 	#returns the net recieve consumption
 	def netRecieveUsage(self):
 		netRecieveUsage = 0
 		for agent in self.drones:
 			netRecieveUsage += agent.recieveUsage
 		return netRecieveUsage
+
+	#returns the net percentage of battery used to recieve messages
+	def netRecievePercentage(self):
+		netRecieveUsage = self.netRecieveUsage()
+		netBatteryUsage = self.netBatteryUsage()
+		if netBatteryUsage == 0.0:
+			netRecievePercentage = 0.0
+		else:
+			netRecievePercentage = (netRecieveUsage/netBatteryUsage)*100
+		return netRecievePercentage
 
 	#gets arguements from run.py which run.py gets from the command line
 	def getArgs(self, args):

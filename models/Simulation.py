@@ -286,6 +286,7 @@ class Simulation:
 			stats = initialStats
 			stats += "\n\n____________________After Simulation(" + str(stepsForStatus) +" steps)____________________\n\nTotal Drones:  " + str(self.numDrones()) + "\n"
 		stats += "Live Drones                                          : " + str(self.numAliveDrones()) + "\n"
+		stats += "Starting Battery Level                               : " + str(self.batteryLevel) + "\n"
 		stats += "Average Energy Level                                 : %.3f" % self.avgEnergyLevel() + "\n"
 		stats += "Coverage                                             : %.5f" % self.coverage(self.comModel.getComRange()) + "\n"
 		stats += "Uniformity	                                     : %.5f" % self.uniformity(self.comModel.getComRange()) + "\n"

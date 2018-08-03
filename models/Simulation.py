@@ -66,6 +66,9 @@ class Simulation:
 		# Drone ID Counter
 		self.agentIDs = 0
 
+		# time
+		self.timestep = 0
+
 
 		if comList[0] == "Disk":
 			self.comModel = Disk(int(comList[1]))
@@ -210,9 +213,18 @@ class Simulation:
 	def droneStep(self):
 		temp = random.random()
 		for drone in self.drones:
-			# if temp < .3 and type(drone) is not BaseStation:
-			# 	drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
+			if temp < .3 and type(drone) is not BaseStation:
+				drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
 			drone.do_step(self.obstacles, self.tarea)
+
+		with open("Timestep-VS-Connectivity.txt","a") as f:
+			# Find k-edge-connectivity
+			connectivity = self.connectivity()
+			f.write("%s, %s, %s \n" % (self.timestep, connectivity[0], connectivity[1]))
+
+		#Increment timestep
+		self.timestep += 1
+
 			# concerned = drone.checkIfConcerned()
 			# if concerned:
 			# 	self.respond(drone)
@@ -289,8 +301,8 @@ class Simulation:
 		stats += "Starting Battery Level                               : " + str(self.batteryLevel) + "\n"
 		stats += "Average Energy Level                                 : %.3f" % self.avgEnergyLevel() + "\n"
 		stats += "Coverage                                             : %.5f" % self.coverage(self.comModel.getComRange()) + "\n"
-		stats += "Uniformity	                                     : %.5f" % self.uniformity(self.comModel.getComRange()) + "\n"
-		stats += "Connectivty	                                       : " + str(self.connectivity()[0] ) + "\n "
+		stats += "Uniformity	                                       : %.5f" % self.uniformity(self.comModel.getComRange()) + "\n"
+		stats += "Connectivity	                                       : " + str(self.connectivity()[0] ) + "\n "
 		stats += "Fully Connected                                      : " + str(self.connectivity()[1] ) + "\n "
 		stats += "Net Percentage of Used                               : %.5f" % self.netBatteryPercentageUsed() + "\n"
 		stats += "Net Percentage of Battery Remaining                  : %.5f" % self.netBatteryPercentageRemaining() + "\n"
@@ -303,6 +315,7 @@ class Simulation:
 		# stats += "Total Battery Consumed by Idling                     : %.5f" % self.netIdleUsage() + "\n"
 		# stats += "Total Battery Consumed by Sending Messages           : %.5f" % self.netSendUsage() + "\n"
 		# stats += "Total Battery Consumed by Recieving Messages         : %.5f" % self.netRecieveUsage() + "\n"
+
 		if(self.numDrones() > 0):
 			stats += "\n_________Drones_________\n"
 			for agent in self.drones:
@@ -382,17 +395,21 @@ class Simulation:
 		output = total/self.numDrones()
 		return output
 
-	Calculates the connectivity of a graph and return both the k value (k-edge-connected) and whether or not the graph is fully connected
+	# Calculates the connectivity of a graph and return both the k value (k-edge-connected) and whether or not the graph is fully connected
 	def connectivity(self):
 		# Translate our simulation to a graph
 		network = nx.Graph()
+		print( len(self.drones))
 		for drone in self.drones:
-			network.add_node(drone)
-			for neighbor in drone.neighbors:
-				network.add_edge(drone,neighbor)
+			if drone.heading == "Free":
+				network.add_node(drone)
+				for neighbor in drone.neighbors:
+					if neighbor.heading == "Free":
+						network.add_edge(drone,neighbor)
 
 		# print(network.nodes)
 		# print(network.edges)
+
 
 		# Find the k value
 		kconnected = True
@@ -404,10 +421,11 @@ class Simulation:
 
 		# Find if it is fully connected or not
 		if k == 0:
-			print("This Graph is not fully connected")
+			print(self.timestep, "This Graph is not fully connected")
 		else:
-			print("This Graph is k-connected, k = " + str(k))
-
+			print(self.timestep, "This Graph is k-connected, k = " + str(k))
+		f = lambda x : x.heading
+		print(list([f(i) for i in self.drones]))
 		return (k, k>0)
 
 
@@ -510,7 +528,7 @@ class Simulation:
 		return netIdleUsage
 
 	#returns the net percentage of battery used for idling
-	def netIdlePercentage(self):	
+	def netIdlePercentage(self):
 		netIdleUsage = self.netIdleUsage()
 		netBatteryUsage = self.netBatteryUsage()
 		if netBatteryUsage == 0.0:

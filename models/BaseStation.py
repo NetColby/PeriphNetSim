@@ -135,15 +135,13 @@ class BaseStation(Agent):
 
 	#sends the given message to the current neighbors
 	def sendPackagesToAll(self):
-		# Derement the battery
-		if type(self) is not BaseStation:
-			self.batteryLevel -= self.sendConsumption
-			self.sendUsage += self.sendConsumption
 
 		tempRecievedBuffer = self.recievedBuffer.copy()
 
 		# Send packages
+		sentAPackage = False
 		for package in tempRecievedBuffer:
+			sentAPackage = True
 			#updates rescued
 			if package.message[0:6] == "Dyingg" and package.used == False:
 				if self.rescued.get(package.getOrigin()) == None:
@@ -181,20 +179,24 @@ class BaseStation(Agent):
 			if package.isExpired():
 				self.sentBuffer.remove(package)
 
+		# Derement the battery
+		if type(self) is not BaseStation and sentAPackage:
+			self.batteryLevel -= self.sendConsumption
+			self.sendUsage += self.sendConsumption
+
 		# Print
 		# print("Drone ID #" , self.agentID, " :  sent ", self.sentBuffer, " recieved ",self.recievedBuffer, self.heading)
 
 	#sends the given message to the current neighbors
 	def sendPackagesTargeted(self):
-		# Derement the battery
-		if type(self) is not BaseStation:
-			self.batteryLevel -= self.sendConsumption
-			self.sendUsage += self.sendConsumption
-
+		# Create a copy
 		tempRecievedBuffer = self.recievedBuffer.copy()
 
 		# Send packages
+		sentAPackage = False
 		for package in tempRecievedBuffer:
+			sentAPackage = True
+
 			#updates rescued
 			if package.message[0:6] == "Dyingg" and package.used == False:
 				if self.rescued.get(package.getOrigin()) == None:
@@ -218,6 +220,7 @@ class BaseStation(Agent):
 				if neighbor.hasntRecieved(package):
 					# print("pckg sent to ", neighbor.agentID)
 					neighbor.recievePackage(package)
+
 				# else :
 				# 	print("already receive package")
 
@@ -237,6 +240,13 @@ class BaseStation(Agent):
 			package.timeStep()
 			if package.isExpired():
 				self.sentBuffer.remove(package)
+
+		# Derement the battery
+		if type(self) is not BaseStation and sentAPackage:
+			self.batteryLevel -= self.sendConsumption
+			self.sendUsage += self.sendConsumption
+
+
 
 		# Print
 		# print("Drone ID #" , self.agentID, " :  sent ", self.sentBuffer, " recieved ",self.recievedBuffer, self.heading)

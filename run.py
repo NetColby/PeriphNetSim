@@ -63,14 +63,27 @@ gui = True
 if "-W" in sys.argv:
     gui = False
 
+
+with open("TimeStep-VS-Connectivity.txt","a") as f:
+	# Find k-edge-connectivity
+	f.write("timeStep,connectivity,connected\n")
+
+
+
+
+
 # If want to control from command line, uncomment the following line
 #numdrones = sys.argv[1]
-sim = Simulation.Simulation(1200, 750, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
-sim.main(1, 200)
-# print("################################################################################")
-# print("################################################################################")
-# print("Simulation Done. Now proceeding to Display")
-# print("################################################################################")
-# print("################################################################################")
-# dapp = Display.DisplayApp(1200, 750, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, True)
-# dapp.main()
+
+sim = 11
+if sim == 0:
+	sim = Simulation.Simulation(1200, 750, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
+	sim.main(1, 1000)
+else:
+	print("################################################################################")
+	print("################################################################################")
+	print("Simulation Done. Now proceeding to Display")
+	print("################################################################################")
+	print("################################################################################")
+	dapp = Display.DisplayApp(1200, 750, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, True)
+	dapp.main()

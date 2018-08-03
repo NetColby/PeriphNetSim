@@ -11,8 +11,8 @@ class AlgorithmProvider(ABC):
 		self.drones = drones
 		super().__init__()
 		# self.numReplaces = 3
-		# self.replacementAlgorithm = RescueMessageForReplacementAlgorithm(self.drones, numReplaces=3)
-		self.replacementAlgorithm = None
+		self.replacementAlgorithm = RescueMessageForReplacementAlgorithm(self.drones, numReplaces=3)
+		# self.replacementAlgorithm = None
 
 	def run(self, drone, obstacles, tarea):
 		if type(drone) is Drone:

@@ -30,6 +30,7 @@ class Drone(BaseStation):
 	def dying(self, drones):
 		self.createPackage("Dyingg&" + str(self.getCoords()) + "&" + str(self.absoluteID), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, origin=self.absoluteID, destinationCoords=self.getDistClosestBaseStation(drones)[1])
 		self.sentDying = True
+		print("Sent help")
 	#####################
 
 	def getAbsID(self):

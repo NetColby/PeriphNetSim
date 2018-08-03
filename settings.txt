@@ -2,13 +2,27 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=60
+numdrones=8
 
 # x,y Coordinates of the drones (optional)
-400,400
-480,440
-425,500
-375,500
+
+# Test the Connecitvity
+450,400
+450,450
+400,450
+350,450
+350,400
+350,350
+400,350
+450,350
+
+
+
+# Test the transmission of the package
+#400,400
+#480,440
+#425,500
+#375,500
 
 
 #350,400
@@ -26,7 +40,7 @@ numdrones=60
 numbasestation=1
 
 # x,y Coordinates of the base stations (required)
-350,400
+400,400
 
 
 # Number of steps (increments in time)
@@ -39,8 +53,8 @@ tareaboolean=True
 400,400
 
 # Target Area settings (Ignore if tareaboolean=False )
-tareaWidth=350
-tareaHeight=350
+tareaWidth=200
+tareaHeight=200
 
 # Obstacle
 obstclboolean=False

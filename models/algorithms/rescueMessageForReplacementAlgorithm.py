@@ -21,9 +21,6 @@ class RescueMessageForReplacementAlgorithm(ReplacementAlgorithm) :
         coordsClosestBaseStation    = baseStationInfoList[1]
         bs                          = baseStationInfoList[2]
 
-        # Same thing as Base To Recharge Algorithm
-        BaseToRechargeAlgorithm.makeDecisions(self, drone, obstacles, tarea, baseStationInfoList)
-
 
         # MAIN DIFFERENCE : sending a rescue-me message when have twice enough battery to come back to Base Station
         if moveConsumption * distClosestBaseStation * 2 > batteryLevel and drone.getHeading() == "Free" and not drone.sentDying:
@@ -33,7 +30,23 @@ class RescueMessageForReplacementAlgorithm(ReplacementAlgorithm) :
                 # 				 		print("one is none: rescuedAbsID", drone.rescued.get(drone.getAbsID()), "numReplaces", self.numReplaces)
             elif drone.getDistClosestBaseStation(self.drones)[2].rescued.get(drone.getAbsID()) < self.numReplaces :
                 drone.dying(self.drones)
-            #     # 				 		print("replace")
-            # else:
-            #     # 				 		print("pass")
-            #     pass
+
+        # If drone is about to run out of battery, make it go back to recharge
+        if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
+            drone.setHeading("Base")
+            pass
+
+        # If close to Base Station, give battery back and set headed to Idle
+        if distClosestBaseStation < self.rechargeDist and drone.getHeading() == "Base":
+            bs.getGarage().append(drone)
+            print("added to garage")
+
+            drone.setBatteryLevel(300)
+            drone.setHeading("Idle")
+            drone.setCommunicating(True)
+            # drone.setCommunicating(False)
+            drone.setSentDying(False)
+
+        # Keep the drones in the vicinity of the basestation charged
+        if distClosestBaseStation < 20 and drone.getHeading() == "Idle":
+            drone.setBatteryLevel(300)

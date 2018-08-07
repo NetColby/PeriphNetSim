@@ -75,7 +75,7 @@ with open("TimeStep-VS-Connectivity.txt","a") as f:
 # If want to control from command line, uncomment the following line
 #numdrones = sys.argv[1]
 
-sim = 11
+sim 	= 0
 if sim == 0:
 	sim = Simulation.Simulation(1200, 750, numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, obstclWidth, obstclHeight, obstclCoordinatesList, batteryLevel, moveConsumption, idleConsumption, comList, False)
 	sim.main(1, 1000)

@@ -21,6 +21,7 @@ class Drone(BaseStation):
 		self.heading = "Free"
 		self.anchor = None
 		self.sentDying = False
+		self.beforeReplacementPosition = None
 		if absoluteID == None:
 			self.absoluteID = self.agentID
 		else:
@@ -28,9 +29,10 @@ class Drone(BaseStation):
 
 	##### MESSAGES ######
 	def dying(self, drones):
+		# self.createPackage("Halo", destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, destinationCoords=self.getDistClosestBaseStation(drones)[1])
 		self.createPackage("Dyingg&" + str(self.getCoords()) + "&" + str(self.absoluteID), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, origin=self.absoluteID, destinationCoords=self.getDistClosestBaseStation(drones)[1])
 		self.sentDying = True
-		print("Sent help")
+		print("Sent help", self.absoluteID)
 	#####################
 
 	def getAbsID(self):
@@ -100,7 +102,8 @@ class Drone(BaseStation):
 		if not self.dead:
 			self.algorithm_provider.run(self, obstacles, tarea)
 			self.algorithm_provider.updateComNeighbors(self, obstacles)
-			self.sendPackagesTargeted()
+			# self.sendPackagesTargeted()
+			self.sendPackagesToAll()
 
 	#returns a list of all the pixels in the com range
 	def getCoverage(self, rng):

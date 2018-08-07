@@ -167,12 +167,20 @@ class DisplayApp(Simulation):
 			if concerned:
 				self.respond(drone)
 
+		with open("Timestep-VS-Connectivity.txt","a") as f:
+			# Find k-edge-connectivity
+			connectivity = self.connectivity()
+			f.write("%s, %s, %s \n" % (self.timestep, connectivity[0], connectivity[1]))
+
+		#Increment timestep
+		self.timestep += 1
+
 # 			if type(drone) is BaseStation:
 # 			print(drone.agentID, drone.rescued)
 		# for drone in self.drones:
-			# print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
+		# 	print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 		self.updateDroneView()
-		# print("_____________________________")
+		print("_____________________________")
 
 
 

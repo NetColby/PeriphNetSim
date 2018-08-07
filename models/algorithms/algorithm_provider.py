@@ -11,12 +11,11 @@ class AlgorithmProvider(ABC):
 		self.drones = drones
 		super().__init__()
 		# self.numReplaces = 3
-		self.replacementAlgorithm = RescueMessageForReplacementAlgorithm(self.drones, numReplaces=3)
-		# self.replacementAlgorithm = None
+		# self.replacementAlgorithm = RescueMessageForReplacementAlgorithm(self.drones, numReplaces=3)
+		self.replacementAlgorithm = BaseToRechargeAlgorithm(self.drones, numReplaces=3)
 
 	def run(self, drone, obstacles, tarea):
 		if type(drone) is Drone:
-
 			###### Undestand the situation
 			if self.replacementAlgorithm != None:
 				# Determine initial settings and environement

@@ -1,10 +1,10 @@
-____________________Before Simulation of 5 Drones____________________
+____________________Before Simulation of 30 Drones____________________
 
-Live Drones                                          : 5
-Starting Battery Level                               : 400.0
-Average Energy Level                                 : 400.000
-Coverage                                             : 0.42718
-Uniformity	                                       : 13.94178
+Live Drones                                          : 30
+Starting Battery Level                               : 300.0
+Average Energy Level                                 : 300.000
+Coverage                                             : 0.72315
+Uniformity	                                       : 22.63920
 Connectivity	                                       : 0
  Fully Connected                                      : False
  Net Percentage of Used                               : 0.00000
@@ -15,46 +15,96 @@ Net Percentage of Battery Used for Sending Packages  : 0.00000
 Net Percentage of Battery Used for Recieving Packages: 0.00000
 
 _________Drones_________
-Drone at (411.253, 416.339) Alive: True
-Drone at (420.364, 430.761) Alive: True
-Drone at (333.089, 340.650) Alive: True
-Drone at (445.794, 439.789) Alive: True
-Drone at (441.079, 339.444) Alive: True
+Drone at (381.737, 422.166) Alive: True
+Drone at (422.203, 401.744) Alive: True
+Drone at (385.325, 331.900) Alive: True
+Drone at (346.031, 355.480) Alive: True
+Drone at (391.852, 401.999) Alive: True
+Drone at (390.251, 410.825) Alive: True
+Drone at (404.119, 357.515) Alive: True
+Drone at (311.417, 384.650) Alive: True
+Drone at (305.845, 376.875) Alive: True
+Drone at (426.353, 476.080) Alive: True
+Drone at (397.383, 427.782) Alive: True
+Drone at (300.504, 441.689) Alive: True
+Drone at (412.827, 394.121) Alive: True
+Drone at (341.130, 358.819) Alive: True
+Drone at (448.134, 427.479) Alive: True
+Drone at (379.974, 388.251) Alive: True
+Drone at (448.686, 418.081) Alive: True
+Drone at (381.983, 448.253) Alive: True
+Drone at (415.261, 329.622) Alive: True
+Drone at (400.107, 461.696) Alive: True
+Drone at (399.492, 454.681) Alive: True
+Drone at (415.191, 481.844) Alive: True
+Drone at (312.518, 472.584) Alive: True
+Drone at (483.887, 433.611) Alive: True
+Drone at (383.032, 351.090) Alive: True
+Drone at (430.791, 443.854) Alive: True
+Drone at (360.548, 367.383) Alive: True
+Drone at (398.819, 374.773) Alive: True
+Drone at (448.637, 353.754) Alive: True
+Drone at (383.434, 395.676) Alive: True
 
 ______Base Station(s)______
-Base Station at (350, 400)
+Base Station at (400, 400)
 
 ______Target Area______
 Coordinates of Center: (400, 400)
 Width x Height: 200 x 200
 
 
-____________________After Simulation(1000 steps)____________________
+____________________After Simulation(800 steps)____________________
 
-Total Drones:  5
-Live Drones                                          : 4
-Starting Battery Level                               : 400.0
-Average Energy Level                                 : 239.400
-Coverage                                             : 0.19085
-Uniformity	                                       : 7.84981
-Connectivity	                                       : 0
- Fully Connected                                      : False
- Net Percentage of Used                               : 144.21000
-Net Percentage of Battery Remaining                  : 59.85000
-Net Percentage of Battery Used for Movement          : 11.95132
-Net Percentage of Battery Used for Idling            : 34.42202
-Net Percentage of Battery Used for Sending Packages  : 50.02427
-Net Percentage of Battery Used for Recieving Packages: 3.60239
+Total Drones:  30
+Live Drones                                          : 30
+Starting Battery Level                               : 300.0
+Average Energy Level                                 : 122.647
+Coverage                                             : 0.95595
+Uniformity	                                       : 22.19113
+Connectivity	                                       : 4
+ Fully Connected                                      : True
+ Net Percentage of Used                               : 237.70778
+Net Percentage of Battery Remaining                  : 40.88222
+Net Percentage of Battery Used for Movement          : 92.28558
+Net Percentage of Battery Used for Idling            : 7.71442
+Net Percentage of Battery Used for Sending Packages  : 0.00000
+Net Percentage of Battery Used for Recieving Packages: 0.00000
 
 _________Drones_________
-Drone at (369.721, 398.308) Alive: False
-Drone at (365.194, 411.764) Alive: True
-Drone at (344.598, 381.042) Alive: True
-Drone at (368.087, 407.153) Alive: True
-Drone at (366.133, 389.274) Alive: True
+Drone at (301.886, 457.420) Alive: True
+Drone at (450.003, 351.566) Alive: True
+Drone at (426.439, 304.870) Alive: True
+Drone at (319.452, 319.281) Alive: True
+Drone at (356.450, 373.237) Alive: True
+Drone at (354.520, 423.940) Alive: True
+Drone at (481.921, 317.735) Alive: True
+Drone at (311.099, 395.770) Alive: True
+Drone at (300.357, 345.806) Alive: True
+Drone at (484.026, 483.810) Alive: True
+Drone at (398.765, 449.274) Alive: True
+Drone at (300.431, 445.299) Alive: True
+Drone at (449.879, 401.699) Alive: True
+Drone at (329.788, 309.766) Alive: True
+Drone at (449.623, 450.758) Alive: True
+Drone at (303.143, 342.156) Alive: True
+Drone at (498.519, 399.540) Alive: True
+Drone at (339.116, 494.907) Alive: True
+Drone at (486.115, 313.766) Alive: True
+Drone at (391.404, 499.701) Alive: True
+Drone at (348.294, 473.780) Alive: True
+Drone at (442.441, 499.262) Alive: True
+Drone at (316.939, 483.124) Alive: True
+Drone at (499.991, 451.115) Alive: True
+Drone at (456.973, 300.809) Alive: True
+Drone at (477.043, 485.112) Alive: True
+Drone at (376.783, 300.016) Alive: True
+Drone at (399.307, 348.086) Alive: True
+Drone at (499.680, 348.184) Alive: True
+Drone at (349.468, 341.783) Alive: True
 
 ______Base Station(s)______
-Base Station at (350, 400)
+Base Station at (400, 400)
 
 ______Target Area______
 Coordinates of Center: (400, 400)

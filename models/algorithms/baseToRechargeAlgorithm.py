@@ -22,25 +22,31 @@ class BaseToRechargeAlgorithm(ReplacementAlgorithm) :
 
         # If drone is about to run out of battery, make it go back to recharge
         if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 15 and drone.getHeading() == "Free":
-            drone.dying(self.drones)
-            pass
-
-
-        if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 20 and drone.getHeading() == "Free":
+            # drone.dying(self.drones)
             drone.setHeading("Base")
+            drone.beforeReplacementPosition = drone.getCoords()
+
+
+        # if moveConsumption * distClosestBaseStation < batteryLevel and moveConsumption * distClosestBaseStation > batteryLevel - 20 and drone.getHeading() == "Free":
+        #     drone.setHeading("Base")
 
 
 
         # If close to Base Station, give battery back and set headed to Idle
         if distClosestBaseStation < self.rechargeDist and drone.getHeading() == "Base":
+            bs.getGarage().append(drone)
+            print("added to garage")
+
             drone.setBatteryLevel(300)
             drone.setHeading("Idle")
-            drone.setCommunicating(False)
+            drone.setCommunicating(True)
+            # drone.setCommunicating(False)
             drone.setSentDying(False)
 
         # Keep the drones in the vicinity of the basestation charged
         if distClosestBaseStation < 20 and drone.getHeading() == "Idle":
             drone.setBatteryLevel(300)
-            if drone not in bs.getGarage():
-                print("added to garage")
-                bs.getGarage().append(drone)
+            drone.setHeading("Anchor")
+            drone.anchor = drone.beforeReplacementPosition
+            drone.setCommunicating(True)
+            drone.setSentDying(False)

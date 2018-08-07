@@ -2,19 +2,19 @@
 
 # Number of drones to spawn
 # Number of drones to spawn
-numdrones=8
+numdrones=30
 
 # x,y Coordinates of the drones (optional)
 
 # Test the Connecitvity
-450,400
-450,450
-400,450
-350,450
-350,400
-350,350
-400,350
-450,350
+#454,400
+#451,450
+#405,449
+#350,451
+#350,400
+#350,350
+#400,350
+#450,350
 
 
 
@@ -73,7 +73,7 @@ obstclWidth=100
 obstclHeight=50
 
 #Starting battery level of drones
-batteryLevel=400
+batteryLevel=300
 
 #Amount of battery consumed with each movement step of a drone
 moveConsumption=0.9

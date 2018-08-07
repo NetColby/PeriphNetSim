@@ -163,6 +163,7 @@ class Simulation:
 	def createDrone(self, x, y, algorithm=NaiveAlgorithmObstclAvoiderTargetArea, absoluteID=None):
 		drone = Drone(x-self.view_tx, y-self.view_ty, algorithm(self.drones), comModel=self.comModel, batteryLevel=self.batteryLevel, moveConsumption=self.moveConsumption, idleConsumption=self.idleConsumption, agentID=self.agentIDs, absoluteID=absoluteID)
 		self.drones.append(drone)
+		print("#####################################################################Created drone")
 		# Keep track of how many drones are created
 		self.agentIDs += 1
 		return drone
@@ -213,9 +214,12 @@ class Simulation:
 	def droneStep(self):
 		temp = random.random()
 		for drone in self.drones:
-			if temp < .3 and type(drone) is not BaseStation:
-				drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
+			# if temp < .3 and type(drone) is not BaseStation:
+			# 	drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
 			drone.do_step(self.obstacles, self.tarea)
+			concerned = drone.checkIfConcerned()
+			if concerned:
+				self.respond(drone)
 
 		with open("Timestep-VS-Connectivity.txt","a") as f:
 			# Find k-edge-connectivity
@@ -615,14 +619,14 @@ class Simulation:
 			self.multiStep(steps, 0)
 
 			# Write the Coverage as an output
-			with open("CoverageOutput.txt","a") as f:
+			# with open("CoverageOutput.txt","a") as f:
 				# For numdrones and coverage file
 				# f.write("%s, %s \n" % (self.numdrones, str(self.coverage(self.drones[0].getComRange())) ))
 
-				# For distance, energylevel
-				for drone in self.drones:
-					if type(drone) is not BaseStation:
-						f.write("%s, %s \n" % (self.euclidianDist(drone.getCoords(), drone.getDistClosestBaseStation(self.drones)[1] ), drone.batteryLevel ))
+				# # For distance, energylevel
+				# for drone in self.drones:
+				# 	if type(drone) is not BaseStation:
+				# 		f.write("%s, %s \n" % (self.euclidianDist(drone.getCoords(), drone.getDistClosestBaseStation(self.drones)[1] ), drone.batteryLevel ))
 
 if __name__ == "__main__":
 	dapp = DisplayApp(800, 600)

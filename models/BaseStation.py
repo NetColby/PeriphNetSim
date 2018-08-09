@@ -1,7 +1,9 @@
-# BaseStation Simluator
+# BaseStation Class
 #
 #Emmett Burns & Selim Hassairi
 #June 2018
+
+# BaseStation Class, child of Agent, that has move and communication functions
 
 import math
 from .Package import Package

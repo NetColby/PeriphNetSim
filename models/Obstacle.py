@@ -1,7 +1,10 @@
-# Drone Simluator
+# Obstacle Class
 #
 # Selim Hassairi
 # June 2018
+
+# Obstacl Class, child of Area, child of agent
+# Is like an area but has a checker to see if a given coordinate falls into an obstacle
 
 OBSTCL		 = "#3e4c3a"
 OBSTCLBORDER = "#255915"
@@ -26,4 +29,3 @@ class Obstacle(Area):
 		   return True
 	   else :
 		   return False
-		   

@@ -1,7 +1,9 @@
-# Drone Simulator
+# Area Class
 #
 # Emmett Burns & Selim Hassairi
 # June 2018
+
+# Area Class, child of agent
 
 from .Agent import Agent
 

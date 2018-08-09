@@ -1,3 +1,14 @@
+# Naive Algorithm with Obstacle Avoider
+
+
+#updated by Emmett Burns & Selim Hassairi
+#June 2018
+
+
+# Movement Algorithm based on Virtual Forces that act upon the members of the network
+# Check for obtacles and avoids them
+
+
 from .algorithm_provider import AlgorithmProvider
 import math
 import random

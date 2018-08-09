@@ -3,8 +3,8 @@ ____________________Before Simulation of 30 Drones____________________
 Live Drones                                          : 30
 Starting Battery Level                               : 300.0
 Average Energy Level                                 : 300.000
-Coverage                                             : 0.72315
-Uniformity	                                       : 22.63920
+Coverage                                             : 0.69550
+Uniformity	                                       : 23.26492
 Connectivity	                                       : 0
  Fully Connected                                      : False
  Net Percentage of Used                               : 0.00000
@@ -15,36 +15,36 @@ Net Percentage of Battery Used for Sending Packages  : 0.00000
 Net Percentage of Battery Used for Recieving Packages: 0.00000
 
 _________Drones_________
-Drone at (381.737, 422.166) Alive: True
-Drone at (422.203, 401.744) Alive: True
-Drone at (385.325, 331.900) Alive: True
-Drone at (346.031, 355.480) Alive: True
-Drone at (391.852, 401.999) Alive: True
-Drone at (390.251, 410.825) Alive: True
-Drone at (404.119, 357.515) Alive: True
-Drone at (311.417, 384.650) Alive: True
-Drone at (305.845, 376.875) Alive: True
-Drone at (426.353, 476.080) Alive: True
-Drone at (397.383, 427.782) Alive: True
-Drone at (300.504, 441.689) Alive: True
-Drone at (412.827, 394.121) Alive: True
-Drone at (341.130, 358.819) Alive: True
-Drone at (448.134, 427.479) Alive: True
-Drone at (379.974, 388.251) Alive: True
-Drone at (448.686, 418.081) Alive: True
-Drone at (381.983, 448.253) Alive: True
-Drone at (415.261, 329.622) Alive: True
-Drone at (400.107, 461.696) Alive: True
-Drone at (399.492, 454.681) Alive: True
-Drone at (415.191, 481.844) Alive: True
-Drone at (312.518, 472.584) Alive: True
-Drone at (483.887, 433.611) Alive: True
-Drone at (383.032, 351.090) Alive: True
-Drone at (430.791, 443.854) Alive: True
-Drone at (360.548, 367.383) Alive: True
-Drone at (398.819, 374.773) Alive: True
-Drone at (448.637, 353.754) Alive: True
-Drone at (383.434, 395.676) Alive: True
+Drone at (457.124, 466.648) Alive: True
+Drone at (323.857, 352.396) Alive: True
+Drone at (312.854, 450.362) Alive: True
+Drone at (316.627, 367.045) Alive: True
+Drone at (303.352, 388.969) Alive: True
+Drone at (386.862, 343.598) Alive: True
+Drone at (481.047, 367.471) Alive: True
+Drone at (417.266, 374.976) Alive: True
+Drone at (392.497, 379.751) Alive: True
+Drone at (428.837, 434.032) Alive: True
+Drone at (428.225, 395.598) Alive: True
+Drone at (457.831, 313.002) Alive: True
+Drone at (382.263, 402.914) Alive: True
+Drone at (446.153, 406.284) Alive: True
+Drone at (422.250, 440.624) Alive: True
+Drone at (304.177, 355.400) Alive: True
+Drone at (388.031, 412.011) Alive: True
+Drone at (379.270, 464.915) Alive: True
+Drone at (365.039, 343.531) Alive: True
+Drone at (375.790, 468.295) Alive: True
+Drone at (417.257, 387.251) Alive: True
+Drone at (384.516, 394.450) Alive: True
+Drone at (334.966, 448.525) Alive: True
+Drone at (344.708, 309.580) Alive: True
+Drone at (377.954, 369.675) Alive: True
+Drone at (312.243, 431.800) Alive: True
+Drone at (316.490, 378.041) Alive: True
+Drone at (428.720, 445.602) Alive: True
+Drone at (445.134, 351.169) Alive: True
+Drone at (348.233, 449.549) Alive: True
 
 ______Base Station(s)______
 Base Station at (400, 400)
@@ -54,54 +54,93 @@ Coordinates of Center: (400, 400)
 Width x Height: 200 x 200
 
 
-____________________After Simulation(800 steps)____________________
+____________________After Simulation(1500 steps)____________________
 
-Total Drones:  30
-Live Drones                                          : 30
+Total Drones:  69
+Live Drones                                          : 69
 Starting Battery Level                               : 300.0
-Average Energy Level                                 : 122.647
-Coverage                                             : 0.95595
-Uniformity	                                       : 22.19113
-Connectivity	                                       : 4
+Average Energy Level                                 : 233.284
+Coverage                                             : 0.89623
+Uniformity	                                       : 21.96603
+Connectivity	                                       : 3
  Fully Connected                                      : True
- Net Percentage of Used                               : 237.70778
-Net Percentage of Battery Remaining                  : 40.88222
-Net Percentage of Battery Used for Movement          : 92.28558
-Net Percentage of Battery Used for Idling            : 7.71442
-Net Percentage of Battery Used for Sending Packages  : 0.00000
-Net Percentage of Battery Used for Recieving Packages: 0.00000
+ Net Percentage of Used                               : 256.63188
+Net Percentage of Battery Remaining                  : 77.76135
+Net Percentage of Battery Used for Movement          : 82.90000
+Net Percentage of Battery Used for Idling            : 6.82080
+Net Percentage of Battery Used for Sending Packages  : 8.01163
+Net Percentage of Battery Used for Recieving Packages: 2.26758
 
 _________Drones_________
-Drone at (301.886, 457.420) Alive: True
-Drone at (450.003, 351.566) Alive: True
-Drone at (426.439, 304.870) Alive: True
-Drone at (319.452, 319.281) Alive: True
-Drone at (356.450, 373.237) Alive: True
-Drone at (354.520, 423.940) Alive: True
-Drone at (481.921, 317.735) Alive: True
-Drone at (311.099, 395.770) Alive: True
-Drone at (300.357, 345.806) Alive: True
-Drone at (484.026, 483.810) Alive: True
-Drone at (398.765, 449.274) Alive: True
-Drone at (300.431, 445.299) Alive: True
-Drone at (449.879, 401.699) Alive: True
-Drone at (329.788, 309.766) Alive: True
-Drone at (449.623, 450.758) Alive: True
-Drone at (303.143, 342.156) Alive: True
-Drone at (498.519, 399.540) Alive: True
-Drone at (339.116, 494.907) Alive: True
-Drone at (486.115, 313.766) Alive: True
-Drone at (391.404, 499.701) Alive: True
-Drone at (348.294, 473.780) Alive: True
-Drone at (442.441, 499.262) Alive: True
-Drone at (316.939, 483.124) Alive: True
-Drone at (499.991, 451.115) Alive: True
-Drone at (456.973, 300.809) Alive: True
-Drone at (477.043, 485.112) Alive: True
-Drone at (376.783, 300.016) Alive: True
-Drone at (399.307, 348.086) Alive: True
-Drone at (499.680, 348.184) Alive: True
-Drone at (349.468, 341.783) Alive: True
+Drone at (499.162, 486.754) Alive: True
+Drone at (386.116, 385.992) Alive: True
+Drone at (326.070, 393.293) Alive: True
+Drone at (384.562, 388.608) Alive: True
+Drone at (380.945, 398.959) Alive: True
+Drone at (470.036, 499.951) Alive: True
+Drone at (314.840, 481.450) Alive: True
+Drone at (401.919, 380.769) Alive: True
+Drone at (387.133, 414.556) Alive: True
+Drone at (476.281, 474.130) Alive: True
+Drone at (418.874, 397.587) Alive: True
+Drone at (357.432, 453.703) Alive: True
+Drone at (383.956, 411.302) Alive: True
+Drone at (477.117, 430.603) Alive: True
+Drone at (409.444, 416.670) Alive: True
+Drone at (382.616, 390.381) Alive: True
+Drone at (400.003, 419.198) Alive: True
+Drone at (400.330, 419.549) Alive: True
+Drone at (417.253, 391.135) Alive: True
+Drone at (301.611, 349.203) Alive: True
+Drone at (419.473, 396.035) Alive: True
+Drone at (382.401, 409.234) Alive: True
+Drone at (387.984, 415.096) Alive: True
+Drone at (390.994, 382.777) Alive: True
+Drone at (383.268, 390.078) Alive: True
+Drone at (415.688, 412.270) Alive: True
+Drone at (412.453, 403.387) Alive: True
+Drone at (409.032, 417.211) Alive: True
+Drone at (343.177, 381.101) Alive: True
+Drone at (388.320, 415.430) Alive: True
+Drone at (310.040, 330.727) Alive: True
+Drone at (450.350, 398.114) Alive: True
+Drone at (429.598, 413.309) Alive: True
+Drone at (496.247, 372.515) Alive: True
+Drone at (353.256, 377.621) Alive: True
+Drone at (355.223, 319.571) Alive: True
+Drone at (416.999, 390.769) Alive: True
+Drone at (415.725, 394.496) Alive: True
+Drone at (415.767, 388.054) Alive: True
+Drone at (357.211, 354.018) Alive: True
+Drone at (403.311, 380.783) Alive: True
+Drone at (414.959, 433.961) Alive: True
+Drone at (408.267, 449.985) Alive: True
+Drone at (386.461, 419.143) Alive: True
+Drone at (412.770, 385.524) Alive: True
+Drone at (427.836, 351.866) Alive: True
+Drone at (431.800, 405.856) Alive: True
+Drone at (383.168, 408.924) Alive: True
+Drone at (400.682, 419.361) Alive: True
+Drone at (383.572, 388.611) Alive: True
+Drone at (361.906, 436.687) Alive: True
+Drone at (492.670, 341.721) Alive: True
+Drone at (384.748, 387.692) Alive: True
+Drone at (348.127, 352.158) Alive: True
+Drone at (405.043, 381.578) Alive: True
+Drone at (350.414, 300.006) Alive: True
+Drone at (409.011, 416.728) Alive: True
+Drone at (393.419, 381.925) Alive: True
+Drone at (384.369, 387.694) Alive: True
+Drone at (403.338, 380.937) Alive: True
+Drone at (495.432, 424.520) Alive: True
+Drone at (407.921, 381.884) Alive: True
+Drone at (417.725, 391.567) Alive: True
+Drone at (302.182, 422.037) Alive: True
+Drone at (309.629, 464.617) Alive: True
+Drone at (399.482, 419.358) Alive: True
+Drone at (429.431, 427.878) Alive: True
+Drone at (407.000, 382.039) Alive: True
+Drone at (383.366, 409.488) Alive: True
 
 ______Base Station(s)______
 Base Station at (400, 400)

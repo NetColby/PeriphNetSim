@@ -1,10 +1,15 @@
-#Emmett Burns
-#06/14/18
-#Simulation.py
+# Simulation Class
+# Emmett Burns & Selim Hassairi
+# June 2018
+
+# Takes into consideration all settings and creates an appropriate environment
+# Runs with time steps
+# Can calculate and return stats from the simualtion at any moment
 
 import random
 import math
 import networkx as nx
+import numpy as np
 
 from .Drone import Drone
 from .algorithms.naive_algorithm import NaiveAlgorithm
@@ -214,6 +219,7 @@ class Simulation:
 	def droneStep(self):
 		temp = random.random()
 		for drone in self.drones:
+
 			# if temp < .3 and type(drone) is not BaseStation:
 			# 	drone.createPackage("Halo", destinationAgentID=drone.getDistClosestBaseStation(self.drones)[2].agentID, destinationCoords=drone.getDistClosestBaseStation(self.drones)[1])
 			drone.do_step(self.obstacles, self.tarea)
@@ -221,10 +227,47 @@ class Simulation:
 			if concerned:
 				self.respond(drone)
 
-		with open("Timestep-VS-Connectivity.txt","a") as f:
-			# Find k-edge-connectivity
-			connectivity = self.connectivity()
-			f.write("%s, %s, %s \n" % (self.timestep, connectivity[0], connectivity[1]))
+		# with open("Timestep-VS-Connectivity.txt","a") as f:
+		#
+		# 	# Count flying drones
+		# 	comDrones = []
+		# 	for drone in self.drones:
+		# 		if drone.heading != "Idle":
+		# 			comDrones.append(drone)
+
+			# Write in file
+			# For timestep, k-connectivity, numdrones
+			# f.write("%s, %s, %s \n" % (self.timestep, connectivity[0], len(comDrones)) )
+
+			# For timestep, avgK, numdrones
+			# f.write("%s, %s, %s \n" % (self.timestep, self.averageLocalConnectivity(), len(comDrones)) )
+
+
+		with open("TimeStep-VS-4Energies.txt","a") as f:
+
+			# Count flying drones
+			comDrones = []
+			for drone in self.drones:
+				if drone.heading != "Idle":
+					comDrones.append(drone)
+
+			# For timestep, energy
+			f.write("%s,%s,%s,%s,%s\n" % (self.timestep, self.netMovementPercentage(), self.netIdlePercentage(), self.netSendPercentage(), self.netRecievePercentage()))
+
+
+		with open("TimeStep-VS-NetEnergy.txt","a") as f:
+
+			# Count flying drones
+			comDrones = []
+			for drone in self.drones:
+				if drone.heading != "Idle":
+					comDrones.append(drone)
+
+
+			f.write("%s,%s\n" % (self.timestep, self.netBatteryUsage()))
+
+
+
 
 		#Increment timestep
 		self.timestep += 1
@@ -403,7 +446,7 @@ class Simulation:
 	def connectivity(self):
 		# Translate our simulation to a graph
 		network = nx.Graph()
-		print( len(self.drones))
+		# print( len(self.drones))
 		for drone in self.drones:
 			if drone.heading == "Free":
 				network.add_node(drone)
@@ -424,13 +467,42 @@ class Simulation:
 		k-=1
 
 		# Find if it is fully connected or not
-		if k == 0:
-			print(self.timestep, "This Graph is not fully connected")
-		else:
-			print(self.timestep, "This Graph is k-connected, k = " + str(k))
+		# if k == 0:
+		# 	print(self.timestep, "This Graph is not fully connected")
+		# else:
+		# 	print(self.timestep, "This Graph is k-connected, k = " + str(k))
+		f = lambda x : x.heading
+		# print(list([f(i) for i in self.drones]))
+		return (k, k>0)
+
+
+	# Calculates the connectivity of a graph and return both the k value (k-edge-connected) and whether or not the graph is fully connected
+	def averageLocalConnectivity(self):
+		# Translate our simulation to a graph
+		network = nx.Graph()
+		print( len(self.drones))
+		for drone in self.drones:
+			if drone.heading == "Free":
+				network.add_node(drone)
+				for neighbor in drone.neighbors:
+					if neighbor.heading == "Free":
+						network.add_edge(drone,neighbor)
+
+		# print(network.nodes)
+		# print(network.edges)
+
+
+		# Find the average k value
+		numEdgesList = []
+		for vertex in network.nodes:
+			numEdgesList.append(len(network.edges(vertex)))
+		avgk = np.mean(numEdgesList)
+
+		# Find if it is fully connected or not
+		print("Average k-edge-connectivity", avgk)
 		f = lambda x : x.heading
 		print(list([f(i) for i in self.drones]))
-		return (k, k>0)
+		return avgk
 
 
 

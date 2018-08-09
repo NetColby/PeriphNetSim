@@ -1,8 +1,10 @@
 # Communication Model - Probabilistic
 
 # Created by Selim Hassairi
+# July 2018
 
-# June 2018
+# A Communication Model that implements a Probabilistic Approach to communications between drones
+
 
 from .CommunicationModel import *
 import math

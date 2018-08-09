@@ -2,6 +2,8 @@
 #Created by Emmett Burns
 #06/20/2018
 
+# A Communication Model that implements an Attenuated Approach to communications between drones
+
 from .CommunicationModel import CommunicationModel
 import random
 import math
@@ -19,7 +21,7 @@ class Attenuated(CommunicationModel):
 	def attemptCommunication(self, distance, middlePoint=None, obstcles=None):
 		f = (self.constant/(distance**self.alpha))
 		return f >= random.uniform(self.getBoundBasedOnDistance(self.constant), self.upperBound)
-		
+
 	#returns a lower so that models with varying alphas may have the same communication range
 	def getBoundBasedOnDistance(self, distance):
 		lowerBound = (self.constant/(distance**self.alpha))
@@ -28,7 +30,7 @@ class Attenuated(CommunicationModel):
 	def getComRange(self):
 		range = (self.constant/self.lowerBound)**(1/self.alpha)
 		return math.floor(range)
-	
+
 	# get dist based on the given f value
 	def getDist(self, f):
 		dist = (self.constant/f)**(1/self.alpha)
@@ -59,11 +61,11 @@ if __name__ == "__main__" :
 	print(at.attemptCommunication(80))
 	print(at.attemptCommunication(90))
 	print(at.attemptCommunication(100))
-	print(at.getComRange())	
+	print(at.getComRange())
 	print(at.getInnerRange())
-	
-	
-	
+
+
+
 	# print("1: " + str(at.attemptCommunication(1)))
 # 	print("10: " + str(at.attemptCommunication(10)))
 # 	print("20: " + str(at.attemptCommunication(20)))

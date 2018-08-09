@@ -1,40 +1,11 @@
 ###   Drone Simulation Settings      ###
 
 # Number of drones to spawn
-# Number of drones to spawn
-numdrones=30
+numdrones=10
 
 # x,y Coordinates of the drones (optional)
-
-# Test the Connecitvity
-#454,400
-#451,450
-#405,449
-#350,451
-#350,400
-#350,350
-#400,350
-#450,350
-
-
-
-# Test the transmission of the package
-#400,400
-#480,440
-#425,500
-#375,500
-
-
-#350,400
-#300,450
-#350,450
-
-#400,500
-#450,500
-#350,499
-
 #300,350
-#350,350
+#450,460
 
 # Number of base stations to spawn
 numbasestation=1
@@ -79,7 +50,7 @@ batteryLevel=300
 moveConsumption=0.9
 
 #Amount of battery consumed with each idle step of a drone
-idleConsumption=0.8
+idleConsumption=0.3
 
 #List of type and arguments to specify comModel
 comModel=Disk,100

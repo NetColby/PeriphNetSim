@@ -1,3 +1,12 @@
+# Base To Recharge Replacement Algorithm
+
+# Created by Selim Hassairi
+# August 2018
+
+
+# When a drone is about to run out of battery, it flies back to the closest base station, recharges,
+# and then goes back to their original position
+
 from abc import ABC, abstractmethod
 import math
 from ..Drone import Drone
@@ -35,7 +44,7 @@ class BaseToRechargeAlgorithm(ReplacementAlgorithm) :
         # If close to Base Station, give battery back and set headed to Idle
         if distClosestBaseStation < self.rechargeDist and drone.getHeading() == "Base":
             bs.getGarage().append(drone)
-            print("added to garage")
+            # print("added to garage")
 
             drone.setBatteryLevel(300)
             drone.setHeading("Idle")
@@ -44,7 +53,7 @@ class BaseToRechargeAlgorithm(ReplacementAlgorithm) :
             drone.setSentDying(False)
 
         # Keep the drones in the vicinity of the basestation charged
-        if distClosestBaseStation < 20 and drone.getHeading() == "Idle":
+        elif distClosestBaseStation < 20 and drone.getHeading() == "Idle":
             drone.setBatteryLevel(300)
             drone.setHeading("Anchor")
             drone.anchor = drone.beforeReplacementPosition

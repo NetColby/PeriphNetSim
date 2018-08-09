@@ -1,3 +1,16 @@
+# Naive Algorithm
+#
+# CP Majgaard & Theo Satloff
+# January 2018
+
+#updated by Emmett Burns & Selim Hassairi
+#June 2018
+
+
+# Movement Algorithm based on Virtual Forces that act upon the members of the network
+
+
+
 from .algorithm_provider import AlgorithmProvider
 import math
 

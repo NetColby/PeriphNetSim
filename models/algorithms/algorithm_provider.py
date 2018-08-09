@@ -1,3 +1,15 @@
+# Algorithm Provider
+#
+# CP Majgaard & Theo Satloff
+# January 2018
+
+#updated by Emmett Burns & Selim Hassairi
+#June 2018
+
+
+# Base of all kinds of algorithm that determines the movement behavior of drones
+
+
 from abc import ABC, abstractmethod
 import math
 from ..Drone import Drone
@@ -11,8 +23,8 @@ class AlgorithmProvider(ABC):
 		self.drones = drones
 		super().__init__()
 		# self.numReplaces = 3
-		# self.replacementAlgorithm = RescueMessageForReplacementAlgorithm(self.drones, numReplaces=3)
-		self.replacementAlgorithm = BaseToRechargeAlgorithm(self.drones, numReplaces=3)
+		self.replacementAlgorithm = RescueMessageForReplacementAlgorithm(self.drones, numReplaces=15)
+		# self.replacementAlgorithm = BaseToRechargeAlgorithm(self.drones, numReplaces=15)
 
 	def run(self, drone, obstacles, tarea):
 		if type(drone) is Drone:
@@ -20,7 +32,7 @@ class AlgorithmProvider(ABC):
 			if self.replacementAlgorithm != None:
 				# Determine initial settings and environement
 				moveConsumption = drone.getMoveConsumption()
-				batteryLevel = drone.get_battery_level()
+				batteryLevel 	= drone.get_battery_level()
 				distClosestBaseStation,coordsClosestBaseStation,bs = drone.getDistClosestBaseStation(self.drones)
 				baseStationInfoList = [distClosestBaseStation,coordsClosestBaseStation,bs]
 

@@ -1,7 +1,10 @@
+# Package Class
+
 #Emmett Burns and Selim Hassairi
 #07/02/2018
-#Package.py
-#format for the messages to be sent between drones and base station
+
+# Is a package that is transmtted across the network of drones used to make the
+# drones communicate with each other (send help, transmit internet inquiries)
 
 import random
 

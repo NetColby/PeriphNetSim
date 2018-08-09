@@ -1,8 +1,9 @@
 # Communication Model Abstract Class
 
 # Created by Selim Hassairi
-
 # June 2018
+
+# Allows to set things up for different Communication Models implementations
 
 class CommunicationModel:
 

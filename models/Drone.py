@@ -1,16 +1,20 @@
-# Drone Simluator
+# Drone Class
 #
 # CP Majgaard & Theo Satloff
 # January 2018
+
 #updated by Emmett Burns & Selim Hassairi
 #June 2018
+
+
+# Drone Class, child of BaseStation, child of Agent, that has move and communication functions
 
 import math
 from .BaseStation import BaseStation
 
 class Drone(BaseStation):
 	def __init__(self, x, y, algorithmProvider, pt=None, canvas=None, comModel=None, batteryLevel=100.0, moveConsumption=0.9,
-	idleConsumption=0.8, sendConsumption=0.2, recieveConsumption=0.1, agentID=9999, absoluteID=None):
+	idleConsumption=0.3, sendConsumption=0.2, recieveConsumption=0.1, agentID=9999, absoluteID=None):
 		BaseStation.__init__(self, x, y, algorithmProvider, pt, canvas, comModel, agentID)
 		self.batteryLevel = batteryLevel
 		self.moves = True
@@ -32,7 +36,7 @@ class Drone(BaseStation):
 		# self.createPackage("Halo", destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, destinationCoords=self.getDistClosestBaseStation(drones)[1])
 		self.createPackage("Dyingg&" + str(self.getCoords()) + "&" + str(self.absoluteID), destinationAgentID=self.getDistClosestBaseStation(drones)[2].agentID, origin=self.absoluteID, destinationCoords=self.getDistClosestBaseStation(drones)[1])
 		self.sentDying = True
-		print("Sent help", self.absoluteID)
+		# print("Sent help", self.absoluteID)
 	#####################
 
 	def getAbsID(self):

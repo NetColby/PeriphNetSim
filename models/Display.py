@@ -1,8 +1,11 @@
-# Drone Simluator
+# Display
 #
-#get names of creators
 #updated by Emmett Burns and Selim Hassairi
 #June 2018
+
+# Display Class, child of Simulation
+# Uses tkinter to visualize all agents, communications, and other settings
+# Has a panel to alter settings in real time
 
 import getpass
 import math
@@ -180,7 +183,7 @@ class DisplayApp(Simulation):
 		# for drone in self.drones:
 		# 	print("Drone ID #" , drone.agentID, " :  sent ", drone.sentBuffer, " recieved ",drone.recievedBuffer, drone.heading)
 		self.updateDroneView()
-		print("_____________________________")
+		# print("_____________________________")
 
 
 
@@ -733,7 +736,6 @@ class DisplayApp(Simulation):
 		print('handle button2 motion')
 
 	def main(self):
-		print('Entering main loop')
 		self.root.mainloop()
 
 

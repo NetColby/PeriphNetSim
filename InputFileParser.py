@@ -3,13 +3,7 @@
 # Selim Hassairi
 # June 2018
 
-# {
-# numBs:10,
-# droenum:10,
-# dronecoords:[(1,1),(2,2)]
-# (xt,yt):(1,2)
-# }
-
+# Parser for the settings.txt file used to change parameters in the simulation
 
 
 
@@ -184,8 +178,9 @@ class InputFileParser:
         moveConsumption = self.input.get("moveConsumption")
         idleConsumption = self.input.get("idleConsumption")
         comModel = self.input.get("comModel")
+        steps = self.input.get("steps")
 
-        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption, comModel
+        return numdrones, dronesCoordinatesList, numbasestation, basestationCoordinatesList, tareaboolean, tareaWidth, tareaHeight, tareaCoords, obstclboolean, numobstacle, obstclCoordinatesList, obstclWidth, obstclHeight, batteryLevel, moveConsumption, idleConsumption, comModel, steps
 
     def statusMessage(self):
         # Console messages

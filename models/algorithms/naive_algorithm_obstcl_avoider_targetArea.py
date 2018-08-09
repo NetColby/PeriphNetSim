@@ -1,9 +1,21 @@
+# Naive Algorithm with Obstacle Avoider and Target Area
+
+
+#updated by Emmett Burns & Selim Hassairi
+#June 2018
+
+
+# Movement Algorithm based on Virtual Forces that act upon the members of the network
+# Check for obtacles and avoids them
+# Check for Target Area and make the agents stay in it
+
+
 from .algorithm_provider import AlgorithmProvider
 import math
 import random
 
 class NaiveAlgorithmObstclAvoiderTargetArea(AlgorithmProvider):
-	
+
 	# Attempts to move the given drone to a target distance
 	# away from the average coordinates of its neighbors (very naive)
 	def individualRun(self, drone, obstacles, tarea):

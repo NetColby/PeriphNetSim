@@ -1,7 +1,9 @@
-# Agent Simulator
+# Agent Class
 #
 # Emmett Burns & Selim Hassairi
 # June 2018
+
+# Agent Class : Main class of the agents in the simualtion
 
 import math
 

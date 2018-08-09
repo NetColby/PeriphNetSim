@@ -1,8 +1,9 @@
 # Communication Model - Disk
 
 # Created by Selim Hassairi
-
 # June 2018
+
+# A Communication Model that implements a Disk Approach to communications between drones
 
 from .CommunicationModel import *
 import random

@@ -1,7 +1,11 @@
-# Drone Simluator
+# TargetArea Class
 #
 # Selim Hassairi
 # June 2018
+
+# TargetArea Class, child of Area, child of Agent,
+# is like an Area object but has a checker to see if an agent is in it
+
 
 TAREA 	 = "#606060"
 TAREABORDER = "#660066"
@@ -17,7 +21,6 @@ class targetArea(Area):
             self.rect = self.canvas.create_rectangle(
                 x-(w/2),y+(h/2),x+(w/2),y-(h/2),
                 outline = TAREABORDER, width= 4)
-            print("Should've drawn it")
 
     def getTAwidth(self) :
         return Area.getAwidth(self)

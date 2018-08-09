@@ -1,3 +1,15 @@
+# Rescue Message for Replacement Algorithm
+
+# Created by Selim Hassairi
+# August 2018
+
+
+# When a drone is about to run out of battery, it sends a resce message to the base station
+# the base station sends a drone from its garage to the location of the dying drone
+# the original drone flies back to the closest base station's garage, recharges, and can go replace any drone now
+
+
+
 from abc import ABC, abstractmethod
 import math
 from ..Drone import Drone
